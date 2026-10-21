@@ -1103,15 +1103,6 @@
     }
   }
   function drawExpBoats(st) {
-    // 파견 어선: 선착장에서 수평선 쪽으로 나갔다가 끝날 무렵 돌아옴
-    if (st.dispatch) {
-      const k = st.dispatch.t / st.dispatch.dur;
-      const out = k < 0.5 ? k * 2 : 2 - k * 2;
-      const x = Math.round(220 + out * 200);
-      const y = Math.round(ROAD_L - out * (ROAD_L - HORIZON - 2));
-      const s = 1 - out * 0.6;
-      boat(x, y, { w: Math.max(16, Math.round(40 * s)), rods: true, passengers: out < 0.5 ? 3 : 0, flag: "#f2c94c", wake: k < 0.5 ? 1 : -1 });
-    }
     const crew = st.owned.crew || 0;
     if (!crew) {
       return;
@@ -1127,6 +1118,51 @@
       px(x + 11, y - 9, 1, 9, "#5f6b78");
       line(x + 12, y - 9, x + 16, y - 2, "#7a4a22");
     }
+  }
+
+  /* ---------- 원정 전용 선착장 (매점·대여점 위 모래사장) ---------- */
+  const EXP_DOCK = { x: 50, y0: 94, y1: LAND_TOP + 2 };
+  const EXP_MOOR = { x: 60, y: 102 };          // 정박 위치 (선체 윗면)
+  const EXP_FAR = { x: 230, y: HORIZON + 1 };  // 수평선 (여기서 사라지고 나타남)
+  const SAIL = 20;                              // 출항·귀항 연출 시간 (초)
+  function drawExpDock(st) {
+    if (!(st.owned.crew > 0)) {
+      return;
+    }
+    posts(EXP_DOCK.x, EXP_DOCK.x + 8, EXP_DOCK.y0 + 2, 8, 6);
+    planks(EXP_DOCK.x, EXP_DOCK.y0, 10, EXP_DOCK.y1 - EXP_DOCK.y0, false);
+    px(EXP_DOCK.x + 10, EXP_DOCK.y0 + 2, 3, 4, "#33404d");
+  }
+  // 0 = 정박, 1 = 수평선 너머. 출항 SAIL초 동안 0→1, 귀항 SAIL초 동안 1→0, 그 사이는 안 보임
+  function expBoatOut(st) {
+    const dp = st.dispatch;
+    if (!dp) {
+      return 0;
+    }
+    const sail = Math.min(SAIL, dp.dur / 3);
+    if (dp.t < sail) {
+      return dp.t / sail;
+    }
+    if (dp.t > dp.dur - sail) {
+      return (dp.dur - dp.t) / sail;
+    }
+    return 1;
+  }
+  function drawExpBoat(st) {
+    if (!(st.owned.crew > 0)) {
+      return;
+    }
+    const k = expBoatOut(st);
+    if (k >= 1) {
+      return;
+    }
+    const e = k * k * (3 - 2 * k);
+    const x = Math.round(EXP_MOOR.x + (EXP_FAR.x - EXP_MOOR.x) * e);
+    // 선체 윗면이 항상 수면(HORIZON) 아래쪽 바다 위에 있도록
+    const y = Math.max(HORIZON + 1, Math.round(EXP_MOOR.y + (EXP_FAR.y - EXP_MOOR.y) * e)) + (k === 0 ? bob(9, 0.6) : 0);
+    const w = Math.max(14, Math.round(44 * (1 - e * 0.65)));
+    const leaving = st.dispatch && st.dispatch.t < st.dispatch.dur / 2;
+    boat(x, y, { w, rods: true, passengers: k === 0 ? 0 : 3, flag: "#f2c94c", wake: k > 0 && k < 1 ? (leaving ? -1 : 1) : 0 });
   }
 
   /* ---------- 여객선 (셔틀) ---------- */
@@ -1903,7 +1939,10 @@
     tag("매표소 · 입구", 22, 206, "rgba(176,58,46,0.92)");
     tag("수족관", 67, 180, "rgba(30,80,120,0.92)");
     if (o.shuttle > 0) {
-      tag("선착장", DOCK_X + 18, ROAD_L + 18, "rgba(29,53,87,0.92)");
+      tag("손님 선착장", DOCK_X + 18, ROAD_L + 18, "rgba(29,53,87,0.92)");
+    }
+    if (o.crew > 0) {
+      tag("원정 선착장", EXP_DOCK.x + 5, EXP_DOCK.y0 - 4, "rgba(122,74,34,0.92)");
     }
     if (o.pension > 0) {
       tag("펜션" + (o.pension > 4 ? " " + o.pension + "실" : ""), 461, 94, "rgba(88,53,144,0.92)");
@@ -1963,7 +2002,7 @@
     const fixed = {
       shop: [24, 140], rental: [66, 144], restaurant: [105, 136], shuttle: [DOCK_X + 18, ROAD_L],
       pension: [461, 110], farm: [240, 78], boat: [190, 78], rock: [40, 56], night: [290, 86],
-      shade: [190, 100], crew: [380, HORIZON - 4], secret: [SECRET.x + SECRET.w / 2, SECRET.y + 6],
+      shade: [190, 100], crew: [EXP_MOOR.x + 20, EXP_MOOR.y], secret: [SECRET.x + SECRET.w / 2, SECRET.y + 6],
     };
     if (/^z_/.test(id)) {
       return [380, HORIZON - 4];
@@ -2021,6 +2060,8 @@
     ["land", (st, world, ctx) => { drawLand(st, ctx.dt); }],
     ["stage", (st, world, ctx) => {
       drawRocks(st);
+      drawExpDock(st);
+      drawExpBoat(st);
       drawTourShip(st);
       drawFarm(st);
       drawSecretFarm(st, world, ctx.night);
