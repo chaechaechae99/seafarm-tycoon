@@ -253,7 +253,7 @@ h1 {
 .box .row { display: flex; justify-content: space-between; gap: 8px; }
 .box .row b { font-family: var(--font-num); font-weight: 400; }
 .rate-bars { display: grid; gap: 3px; }
-.rate-bar { display: grid; grid-template-columns: 44px minmax(0, 1fr) 46px; gap: 6px; align-items: center; font-size: 11px; }
+.rate-bar { display: grid; grid-template-columns: 84px minmax(0, 1fr) 46px; gap: 6px; align-items: center; font-size: 11px; }
 .rate-bar i { display: block; height: 8px; background: var(--rc); min-width: 2px; }
 .rate-bar span:last-child { font-family: var(--font-num); text-align: right; }
 .dex-grid-sm { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }

@@ -107,18 +107,42 @@
   }
 
   /* ---------------- 가격·구매 ---------------- */
-  function costOf(id, owned) {
+  // ln(가격/base)를 n개째까지 누적해 둠 (상승률이 n에 따라 줄어들어 닫힌 식이 없음)
+  const priceLog = {};
+  function unitLog(id, n) {
     const f = FAC[id];
-    return Math.ceil(f.base * Math.pow(f.r, owned - (f.free || 0)));
+    const arr = priceLog[id] || (priceLog[id] = [0]);
+    while (arr.length <= n) {
+      const i = arr.length - 1;
+      const over = Math.max(0, i - D.PRICE.knee);
+      arr.push(arr[i] + Math.log(1 + (f.r - 1) / (1 + over / D.PRICE.soft)));
+    }
+    return arr[n];
+  }
+  function unitCost(id, n) {
+    return FAC[id].base * Math.exp(unitLog(id, Math.max(0, n)));
+  }
+  function costOf(id, owned) {
+    return Math.ceil(unitCost(id, owned - (FAC[id].free || 0)));
   }
   function costOfN(id, owned, k) {
-    const f = FAC[id];
-    const first = f.base * Math.pow(f.r, owned - (f.free || 0));
-    return Math.ceil(first * (Math.pow(f.r, k) - 1) / (f.r - 1));
+    const n = owned - (FAC[id].free || 0);
+    let s = 0;
+    for (let j = 0; j < k; j++) {
+      s += unitCost(id, n + j);
+    }
+    return Math.ceil(s);
   }
   function maxAffordable(state, id) {
+    const n = state.owned[id] - (FAC[id].free || 0);
+    let sum = 0;
     let k = 0;
-    while (k < 1000 && costOfN(id, state.owned[id], k + 1) <= state.money) {
+    while (k < 1000) {
+      const c = unitCost(id, n + k);
+      if (sum + c > state.money) {
+        break;
+      }
+      sum += c;
       k++;
     }
     return k;
@@ -182,6 +206,33 @@
     return Object.keys(state.expDex).length;
   }
   // 도감 1종당 +2%, 원정 도감 1종당 +0.5%, 수족관 버프는 곱으로
+  /* ---------------- 도감 세트 컬렉션 ---------------- */
+  const SETS = D.COLLECTION_SETS.map((s) => Object.assign({}, s, { members: D.FISH.filter((f) => new RegExp(s.re).test(f.name)).map((f) => f.id) }));
+  function setProgress(state) {
+    return SETS.map((s) => {
+      const got = s.members.filter((id) => state.dex[id]).length;
+      return { id: s.id, name: s.name, got, total: s.members.length, done: got === s.members.length, value: s.value, speed: s.speed, members: s.members };
+    });
+  }
+  // 어종 판매가 배수: 그 어종이 속한 완성 세트들의 value 합
+  function setValueMult(state, fishId) {
+    let m = 1;
+    SETS.forEach((s) => {
+      if (s.members.includes(fishId) && s.members.every((id) => state.dex[id])) {
+        m += s.value;
+      }
+    });
+    return m;
+  }
+  function setSpeedMult(state) {
+    let m = 1;
+    SETS.forEach((s) => {
+      if (s.members.every((id) => state.dex[id])) {
+        m += s.speed;
+      }
+    });
+    return m;
+  }
   function incomeMult(state) {
     return (1 + 0.02 * dexCount(state) + D.EXPEDITION.dexBonus * expDexCount(state)) * (1 + aquaBuff(state)) * (1 + prestigeBonus(state, "income"));
   }
@@ -604,7 +655,7 @@
   }
   function catchSpeedMult(state) {
     const ev = oceanEvent(state);
-    return Math.pow(1.2, msCount(state.owned.seat)) * (1 + prestigeBonus(state, "speed")) * (ev && ev.speed ? ev.speed : 1);
+    return Math.pow(1.2, msCount(state.owned.seat)) * (1 + prestigeBonus(state, "speed")) * (ev && ev.speed ? ev.speed : 1) * setSpeedMult(state);
   }
   function spotBonus(state, night) {
     return 1 + 0.25 * (availableSpots(state, night).length - 1);
@@ -687,13 +738,16 @@
     if (state.upgrades.boat) {
       s.push("boat");
     }
-    if (state.upgrades.night && night) {
-      s.push("night");
+    if (night) {
+      s.push("night");   // 집어등이 없으면 spotWeight에서 약하게
     }
     if (state.upgrades.rock) {
       s.push("rock");
     }
     return s;
+  }
+  function spotWeight(state, s) {
+    return D.SPOTS[s].weight * (s === "night" && !state.upgrades.night ? D.NIGHT_WEATHER.nightSpot : 1);
   }
   function rarityWeights(state, rarityMult, spot, night) {
     const w = {};
@@ -710,6 +764,9 @@
         }
         if (r === "legendary" || r === "masterpiece") {
           x *= legendaryMult(state);
+        }
+        if (state.weather === "rain" && RANK[r] >= RANK.rare) {
+          x *= D.NIGHT_WEATHER.rainRare;
         }
       }
       w[r] = x;
@@ -740,7 +797,7 @@
       return { junk: true, id: j.id, name: j.name, value: 0, rarity: "junk" };
     }
     const spots = availableSpots(state, ck.night);
-    const spot = pickWeighted(rng, spots.map((s) => [s, D.SPOTS[s].weight]));
+    const spot = pickWeighted(rng, spots.map((s) => [s, spotWeight(state, s)]));
     const rw = rarityWeights(state, opt.rarityMult || 1, spot, ck.night);
     const rarities = D.RARITY_ORDER.filter((r) => fishPool(spot, r, ck.season).length > 0);
     const rarity = pickWeighted(rng, rarities.map((r) => [r, rw[r]]));
@@ -750,7 +807,7 @@
     const sizeMult = 0.7 + 0.9 * t;
     const gChance = D.GOLDEN_CHANCE * (state.upgrades.golden ? 3 : 1);
     const golden = rng() < gChance;
-    const value = Math.round(D.RARITY[rarity].base * f.v * sizeMult * (golden ? 10 : 1));
+    const value = Math.round(D.RARITY[rarity].base * f.v * sizeMult * (golden ? 10 : 1) * setValueMult(state, f.id));
     const tier = t > 0.9 ? "대물" : t > 0.6 ? "대" : t > 0.3 ? "중" : "소";
     return { junk: false, id: f.id, name: f.name, rarity, spot, size, value, golden, tier };
   }
@@ -794,7 +851,7 @@
     const season = clockInfo(state).season;
     const spots = availableSpots(state, night);
     let sw = 0;
-    spots.forEach((s) => { sw += D.SPOTS[s].weight; });
+    spots.forEach((s) => { sw += spotWeight(state, s); });
     let ev = 0;
     spots.forEach((spot) => {
       const rw = rarityWeights(state, rarityMult || 1, spot, night);
@@ -806,7 +863,7 @@
         let pw = 0;
         let pv = 0;
         pool.forEach(([f, w]) => { pw += w; pv += w * f.v; });
-        ev += (D.SPOTS[spot].weight / sw) * (rw[r] / rt) * D.RARITY[r].base * (pv / pw);
+        ev += (spotWeight(state, spot) / sw) * (rw[r] / rt) * D.RARITY[r].base * (pv / pw);
       });
     });
     const gChance = D.GOLDEN_CHANCE * (state.upgrades.golden ? 3 : 1);
@@ -860,7 +917,7 @@
     let vipRate = 0;
     regs.forEach((r) => {
       const lv = vipLevel(r);
-      extra += perReg * tipChance(lv) * D.VIP.tipShare * (fee + shop);
+      extra += perReg * tipChance(lv) * D.VIP.tipShare * (1 + prestigeBonus(state, "tip")) * (fee + shop);
       if (lv >= 10 && state.upgrades.secret) {
         vipRate += perReg;
       }
@@ -1112,7 +1169,7 @@
       const r = guest.reg;
       const before = vipLevel(r);
       if (rng() < tipChance(before)) {
-        const tip = (feePerGuest(state, guest.type) + shopPerGuest(state, guest.type)) * D.VIP.tipShare;
+        const tip = (feePerGuest(state, guest.type) + shopPerGuest(state, guest.type)) * D.VIP.tipShare * (1 + prestigeBonus(state, "tip"));
         state.stats.tips++;
         earn(state, world, tip, { seat: guest.seat, src: "tip" });
       }
@@ -1416,6 +1473,7 @@
     breedCatalog, hintCost, buyHint,
     aquaEntry, aquaCandidates, aquaBuffOf, aquaBuff, aquaAdd, aquaRemove,
     catFeedCost, feedCat, makeWish, legendaryMult, fmtSize, WALK_IN,
+    setProgress, setValueMult, setSpeedMult, spotWeight,
     cpsReward, prestigeLevel, prestigeBonus, prestigeGain, prestigeCost, buyPrestige, doPrestige,
     oceanEvent, questReward, tourneyLeague, teamPower, runTourney,
     dispatchTier, dispatchCatches, startDispatch, dispatchUnlocked, finishDispatch, vipXpFor, vipFeeMult, vipPool,

@@ -50,10 +50,28 @@
     common: { name: "일반", base: 30, weight: 70, color: "#7a8a99", sat: 3 },
     premium: { name: "고급", base: 150, weight: 24, color: "#2f8f5b", sat: 8 },
     rare: { name: "희귀", base: 1000, weight: 5.5, color: "#2f6fd6", sat: 20 },
-    masterpiece: { name: "명품", base: 3500, weight: 1.6, color: "#b8327a", sat: 30 },
-    legendary: { name: "전설", base: 12000, weight: 0.4, color: "#c9821b", sat: 40 },
+    masterpiece: { name: "명품", base: 4500, weight: 1.6, color: "#b8327a", sat: 30 },
+    legendary: { name: "전설", base: 16000, weight: 0.4, color: "#c9821b", sat: 40 },
   };
   const RARITY_ORDER = ["common", "premium", "rare", "masterpiece", "legendary"];
+  // 시설 가격 소프트캡: n번째 가격 = base × Π (1 + (r-1) / (1 + max(0, i - knee) / soft))
+  // knee개까지는 기존처럼 r배씩, 그 뒤로는 상승률이 점점 줄어듦 (200개째 상승률 ≈ (r-1)/2.5)
+  const PRICE = { knee: 50, soft: 100 };
+  // 도감 세트 컬렉션: 카테고리 어종을 모두 낚으면 그 어종 판매가 +value, 전체 입질 속도 +speed
+  const COLLECTION_SETS = [
+    { id: "bream", name: "돔류", re: "돔", value: 0.3, speed: 0.04 },
+    { id: "salmon", name: "연어·송어류", re: "연어(?!병치)|송어", value: 0.3, speed: 0.03 },
+    { id: "flat", name: "가자미·넙치류", re: "가자미|광어|도다리|터봇", value: 0.3, speed: 0.03 },
+    { id: "blue", name: "등푸른 생선", re: "고등어|전갱이|삼치|꽁치|청어|전어|정어리|멸치|밴댕이|까나리", value: 0.25, speed: 0.04 },
+    { id: "rock", name: "볼락·우럭류", re: "볼락|우럭|열기|쏨뱅이|감펭|노래미", value: 0.3, speed: 0.03 },
+    { id: "tuna", name: "다랑어·방어류", re: "다랑어|방어|부시리|새치|만새기", value: 0.35, speed: 0.04 },
+    { id: "cephalo", name: "두족류", re: "오징어|문어|낙지|주꾸미|한치", value: 0.3, speed: 0.03 },
+    { id: "grouper", name: "바리·농어류", re: "바리|능성어|농어|바라문디|씨바스", value: 0.35, speed: 0.03 },
+    { id: "croaker", name: "조기·민어류", re: "조기|부세|보구치|민어|드럼", value: 0.3, speed: 0.03 },
+    { id: "cold", name: "냉수·심해어", re: "대구|명태|메로|아귀|물메기|눈볼대|금눈돔|옥돔|옥두어|도루묵|임연수", value: 0.35, speed: 0.04 },
+  ];
+  // 날씨·밤 출현 변동: 밤엔 집어등 없이도 야간 포인트가 약하게(nightSpot) 열림, 비 오면 희귀 이상 ×rainRare
+  const NIGHT_WEATHER = { nightSpot: 0.4, rainRare: 1.2 };
   // 낚시 난이도 1~5: 높을수록 잘 안 물림 (출현 가중치 배수). 값이 없으면 희귀도 기본값
   const DIFF_WEIGHT = [1, 1, 0.9, 0.75, 0.6, 0.45];
   const DIFF_DEFAULT = { common: 1, premium: 2, rare: 3, masterpiece: 4, legendary: 5 };
@@ -228,7 +246,7 @@
     titles: [[100, "낚시터의 전설"], [50, "전설의 단골"], [20, "명예 VIP"], [10, "VIP VVIP 손님"], [5, "단골 조사님"], [1, "일반 손님"]],
     tipBase: 0.1,          // 팁 확률 (레벨 5부터 +tipLv5)
     tipLv5: 0.2,
-    tipShare: 0.5,         // 팁 = (입장료+매점) × tipShare
+    tipShare: 0.7,         // 팁 = (입장료+매점) × tipShare × (1 + 환생 'VIP 팁')
     lv5Stay: 1.2,          // 고급 좌대: 체류 ×, 희귀 어종 ×
     lv5Rarity: 1.2,
     feeLv10: 20,           // VIP VVIP 이용료 배수 (레벨 10 초과분 1레벨당 +feePerLv)
@@ -340,6 +358,7 @@
       { id: "legend", name: "전설 어종 출현", per: 0.2, max: 15, desc: "전설·명품 확률 +20%/레벨" },
       { id: "voyage", name: "원정 시간 단축", per: 0.08, max: 6, desc: "원정 파견 시간 -8%/레벨" },
       { id: "income", name: "리조트 브랜드", per: 0.15, max: 30, desc: "전체 수익 +15%/레벨" },
+      { id: "tip", name: "VIP 팁 비율", per: 0.1, max: 20, desc: "단골 팁 +10%/레벨" },
     ],
   };
   // 해양 이벤트: every초마다 확률로 발생, dur초 지속. 태풍(날씨)은 연안 전설 폭증 + 원정 위험
@@ -433,7 +452,7 @@
     FACILITIES, UPGRADES, RARITY, RARITY_ORDER, SPOTS, FISH, JUNK, JUNK_CHANCE, WALKIN, GOLDEN_CHANCE,
     EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, QUEST, PRESTIGE, OCEAN, TOURNEY, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
     GUEST_TYPES, SEASON_NAMES, WEATHER, WEATHER_ODDS, NICK_A, NICK_B, REVIEW_TEXT,
-    PERSONAS, SURNAME, GIVEN, DIFF_WEIGHT, DIFF_DEFAULT,
+    PERSONAS, SURNAME, GIVEN, DIFF_WEIGHT, DIFF_DEFAULT, PRICE, COLLECTION_SETS, NIGHT_WEATHER,
   };
   root.GameData = GameData;
   if (typeof module !== "undefined" && module.exports) {

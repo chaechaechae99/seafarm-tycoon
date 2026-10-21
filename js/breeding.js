@@ -141,7 +141,7 @@
       }
       const R = this.D.RARITY;
       const avg = (R[pa.rarity].base * pa.v + R[pb.rarity].base * pb.v) / 2;
-      const base = Math.max(avg * this.D.BREED.costMult, (ratePerSec || 0) * 60);
+      const base = Math.max(avg * this.D.BREED.costMult, (ratePerSec || 0) * 40);
       return Math.ceil(base * (mutate ? this.D.BREED.mutateCostMult : 1));
     }
     block(state, a, b, mutate, ratePerSec) {

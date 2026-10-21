@@ -551,6 +551,12 @@
     U.dexDirty = false;
     const ck = G.clockInfo(state);
     $("dexNote").textContent = "새 어종을 낚을 때마다 전체 수익 +2% (현재 +" + (G.dexCount(state) * 2) + "%) · 지금은 " + D.SEASON_NAMES[ck.season] + " 제철 어종이 잘 잡혀요";
+    // 세트 컬렉션 현황
+    const sets = G.setProgress(state);
+    $("dexSets").innerHTML = "<h3>세트 컬렉션 " + sets.filter((s) => s.done).length + " / " + sets.length + '</h3><div class="rate-bars">' + sets.map((s) =>
+      '<div class="rate-bar" style="--rc:' + (s.done ? "var(--r-legendary)" : "var(--r-premium)") + '"><span>' + esc(s.name) + '</span><i style="width:' + Math.round((s.got / s.total) * 100) + '%"></i><span>' +
+      s.got + "/" + s.total + "</span></div>").join("") + '</div><p class="note">세트를 완성하면 그 어종 판매가 +25~35%, 전체 입질 속도 +3~4%. 완성: ' +
+      (sets.filter((s) => s.done).map((s) => esc(s.name)).join(", ") || "없음") + "</p>";
     const grid = $("dexGrid");
     grid.innerHTML = D.FISH.filter((f) => U.rar === "all" || f.rarity === U.rar).map((f) => {
       const d = state.dex[f.id];
