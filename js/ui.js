@@ -451,6 +451,10 @@
     $("dispatchBtn").disabled = !open;
     $("dispatchBtn").title = open ? "" : "시설 탭에서 원정 낚시꾼을 고용하면 열려요";
     $("dispatchBtn").lastChild.textContent = !open ? "원정 파견 [잠김]" : dp ? "원정 중 " + hms(Math.max(0, dp.dur - dp.t)) : "원정 파견 (티켓 " + state.tickets + ")";
+    const ad = $("autoDispBtn");
+    ad.disabled = !open;
+    ad.setAttribute("aria-pressed", state.autoDispatch ? "true" : "false");
+    ad.textContent = !open ? "자동 파견 [잠김]" : state.autoDispatch ? "자동 파견 ON · " + Math.max(0, Math.ceil(world.autoDispT === undefined ? D.DISPATCH.autoSec : world.autoDispT)) + "초" : "자동 파견 OFF";
     const bu = $("burstBtn");
     bu.disabled = state.skillCd.burst > 0;
     bu.textContent = state.buffs.burst > 0 ? "골드 버스트 ×" + D.SKILLS.burst.mult + " · " + Math.ceil(state.buffs.burst) + "초" : state.skillCd.burst > 0 ? "골드 버스트 " + hms(state.skillCd.burst) : "골드 버스트";
@@ -892,7 +896,15 @@
       toast(r.league + " 대회 " + r.rank + "위! 상금 +" + fmt(r.prize) + "원" + (r.skin ? " · 새 스킨 " + (SKIN_NAME[r.skin] || r.skin) : ""), r.rank <= 3 ? "gold" : "new", root.Sprites.iconURL("vip"));
     } else if (ev.kind === "dispatch") {
       U.expDirty = U.farmDirty = U.aquaDirty = true;
-      showDispatchResult(state);
+      if (state.autoDispatch) {
+        // 자동 파견 중엔 팝업 대신 알림만 (결과는 원정 파견 창에 남음)
+        ev.res.seen = true;
+        toast("원정 귀항 · " + ev.res.total + "마리 · +" + fmt(ev.res.gold) + "원 · 새 어종 " + ev.res.newCount + "종", "gold", root.Sprites.iconURL("crew"));
+      } else {
+        showDispatchResult(state);
+      }
+    } else if (ev.kind === "autodispatch") {
+      toast("자동 파견: " + ev.name + " 원정 출항", "new", root.Sprites.iconURL("crew"));
     } else if (ev.kind === "vipLevel") {
       toast(ev.nick + "님 호감도 Lv." + ev.lv + " · " + ev.title + (ev.lv === 10 ? " — 비밀 양식장 입장 가능!" : ev.lv === 5 ? " — 팁·고급 좌대" : ""), ev.lv >= 5 ? "gold" : "new", root.Sprites.iconURL("vip"));
       U.farmDirty = true;
@@ -1043,6 +1055,7 @@
     }));
     $("castBtn").addEventListener("click", () => actions.cast());
     $("autoBtn").addEventListener("click", () => actions.toggleAuto());
+    $("autoDispBtn").addEventListener("click", () => actions.toggleAutoDispatch());
     $("burstBtn").addEventListener("click", () => actions.useSkill("burst"));
     $("harborBtn").addEventListener("click", () => actions.useSkill("harbor"));
     $("dispatchBtn").addEventListener("click", () => {

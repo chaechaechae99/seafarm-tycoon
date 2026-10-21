@@ -61,6 +61,7 @@
       dispatch: null,       // 원정 파견 중: { t, dur, zone }
       lastDispatch: null,
       autoCast: false,      // 사장님 자동 낚시 (30초마다)
+      autoDispatch: false,  // 자동 파견: 켜 둔 동안 30초마다 원정 어선 조업 + 귀항하면 다시 출항
       quests: [],           // 손님 특별 의뢰 { id, fish, name, rarity, reward, left, nick }
       questCd: 30,
       questSeq: 1,
@@ -1277,6 +1278,28 @@
     return true;
   }
 
+  /* ---------------- 자동 파견 (켜 둔 동안만) ---------------- */
+  function tickAutoDispatch(state, world, dt, rng) {
+    // 귀항해 있으면 티켓으로 갈 수 있는 가장 긴 코스로 다시 출항
+    if (!state.dispatch) {
+      const tier = D.DISPATCH.tiers.filter((x) => x.tickets <= state.tickets).pop();
+      if (tier && startDispatch(state, tier.sec)) {
+        world.events.push({ kind: "autodispatch", name: tier.name });
+      }
+    }
+    world.autoDispT = (world.autoDispT === undefined ? D.DISPATCH.autoSec : world.autoDispT) - dt;
+    if (world.autoDispT > 0) {
+      return;
+    }
+    world.autoDispT = D.DISPATCH.autoSec;
+    const c = EXP.rollCatch(expProgress(state), D.DISPATCH.autoCtx, rng);
+    if (c) {
+      const isNew = registerExp(state, c, true);
+      earn(state, world, Math.max(c.value, (expectedRate(state) / incomeMult(state)) * D.DISPATCH.autoSec * D.DISPATCH.cpsShare), null);
+      world.events.push({ kind: "expcatch", fish: c, isNew, auto: true });
+    }
+  }
+
   /* ---------------- 시간 메카닉 · 다이아 시간 단축 · VIP 초청 · 스킬 ---------------- */
   function tickTimers(state, dt) {
     const T = D.DISPATCH.ticket;
@@ -1657,6 +1680,9 @@
       }
     }
     // 사장님 자동 낚시: 30초마다 저절로 던지고, 꽝 없이 성공
+    if (state.autoDispatch && dispatchUnlocked(state)) {
+      tickAutoDispatch(state, world, dt, rng);
+    }
     if (state.autoCast) {
       world.autoT = (world.autoT === undefined ? 0 : world.autoT) - dt;
       if (world.autoT <= 0 && !world.cast && world.castCd <= 0) {

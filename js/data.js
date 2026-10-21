@@ -348,9 +348,11 @@
   const DISPATCH = {
     perMinute: 1,
     ticket: { regen: 3600, max: 12, start: 3 },
-    cpsShare: 0.25,   // 최소 보상 = 초당 수익 × 항해 시간 × cpsShare (후반에도 의미 있게)
+    cpsShare: 0.25,
+    autoSec: 30,      // 자동 파견: 게임을 켜 둔 동안 30초마다 원정 어선이 한 마리 (파견 도감 등록)
+    autoCtx: { luck: 4, deep: 4, depth: 3 },   // 최소 보상 = 초당 수익 × 항해 시간 × cpsShare (후반에도 의미 있게)
     // 파견 도감: 직접 보낸 원정에서 낚은 어종. 전설 원정 어종은 파견으로만 등록됨
-    dexMilestones: [[10, 5], [50, 10], [100, 20], [200, 40], [350, 100]],
+    dexMilestones: [[30, 5], [60, 10], [120, 20], [200, 40], [300, 100]],
     tiers: [
       { sec: 3600, name: "1시간", tickets: 1, luck: 4, deep: 4, depth: 3 },
       { sec: 10800, name: "3시간", tickets: 3, luck: 6, deep: 6, depth: 4 },

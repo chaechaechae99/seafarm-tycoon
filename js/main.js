@@ -210,6 +210,12 @@
       }
       return false;
     },
+    toggleAutoDispatch() {
+      state.autoDispatch = !state.autoDispatch;
+      world.autoDispT = 0;   // 켜자마자 한 마리
+      sfx("click");
+      save();
+    },
     invite() {
       const v = G.inviteVip(state, Math.random);
       if (v) {

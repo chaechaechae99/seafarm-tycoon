@@ -124,6 +124,16 @@ test("원정 파견: 후반 보상은 초당 수익 비례, 전설 원정 어종
   assert.ok(!G.registerExp(s, { id: leg.id, rarity: "Legendary", size: 100 }) && !s.expDex[leg.id]);
 });
 
+test("자동 파견: 켜 둔 동안 30초마다 파견 도감 등록 + 귀항 시 자동 재출항", () => {
+  const s = midGame();
+  const w = G.newWorld(rng);
+  s.autoDispatch = true;
+  s.tickets = 3;
+  for (let i = 0; i < 61; i++) { G.tick(s, w, 1); }
+  assert.ok(s.dispatch && s.dispatch.sec === 10800 && s.tickets === 0, "티켓 3장 → 3시간 코스 자동 출항");
+  assert.ok(Object.keys(s.dispDex).length >= 2, "30초마다 한 마리");
+});
+
 test("교배 시간: 일반 15분 ~ 전설 3시간, 부스터·명인 손재주로 단축", () => {
   const s = G.newState();
   const c = D.FISH.find((f) => f.rarity === "common");
