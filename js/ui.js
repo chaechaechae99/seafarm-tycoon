@@ -84,6 +84,9 @@
       case "shuttle": return "기본 방문객 +" + (0.08 * o.shuttle).toFixed(2) + "명/초";
       case "pension": return "숙박 수입 초당 " + fmt(60 * o.pension * ms * G.reputation(state) / 3) + "원";
       case "farm": return "초당 " + fmt(900 * o.farm * ms) + "원 · 가두리 고급 어종 +" + Math.round(Math.min(50, 2 * o.farm)) + "%";
+      case "resort":
+      case "market":
+      case "park": return "초당 " + fmt(D.FACILITIES.find((f) => f.id === id).passive * o[id] * ms * (id === "resort" ? G.reputation(state) / 3 : 1) * (state.upgrades.smartfarm ? 2 : 1)) + "원" + (ms > 1 ? " (×" + ms + ")" : "");
       case "crew": return "원정 수익 초당 " + fmt(G.expIncome(state) * G.incomeMult(state)) + "원 (1명당 " + fmt(G.expPerAngler(state)) + "원" + (ms > 1 ? " ×" + ms : "") + ")";
       default: return "";
     }
@@ -362,12 +365,12 @@
       $("breedProg").style.width = Math.min(100, (br.t / br.dur) * 100) + "%";
       const pa = G.parentInfo(state, br.a);
       const pb = G.parentInfo(state, br.b);
-      $("breedMsg").textContent = "교배 중: " + (pa ? pa.name : "?") + " × " + (pb ? pb.name : "?") + " · " + Math.ceil(br.dur - br.t) + "초 남음";
+      $("breedMsg").textContent = "교배 중: " + (pa ? pa.name : "?") + " × " + (pb ? pb.name : "?") + " · " + hms(br.dur - br.t) + " 남음 (다이아 즉시완료는 상점 탭)";
     } else {
       $("breedMsg").textContent = G.breedBlock(state, U.breedA, U.breedB, U.mutate);
     }
     const cost = G.breedCost(state, U.breedA, U.breedB, U.mutate);
-    $("breedCost").textContent = (isFinite(cost) ? fmt(cost) + "원" : "-") + " · " + D.BREED.time + "초";
+    $("breedCost").textContent = (isFinite(cost) ? fmt(cost) + "원" : "-") + " · " + hms(G.breedTime(state, U.breedA, U.breedB)) + (state.buffs.boost > 0 ? " (부스터)" : "");
     $("breedBtn").disabled = !!G.breedBlock(state, U.breedA, U.breedB, U.mutate);
   }
 
@@ -446,10 +449,20 @@
     const open = G.dispatchUnlocked(state);
     $("dispatchBtn").disabled = !open;
     $("dispatchBtn").title = open ? "" : "시설 탭에서 원정 낚시꾼을 고용하면 열려요";
-    $("dispatchBtn").lastChild.textContent = !open ? "원정 파견 [잠김]" : dp ? "원정 중 " + mmss(Math.max(0, dp.dur - dp.t)) : "원정 파견";
+    $("dispatchBtn").lastChild.textContent = !open ? "원정 파견 [잠김]" : dp ? "원정 중 " + hms(Math.max(0, dp.dur - dp.t)) : "원정 파견 (티켓 " + state.tickets + ")";
+    const bu = $("burstBtn");
+    bu.disabled = state.skillCd.burst > 0;
+    bu.textContent = state.buffs.burst > 0 ? "골드 버스트 ×" + D.SKILLS.burst.mult + " · " + Math.ceil(state.buffs.burst) + "초" : state.skillCd.burst > 0 ? "골드 버스트 " + hms(state.skillCd.burst) : "골드 버스트";
+    const hb = $("harborBtn");
+    hb.disabled = state.skillCd.harbor > 0 || !dp || (dp.sec || dp.dur) > D.SKILLS.harbor.maxSec;
+    hb.textContent = state.skillCd.harbor > 0 ? "만선 입항 " + hms(state.skillCd.harbor) : "만선 입항";
     if (!$("dispatchModal").hidden) {
       renderDispatch(state);
     }
+  }
+  function hms(s) {
+    s = Math.ceil(s);
+    return s >= 3600 ? Math.floor(s / 3600) + "시간 " + Math.floor((s % 3600) / 60) + "분" : mmss(s);
   }
   function dispatchResultHtml(state, last) {
     const br = last.byRarity || { Common: 0, Rare: 0, Epic: 0, Legendary: 0 };
@@ -464,11 +477,14 @@
     let html;
     if (dp) {
       html = '<div class="box"><div class="row"><span>출항 중 · ' + esc((G.dispatchTier(dp.sec || dp.dur) || {}).name || "") + " 원정</span><b>" + mmss(Math.max(0, dp.dur - dp.t)) + ' 남음</b></div>' +
-        '<div class="progress"><i style="width:' + Math.min(100, (dp.t / dp.dur) * 100) + '%"></i></div></div>';
+        '<div class="progress"><i style="width:' + Math.min(100, (dp.t / dp.dur) * 100) + '%"></i></div>' +
+        '<button type="button" class="btn" data-act="instDisp"' + (state.diamonds < G.instDispatchCost(state) ? " disabled" : "") + ">다이아 " + G.instDispatchCost(state) + "개로 즉시 귀항 (보유 " + state.diamonds + ")</button></div>";
     } else {
-      html = '<p class="note">파견은 무료예요. 1분에 1마리씩 잡고, 오래 보낼수록 더 먼 바다까지 나가 전설·고래·심해 생물 확률이 크게 올라요.</p>' +
+      const T = D.DISPATCH.ticket;
+      html = '<div class="row"><span>원정 티켓 (1장 = 1시간 항해)</span><b>' + state.tickets + " / " + T.max + (state.tickets < T.max ? " · 다음 충전 " + hms(T.regen - state.ticketT) : "") + "</b></div>" +
+        '<p class="note">티켓은 1시간마다 1장 충전돼요. 1분에 1마리씩 잡고, 오래 보낼수록 더 먼 바다까지 나가 전설·고래·심해 생물 확률이 크게 올라요.</p>' +
         '<div class="disp-opts">' + D.DISPATCH.tiers.map((x) =>
-          '<button type="button" class="btn disp-opt" data-disp="' + x.sec + '"><b>' + x.name + "</b><span>" + G.dispatchCatches(x.sec) + "마리</span><span>" +
+          '<button type="button" class="btn disp-opt" data-disp="' + x.sec + '"' + (state.tickets < x.tickets ? " disabled" : "") + "><b>" + x.name + "</b><span>티켓 " + x.tickets + "장</span><span>" + G.dispatchCatches(x.sec) + "마리</span><span>" +
           esc(G.EXP.zones[x.depth].name) + "까지</span><span>희귀↑ x" + x.luck + "</span></button>").join("") + "</div>";
     }
     if (state.lastDispatch) {
@@ -489,6 +505,74 @@
     U.dispHtml = "";
     $("dispatchModal").hidden = false;
     renderDispatch(state);
+  }
+
+  /* ---------- 상점: 다이아 업적 · 가챠 · 스킨 · 경매장 ---------- */
+  function updateShop(state, world, dt) {
+    if (U.tab !== "shop") {
+      return;
+    }
+    U.shopT = (U.shopT || 0) - dt;
+    if (U.shopT > 0 && !U.shopDirty) {
+      return;
+    }
+    U.shopT = 1;
+    U.shopDirty = false;
+    const DM = D.DIAMOND;
+    const n = G.dexCount(state);
+    const achv = '<div class="box"><h3>다이아 ' + state.diamonds + "개</h3>" +
+      DM.dexMilestones.map(([need, dia]) => '<div class="row"><span>도감 ' + need + "종 (" + Math.min(n, need) + "/" + need + ")</span><b>" + (state.achv.dex.includes(need) ? "받음" : "+" + dia) + "</b></div>").join("") +
+      '<div class="row"><span>세트 컬렉션 완성 (' + state.achv.sets.length + "/" + D.COLLECTION_SETS.length + ")</span><b>세트당 +" + DM.setReward + "</b></div>" +
+      '<div class="set-actions"><button type="button" class="btn" data-act="gacha"' + (state.diamonds < DM.gachaCost ? " disabled" : "") + ">한정 스킨 뽑기 (다이아 " + DM.gachaCost + ")</button>" +
+      '<button type="button" class="btn" data-act="bait"' + (state.diamonds < DM.bait.cost ? " disabled" : "") + ">특수 미끼 (다이아 " + DM.bait.cost + ", 10분 고급 이상 ×" + DM.bait.mult + ")</button></div>" +
+      (state.buffs.bait > 0 ? '<p class="note">특수 미끼 ' + mmss(state.buffs.bait) + " 남음</p>" : "") +
+      (state.lastGacha ? '<p class="note">지난 뽑기: ' + esc(state.lastGacha.name) + (state.lastGacha.dup ? " (중복 · 다이아 " + DM.dupRefund + "개 돌려받음)" : " [NEW]") + "</p>" : "") + "</div>";
+    const skins = '<div class="box"><h3>스킨</h3>' + Object.entries(D.SKIN_TARGETS).map(([tg, tname]) => {
+      const list = D.SKINS.filter((s) => s.target === tg);
+      const cur = state.equip[tg];
+      return '<div class="vip-meta">' + esc(tname) + "</div>" + '<div class="chip-row">' +
+        '<button type="button" class="mini-btn' + (!cur ? " is-on" : "") + '" data-skin="default:' + tg + '">기본</button>' +
+        list.map((s) => {
+          const own = state.skinsOwned.includes(s.id);
+          if (own) {
+            return '<button type="button" class="mini-btn' + (cur === s.id ? " is-on" : "") + '" data-skin="' + s.id + '">' + esc(s.name) + (cur === s.id ? " [장착]" : "") + "</button>";
+          }
+          return s.gold ? '<button type="button" class="mini-btn" data-buyskin="' + s.id + '"' + (state.money < s.gold ? " disabled" : "") + ">" + esc(s.name) + " " + fmt(s.gold) + "원</button>" :
+            '<span class="mini-btn is-locked">' + esc(s.name) + " [뽑기]</span>";
+        }).join("") + "</div>";
+    }).join("") + "</div>";
+    const A = state.auction;
+    let auc;
+    if (!G.auctionOpen(state)) {
+      auc = '<div class="box"><h3>글로벌 해양 경매장 [잠김]</h3><p class="note">보유 자금 ' + fmt(D.AUCTION.minMoney) + "원 이상이면 열려요. 고대 유물·희귀 어종 알·조형물을 NPC와 경쟁해서 낙찰받아요.</p></div>";
+    } else if (!A) {
+      auc = '<div class="box"><h3>글로벌 해양 경매장</h3><div class="row"><span>다음 경매</span><b>' + mmss(Math.max(0, state.auctionT)) + "</b></div>" +
+        '<div class="row"><span>보유 유물·조형물</span><b>' + (state.relics.length ? state.relics.map((id) => esc(D.AUCTION.lots.find((l) => l.id === id).name)).join(", ") : "없음") + "</b></div></div>";
+    } else {
+      const lot = D.AUCTION.lots.find((l) => l.id === A.lot);
+      const next = A.bids ? Math.round(A.price * (1 + D.AUCTION.raise)) : A.price;
+      auc = '<div class="box"><h3>경매 진행 중 · ' + esc(lot.name) + '</h3><p class="note">' + esc(lot.desc) + "</p>" +
+        '<div class="row"><span>현재가</span><b>' + fmt(A.price) + "원</b></div>" +
+        '<div class="row"><span>최고 입찰</span><b>' + (A.leader === "me" ? "우리 낚시터" : esc(A.leader || "없음")) + "</b></div>" +
+        '<div class="row"><span>남은 시간</span><b>' + Math.ceil(A.left) + "초</b></div>" +
+        '<button type="button" class="btn btn-primary" data-act="bid"' + (A.leader === "me" || state.money < next ? " disabled" : "") + ">" +
+        (A.leader === "me" ? "최고 입찰 중" : fmt(next) + "원에 입찰") + "</button></div>";
+    }
+    const br = state.breeding;
+    const time = '<div class="box"><h3>시간 단축 (다이아)</h3>' +
+      '<div class="row"><span>교배 ' + (br ? hms(br.dur - br.t) + " 남음" : "진행 중 아님") + "</span>" +
+      '<button type="button" class="mini-btn" data-act="instBreed"' + (!br || state.diamonds < G.instBreedCost(state) ? " disabled" : "") + ">즉시완료 " + (br ? G.instBreedCost(state) : 0) + "</button></div>" +
+      '<div class="row"><span>원정 ' + (state.dispatch ? hms(state.dispatch.dur - state.dispatch.t) + " 남음" : "출항 중 아님") + "</span>" +
+      '<button type="button" class="mini-btn" data-act="instDisp"' + (!state.dispatch || state.diamonds < G.instDispatchCost(state) ? " disabled" : "") + ">즉시 귀항 " + (state.dispatch ? G.instDispatchCost(state) : 0) + "</button></div>" +
+      '<div class="row"><span>교배 쿨타임 단축 부스터 (2시간, 새 교배 시간 ×' + DM.booster.mult + ")" + (state.buffs.boost > 0 ? " · " + hms(state.buffs.boost) + " 남음" : "") + "</span>" +
+      '<button type="button" class="mini-btn" data-act="booster"' + (state.diamonds < DM.booster.cost ? " disabled" : "") + ">다이아 " + DM.booster.cost + "</button></div></div>";
+    const vipd = '<div class="box"><h3>세계 VIP 특수 손님 도감 (' + state.vipDex.length + "/" + D.VIP_GUESTS.length + ") · 수익 +" + 2 * state.vipDex.length + "%</h3>" +
+      '<div class="chip-row">' + D.VIP_GUESTS.map((v) => state.vipDex.includes(v.id) ?
+        '<span class="mini-btn is-on" title="' + esc(v.title) + '">' + esc(v.name) + "</span>" : '<span class="mini-btn is-locked">???</span>').join("") + "</div>" +
+      '<p class="note">초청권을 쓰면 VIP가 확정 방문해 초당 수익 30분~2시간분의 특수 팁을 줘요. 비밀 양식장이 있으면 VIP 원형 플랫폼에 앉아요.</p>' +
+      '<button type="button" class="btn btn-primary" data-act="invite"' + (state.pendingVip || state.diamonds < DM.invite ? " disabled" : "") + ">" +
+      (state.pendingVip ? "VIP 입장 대기 중 (빈자리 나면 도착)" : "VIP 초청권 (다이아 " + DM.invite + ")") + "</button></div>";
+    $("shopBody").innerHTML = achv + time + vipd + auc + skins;
   }
 
   /* ---------- 명예: 의뢰 · 해양 · 대회 · 환생 ---------- */
@@ -528,7 +612,8 @@
     const prestige = '<div class="box"><h3>환생 · 리조트 매각</h3>' +
       '<div class="row"><span>이번 회차 누적 수익</span><b>' + fmt(state.totalEarned) + " / " + fmt(D.PRESTIGE.minEarned) + "원</b></div>" +
       '<div class="row"><span>매각하면 받는 명성 포인트</span><b>' + gain + "</b></div>" +
-      '<p class="note">자금·시설·업그레이드·단골이 초기화돼요. 도감·원정 도감·신종·수족관·트로피·스킨은 남아요. (' + P.count + "회 환생)</p>" +
+      '<p class="note">자금·시설·업그레이드·단골이 초기화돼요. 원정 도감·신종·수족관·트로피·스킨·VIP 도감·스킬·다이아는 남아요. (' + P.count + "회 환생)</p>" +
+      '<p class="note warn">[주의] 환생 시 어류 도감 및 도감 업적이 초기화되며, 도감을 다시 채워 다이아 보상을 재수급할 수 있습니다.</p>' +
       '<button type="button" class="btn btn-danger' + (U.prestigeArm ? " is-armed" : "") + '" data-act="prestige"' + (gain ? "" : " disabled") + ">" +
       (U.prestigeArm ? "한 번 더 누르면 매각" : "리조트 매각 (명성 +" + gain + ")") + "</button>" +
       '<div class="row"><span>보유 명성 포인트</span><b>' + P.points + " (누적 " + P.total + ")</b></div>" +
@@ -539,7 +624,16 @@
         return '<div class="vip-row"><div class="vip-lv">' + lv + '</div><div><div class="vip-name">' + esc(it.name) + '</div><div class="vip-meta">' + esc(it.desc) + " · 현재 +" + Math.round(G.prestigeBonus(state, it.id) * 100) + "%</div></div>" +
           '<button type="button" class="mini-btn" data-pshop="' + it.id + '"' + (max || P.points < cost ? " disabled" : "") + ">" + (max ? "최대" : cost + "점") + "</button></div>";
       }).join("") + "</div>";
-    $("metaBody").innerHTML = ocean + quests + tourney + prestige;
+    const skills = '<div class="box"><h3>사장님 스킬</h3>' +
+      '<p class="note">액티브: 골드 버스트(60초 수입 ×' + D.SKILLS.burst.mult + ", 20분), 만선 입항(1시간 원정 즉시 귀항, 4시간) - 낚시 화면 아래 버튼</p>" +
+      D.SKILLS.passive.map((p) => {
+        const lv = G.skillLv(state, p.id);
+        const max = lv >= D.SKILLS.max;
+        const cost = G.skillCost(state, p.id);
+        return '<div class="vip-row"><div class="vip-lv">' + lv + '</div><div><div class="vip-name">' + esc(p.name) + '</div><div class="vip-meta">' + esc(p.desc) + "</div></div>" +
+          '<button type="button" class="mini-btn" data-skillup="' + p.id + '"' + (max || state.money < cost ? " disabled" : "") + ">" + (max ? "최대" : fmt(cost) + "원") + "</button></div>";
+      }).join("") + "</div>";
+    $("metaBody").innerHTML = ocean + quests + tourney + skills + prestige;
   }
 
   /* ---------- 도감 ---------- */
@@ -752,6 +846,23 @@
       if (f.rarity === "Legendary" || (ev.isNew && Math.random() < 0.3)) {
         addNews(fishImg(f) + "<b>원정대</b> · " + esc(f.name) + " " + G.fmtSize(f.size) + (ev.isNew ? " (새 어종)" : ""));
       }
+    } else if (ev.kind === "vipguest") {
+      U.shopDirty = true;
+      toast("[VIP 도착] " + ev.name + " · 특수 팁 +" + fmt(ev.tip) + "원" + (ev.isNew ? " [NEW]" : ""), "gold", root.Sprites.iconURL("vip"));
+    } else if (ev.kind === "achv") {
+      U.shopDirty = true;
+      toast("업적 달성: " + ev.name + " · 다이아 +" + ev.dia, "gold", root.Sprites.iconURL("vip"));
+    } else if (ev.kind === "auction") {
+      U.shopDirty = true;
+      if (ev.start) {
+        toast("[경매 시작] " + ev.lot.name + " · 상점 탭에서 입찰", "gold");
+      } else if (ev.outbid) {
+        toast(ev.by + "이(가) " + fmt(ev.price) + "원으로 더 높게 불렀어요");
+      } else if (ev.won) {
+        toast("낙찰! " + ev.got + " (" + fmt(ev.price) + "원)", "gold");
+      } else if (ev.lost) {
+        toast("경매 종료 · " + ev.lot.name + " → " + ev.by);
+      }
     } else if (ev.kind === "quest") {
       U.metaDirty = true;
       if (ev.done) {
@@ -824,7 +935,7 @@
     }
     // 새 탭 버튼들 (내용을 다시 그려도 동작하도록 위임)
     document.querySelector(".sidebar").addEventListener("click", (e) => {
-      const b = e.target.closest("[data-act], [data-zone], [data-cat], [data-hint], [data-pshop]");
+      const b = e.target.closest("[data-act], [data-zone], [data-cat], [data-hint], [data-pshop], [data-skin], [data-buyskin], [data-skillup]");
       if (!b) {
         return;
       }
@@ -836,6 +947,21 @@
       if (b.dataset.cat) {
         U.catKind = b.dataset.cat;
         U.farmDirty = true;
+        return;
+      }
+      if (b.dataset.skin || b.dataset.buyskin) {
+        actions.skin(b.dataset.skin, b.dataset.buyskin);
+        U.shopDirty = true;
+        return;
+      }
+      if (b.dataset.skillup) {
+        actions.skillUp(b.dataset.skillup);
+        U.metaDirty = true;
+        return;
+      }
+      if (["gacha", "bait", "bid", "invite", "instBreed", "instDisp", "booster"].includes(b.dataset.act)) {
+        actions[b.dataset.act]();
+        U.shopDirty = true;
         return;
       }
       if (b.dataset.pshop) {
@@ -867,7 +993,7 @@
         U.farmDirty = true;
       } else if (act === "breed") {
         if (actions.breed(U.breedA, U.breedB, U.mutate)) {
-          toast("교배를 시작했어요 (" + D.BREED.time + "초)", "new", root.Sprites.iconURL("secret"));
+          toast("교배를 시작했어요 (" + hms(U.state.breeding.dur) + ")", "new", root.Sprites.iconURL("secret"));
         }
       } else if (act === "aqua-add" || act === "aqua-del") {
         actions.aqua(act === "aqua-add", b.dataset.key);
@@ -901,6 +1027,8 @@
     }));
     $("castBtn").addEventListener("click", () => actions.cast());
     $("autoBtn").addEventListener("click", () => actions.toggleAuto());
+    $("burstBtn").addEventListener("click", () => actions.useSkill("burst"));
+    $("harborBtn").addEventListener("click", () => actions.useSkill("harbor"));
     $("dispatchBtn").addEventListener("click", () => {
       if (!G.dispatchUnlocked(U.state)) {
         toast("원정 낚시꾼을 고용하면 원정 파견이 열려요 (시설 탭)");
@@ -963,6 +1091,7 @@
     updateFarm(state);
     updateVip(state, world, 0.2);
     updateMeta(state, 0.2);
+    updateShop(state, world, 0.2);
     updateAqua(state);
     updateDex(state);
     updateReviews(state);

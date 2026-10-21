@@ -89,6 +89,18 @@
     owner_navy: { hat: "captain", H: "#f5f7fa", h: "#1d3557", T: "#24406e", t: "#ffffff", P: "#14213d", B: "#111111" },
     owner_gold: { hat: "captain", H: "#f2c230", h: "#c9921a", T: "#f2c230", t: "#ffffff", P: "#1d3557", B: "#111111" },
     owner_legend: { hat: "captain", H: "#2a1450", h: "#f2c230", T: "#7b3fd0", t: "#f2c230", P: "#2a1450", B: "#111111", shades: true },
+    owner_admiral: { hat: "captain", H: "#ffffff", h: "#f2c230", T: "#f5f5f5", t: "#f2c230", P: "#f5f5f5", B: "#1d1d2b" },
+    // 세계 VIP 특수 손님 (data.js VIP_GUESTS → "vipg_" + id)
+    vipg_brazil: { hat: "cap", H: "#2e9a4a", h: "#f2c230", T: "#2e9a4a", t: "#f2c230", P: "#1d3557", B: "#111111" },
+    vipg_oil: { hat: "bucket", H: "#ffffff", h: "#d8d8d8", T: "#ffffff", t: "#f2c230", P: "#ffffff", B: "#5a3a1e", shades: true },
+    vipg_actor: { hat: "none", hair: "long", H: "#000", h: "#000", T: "#e5484d", t: "#f2c230", P: "#111111", B: "#e5484d", shades: true },
+    vipg_ceo: { hat: "none", H: "#000", h: "#000", T: "#111111", t: "#111111", P: "#3e5c8a", B: "#f2f2f2" },
+    vipg_kpop: { hat: "cap", H: "#ff3cac", h: "#111111", T: "#ffffff", t: "#ff3cac", P: "#111111", B: "#ffffff", shades: true },
+    vipg_prince: { hat: "captain", H: "#1d3557", h: "#f2c230", T: "#1d3557", t: "#f2c230", P: "#ffffff", B: "#111111" },
+    vipg_fund: { hat: "none", H: "#000", h: "#000", T: "#2a2a33", t: "#2e9a4a", P: "#2a2a33", B: "#111111", shades: true },
+    vipg_sushi: { hat: "bucket", H: "#ffffff", h: "#e8e8e8", T: "#ffffff", t: "#1d3557", P: "#1d3557", B: "#5a3a1e" },
+    vipg_f1: { hat: "cap", H: "#e5484d", h: "#ffffff", T: "#e5484d", t: "#ffffff", P: "#e5484d", B: "#111111", shades: true },
+    vipg_polar: { hat: "bucket", H: "#f08a4b", h: "#c96a33", T: "#f08a4b", t: "#ffffff", P: "#2a2a3a", B: "#111111" },
     // 손님 페르소나 (data.js PERSONAS의 look)
     student: { hat: "none", H: "#000", h: "#000", T: "#1d3557", t: "#f2f2f2", P: "#2a2a3a", B: "#111111" },
     college: { hat: "cap", H: "#4fa36b", h: "#2f6b45", T: "#7a8a99", t: "#5a6a79", P: "#3e5c8a", B: "#f2f2f2" },
@@ -935,6 +947,10 @@
   function iconURL(id) {
     if (!ICONS[id] && /^z_/.test(id)) {
       id = "zone";
+    }
+    const ALIAS = { resort: "pension", market: "farm", park: "vip", autocook: "restaurant", drone: "sns", member: "vip", smartfarm: "farm", sonar: "zone" };
+    if (!ICONS[id] && ALIAS[id]) {
+      id = ICONS[ALIAS[id]] ? ALIAS[id] : "zone";
     }
     if (!iconUrlCache[id]) {
       const ic = ICONS[id];

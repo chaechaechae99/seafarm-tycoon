@@ -272,7 +272,7 @@
       }
       // 돌연변이 잡종: 희귀도는 부모 중 높은 쪽에서 확률적으로 상승
       let rank = Math.max(this.rank(pa.rarity), this.rank(pb.rarity));
-      if (rng() < this.D.BREED.upChance + (mutate ? this.D.BREED.mutateBonus : 0)) {
+      if (rng() < this.D.BREED.upChance + (this.upBonus || 0) + (mutate ? this.D.BREED.mutateBonus : 0)) {
         rank++;
       }
       const prefix = this.D.BREED.prefix[this.hash(id) % this.D.BREED.prefix.length];

@@ -210,6 +210,70 @@
       }
       return false;
     },
+    invite() {
+      const v = G.inviteVip(state, Math.random);
+      if (v) {
+        sfx("fanfare");
+        UI.toast("VIP 초청장 발송: " + v.name + " · 곧 도착해요", "gold");
+        save();
+      }
+    },
+    instBreed() {
+      if (G.instantFinish(state, "breed")) {
+        sfx("levelup");
+        save();
+      }
+    },
+    instDisp() {
+      if (G.instantFinish(state, "dispatch")) {
+        sfx("levelup");
+        save();
+      }
+    },
+    booster() {
+      if (G.buyBooster(state)) {
+        sfx("levelup");
+        save();
+      }
+    },
+    useSkill(id) {
+      if (G.useSkill(state, id)) {
+        sfx("fanfare");
+        UI.toast(id === "burst" ? "골드 버스트! 60초 동안 수입 ×" + D.SKILLS.burst.mult : "만선 입항! 원정 어선이 바로 귀항해요", "gold");
+        save();
+      }
+    },
+    skillUp(id) {
+      if (G.upgradeSkill(state, id)) {
+        sfx("levelup");
+        save();
+      }
+    },
+    gacha() {
+      const r = G.rollGacha(state, Math.random);
+      if (r) {
+        sfx(r.dup ? "coin" : "fanfare");
+        UI.toast(r.dup ? r.name + " (중복, 다이아 일부 반환)" : "한정 스킨 획득! " + r.name, r.dup ? "" : "gold");
+        save();
+      }
+    },
+    bait() {
+      if (G.buyBait(state)) {
+        sfx("levelup");
+        save();
+      }
+    },
+    bid() {
+      if (G.auctionBid(state)) {
+        sfx("coin");
+      }
+    },
+    skin(equipId, buyId) {
+      if (buyId ? G.buySkin(state, buyId) : G.equipSkin(state, equipId)) {
+        sfx(buyId ? "fanfare" : "click");
+        save();
+      }
+    },
     buyPrestige(id) {
       if (G.buyPrestige(state, id)) {
         sfx("levelup");

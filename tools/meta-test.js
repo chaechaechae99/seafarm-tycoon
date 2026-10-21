@@ -95,7 +95,61 @@ test("환생: 100억 미만 불가, 이상이면 포인트 획득 + 시설 초�
   assert.strictEqual(gain, Math.floor(10 * Math.sqrt(4)));
   assert.strictEqual(s.owned.shop, 0);
   assert.strictEqual(s.money, 0);
-  assert.ok(s.dex.goby && s.trophies.length === 1 && s.prestige.points === gain && s.prestige.count === 1);
+  assert.ok(!s.dex.goby && s.achv.dex.length === 0, "환생하면 어류 도감·도감 업적 초기화");
+  assert.ok(s.trophies.length === 1 && s.prestige.points === gain && s.prestige.count === 1);
+});
+
+test("교배 시간: 일반 15분 ~ 전설 3시간, 부스터·명인 손재주로 단축", () => {
+  const s = G.newState();
+  const c = D.FISH.find((f) => f.rarity === "common");
+  const l = D.FISH.find((f) => f.rarity === "legendary");
+  s.dex[c.id] = { count: 1, best: 10 };
+  s.dex[l.id] = { count: 1, best: 10 };
+  assert.strictEqual(G.breedTime(s, "f:" + c.id, "f:" + c.id), 900);
+  assert.strictEqual(G.breedTime(s, "f:" + c.id, "f:" + l.id), 10800);
+  s.buffs.boost = 100;
+  s.skills.craft = 5;
+  assert.strictEqual(G.breedTime(s, "f:" + l.id, "f:" + l.id), Math.round(10800 * 0.7 * 0.5));
+});
+
+test("원정 티켓: 1시간 = 1장, 1시간마다 충전, 다이아 즉시 귀항", () => {
+  const s = midGame();
+  s.tickets = 2;
+  assert.ok(!G.startDispatch(s, 10800), "티켓 부족이면 3시간 원정 불가");
+  assert.ok(G.startDispatch(s, 3600));
+  assert.strictEqual(s.tickets, 1);
+  s.lastSave = Date.now();
+  G.applyOffline(s, Date.now() + 2 * 3600 * 1000 + 500);
+  assert.strictEqual(s.tickets, 3);
+  s.dispatch = { t: 0, sec: 10800, dur: 10800 };
+  s.diamonds = 100;
+  assert.strictEqual(G.instDispatchCost(s), 9);
+  assert.ok(G.instantFinish(s, "dispatch") && s.dispatch.t === s.dispatch.dur && s.diamonds === 91);
+});
+
+test("VIP 초청: 다이아 소모 → 확정 방문·도감 등록·특수 팁", () => {
+  const s = midGame();
+  const w = G.newWorld(rng);
+  s.diamonds = 20;
+  const v = G.inviteVip(s, rng);
+  assert.ok(v && s.diamonds === 5 && s.pendingVip === v.id);
+  const before = s.money;
+  G.tick(s, w, 0.05);
+  assert.ok(!s.pendingVip && s.vipDex.includes(v.id));
+  assert.ok(s.money - before >= G.expectedRate(s) * v.tipSec * 0.5);
+});
+
+test("스킬: 골드 버스트 수입 ×3·쿨타임, 패시브 레벨업", () => {
+  const s = midGame();
+  const base = G.incomeMult(s);
+  assert.ok(G.useSkill(s, "burst"));
+  assert.ok(Math.abs(G.incomeMult(s) - base * 3) < 1e-9);
+  assert.ok(!G.useSkill(s, "burst"));
+  assert.ok(!G.useSkill(s, "harbor"), "원정 없으면 만선 입항 불가");
+  s.money = 1e15;
+  const sp = G.catchSpeedMult(s);
+  assert.ok(G.upgradeSkill(s, "chum"));
+  assert.ok(Math.abs(G.catchSpeedMult(s) - sp * 1.05) < 1e-9);
 });
 
 test("환생 상점: 비용·효과 (속도·전설·원정·수익)", () => {

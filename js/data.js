@@ -22,6 +22,13 @@
       desc: "방류어 판매 초당 +900원, 가두리 고급 어종 ↑" },
     { id: "crew", name: "원정 낚시꾼", base: 15000, r: 1.15, free: 0, need: { shuttle: 1 },
       desc: "해금한 원정 구역(350종)에서 쉬지 않고 낚시해 수익을 벌어와요" },
+    // 후반 시설: 초당 고정 수입 (passive = 1개당 초당 원)
+    { id: "resort", name: "해상 리조트 호텔", base: 4e7, r: 1.16, free: 0, need: { pension: 10 }, passive: 1.2e5,
+      desc: "고급 숙박 초당 +12만원 (평판에 비례)" },
+    { id: "market", name: "수산물 경매 시장", base: 1.5e9, r: 1.17, free: 0, need: { farm: 10 }, passive: 4e6,
+      desc: "양식·원정 어획을 경매로 넘겨 초당 +400만원" },
+    { id: "park", name: "해양 테마파크", base: 6e10, r: 1.18, free: 0, need: { resort: 10 }, passive: 1.2e8,
+      desc: "관광객 수입 초당 +1.2억원, 방문객 +1%/개" },
   ];
 
   // 1회성 업그레이드 / 낚시 포인트 해금
@@ -38,6 +45,12 @@
     { id: "tv", name: "낚시 방송 촬영 유치", cost: 6000000, desc: "프로·유튜버 손님 ×3, 방문객 ×1.2, 입장료 ×1.5" },
     { id: "secret", name: "비밀 양식장", cost: 70000000, needFac: { farm: 1 }, needVip: 10,
       desc: "어종 교배·유전자 변형으로 신종 육성 + VIP 전용 좌대 3석 (호감도 10 VIP 손님이 있어야 공사 가능)" },
+    // 후반 업그레이드
+    { id: "autocook", name: "자동 손질 라인", cost: 5e8, needFac: { restaurant: 25 }, desc: "횟집 손질 매출 ×2" },
+    { id: "drone", name: "드론 항공 홍보", cost: 3e9, desc: "방문객 ×1.5" },
+    { id: "member", name: "프리미엄 회원제", cost: 2e10, needFac: { resort: 1 }, desc: "입장료 ×2" },
+    { id: "smartfarm", name: "스마트 양식 AI", cost: 1e11, needFac: { market: 1 }, desc: "펜션·양식장·리조트·경매 시장 수입 ×2" },
+    { id: "sonar", name: "위성 어군 탐지기", cost: 5e11, desc: "입질 속도 ×1.3" },
     // 원정 구역 (원정 탭에 표시). zone = species-manager의 구역 id
     { id: "z_bay", name: "내만 선착장 원정", cost: 300000, zone: "bay", tab: "exp", desc: "원정 구역 2 · 어종 풀 확장, 어획 가치 ×1.4" },
     { id: "z_offshore", name: "근해 선상 원정", cost: 2000000, zone: "offshore", needUpg: "z_bay", tab: "exp", desc: "원정 구역 3 · 어획 가치 ×2" },
@@ -56,7 +69,7 @@
   const RARITY_ORDER = ["common", "premium", "rare", "masterpiece", "legendary"];
   // 시설 가격 소프트캡: n번째 가격 = base × Π (1 + (r-1) / (1 + max(0, i - knee) / soft))
   // knee개까지는 기존처럼 r배씩, 그 뒤로는 상승률이 점점 줄어듦 (200개째 상승률 ≈ (r-1)/2.5)
-  const PRICE = { knee: 50, soft: 100 };
+  const PRICE = { knee: 35, soft: 50 };
   // 도감 세트 컬렉션: 카테고리 어종을 모두 낚으면 그 어종 판매가 +value, 전체 입질 속도 +speed
   const COLLECTION_SETS = [
     { id: "bream", name: "돔류", re: "돔", value: 0.3, speed: 0.04 },
@@ -256,7 +269,9 @@
 
   // 비밀 양식장 교배
   const BREED = {
-    time: 60,              // 교배 시간 (초)
+    time: 900,             // 기본 교배 시간 (초) - 실제는 timeByRarity
+    // 재료 중 높은 등급 기준 교배 시간: 일반 15분 ~ 전설 3시간
+    timeByRarity: { common: 900, premium: 1800, rare: 3600, masterpiece: 7200, legendary: 10800 },
     costMult: 40,          // 비용 = 부모 평균 가치 × costMult
     mutateCostMult: 3,     // 유전자 변형 시 비용 ×
     upChance: 0.3,         // 희귀도 한 단계 상승 확률 (유전자 변형 시 +mutateBonus)
@@ -329,14 +344,15 @@
   const CAT = { buffSec: 600, rep: 0.4, arrive: 1.25, feedCostSec: 20 };   // 비용 = 초당 수익 × feedCostSec (최소 30원)
   // 원정 파견 (무료): 1분당 1마리. 오래 보낼수록 희귀 이상 확률(luck)·심해 생물 가중(deep)이 커지고
   // 더 먼 구역(depth: 0 연안 ~ 5 심해)까지 나감
+  // 원정 티켓: 1장 = 1시간 항해. 1시간마다 1장 충전 (최대 max장)
   const DISPATCH = {
     perMinute: 1,
+    ticket: { regen: 3600, max: 12, start: 3 },
     tiers: [
-      { sec: 60, name: "1분", luck: 1, deep: 1, depth: 0 },
-      { sec: 900, name: "15분", luck: 2, deep: 2, depth: 2 },
-      { sec: 3600, name: "1시간", luck: 4, deep: 4, depth: 3 },
-      { sec: 21600, name: "6시간", luck: 8, deep: 8, depth: 4 },
-      { sec: 86400, name: "24시간", luck: 16, deep: 16, depth: 5 },
+      { sec: 3600, name: "1시간", tickets: 1, luck: 4, deep: 4, depth: 3 },
+      { sec: 10800, name: "3시간", tickets: 3, luck: 6, deep: 6, depth: 4 },
+      { sec: 21600, name: "6시간", tickets: 6, luck: 8, deep: 8, depth: 4 },
+      { sec: 43200, name: "12시간", tickets: 12, luck: 12, deep: 12, depth: 5 },
     ],
   };
   // 사장님 자동 낚시 간격 (초)
@@ -383,6 +399,77 @@
     ],
     prizeSec: [600, 300, 150, 80, 50, 30, 20, 10],
     rivals: ["남해 바다낚시클럽", "통영 좌대연합", "거제 갯바위회", "여수 선상팀", "제주 다금바리파", "부산 감성돔클럽", "목포 민어회", "완도 전복낚시단", "삼척 방어팀", "속초 대게연합"],
+  };
+
+  /* ---- 엔드게임 소모처 ---- */
+  // 다이아: 도감 달성·세트 완성 보상 → 가챠·특수 미끼
+  const DIAMOND = {
+    dexMilestones: [[10, 5], [30, 10], [60, 20], [100, 40], [120, 80]],   // [종 수, 다이아]
+    setReward: 15,
+    gachaCost: 10, dupRefund: 3,
+    bait: { cost: 5, sec: 600, mult: 1.5 },   // 특수 미끼: 10분간 고급 이상 출현 ×1.5
+    instBreed: 1,      // 교배 즉시완료: 남은 10분당 다이아
+    instDispatch: 3,   // 원정 즉시완료: 남은 1시간당 다이아
+    booster: { cost: 8, sec: 7200, mult: 0.5 },   // 교배 쿨타임 단축: 2시간 동안 새 교배 시간 ×0.5
+    invite: 15,        // VIP 특수 손님 초청권
+  };
+  // 세계 VIP 특수 손님 도감: 초청하면 확정 방문, 팁 = 초당 수익 × tipSec. 도감 1명당 전체 수익 +2%
+  const VIP_GUESTS = [
+    { id: "brazil", name: "브라질 국회의원", title: "삼바 입법가", tipSec: 1800 },
+    { id: "oil", name: "중동 석유왕", title: "유전 세 개 보유", tipSec: 7200 },
+    { id: "actor", name: "헐리우드 영화배우", title: "선글라스는 실내에서도", tipSec: 3600 },
+    { id: "ceo", name: "글로벌 IT CEO", title: "검은 터틀넥 10벌", tipSec: 5400 },
+    { id: "kpop", name: "K-POP 월드스타", title: "팬클럽 3천만", tipSec: 3600 },
+    { id: "prince", name: "북유럽 왕세자", title: "요트 타고 등장", tipSec: 4800 },
+    { id: "fund", name: "월스트리트 펀드매니저", title: "광어 선물 매수", tipSec: 4200 },
+    { id: "sushi", name: "도쿄 스시 장인", title: "칼 한 자루 30년", tipSec: 2400 },
+    { id: "f1", name: "모나코 F1 레이서", title: "릴도 시속 300", tipSec: 3000 },
+    { id: "polar", name: "남극 탐험 억만장자", title: "펭귄이랑 친구", tipSec: 6000 },
+  ];
+  // 플레이어 스킬. 액티브 = 쿨타임(초), 패시브 = 골드로 레벨업 (비용 = 초당 수익 × costSec × growth^레벨)
+  const SKILLS = {
+    burst: { name: "골드 버스트", cd: 1200, dur: 60, mult: 3, desc: "60초 동안 모든 수입 ×3" },
+    harbor: { name: "만선 입항", cd: 14400, maxSec: 3600, desc: "진행 중인 1시간 원정 즉시 귀항" },
+    passive: [
+      { id: "chum", name: "떡밥 살포", per: 0.05, desc: "입질 속도 +5%/레벨" },
+      { id: "haggle", name: "흥정의 달인", per: 0.1, desc: "매점 매출 +10%/레벨" },
+      { id: "craft", name: "명인 손재주", per: 0.06, up: 0.02, desc: "교배 시간 -6%, 등급 상승 확률 +2%/레벨" },
+    ],
+    max: 10, costSec: 300, growth: 2.2, costMin: 1e5,
+  };
+  // 스킨: target = 바꾸는 대상. gold = 골드 상점 가격, gacha = 가챠 가중치(한정)
+  const SKINS = [
+    { id: "cage_marble", target: "cage", name: "대리석 가두리", gold: 1e10 },
+    { id: "cage_gold", target: "cage", name: "황금 가두리", gold: 3e10 },
+    { id: "rest_hanok", target: "restaurant", name: "한옥 횟집", gold: 2e10 },
+    { id: "rest_gold", target: "restaurant", name: "황금 횟집", gold: 1e11 },
+    { id: "vip_marble", target: "vip", name: "대리석 VIP 원형 플랫폼", gold: 5e10 },
+    { id: "boat_gold", target: "boat", name: "황금 원정 어선", gold: 1e11 },
+    { id: "cage_coral", target: "cage", name: "산호 가두리", gacha: 30 },
+    { id: "cage_sakura", target: "cage", name: "벚꽃 가두리", gacha: 30 },
+    { id: "rest_neon", target: "restaurant", name: "네온 횟집", gacha: 25 },
+    { id: "rest_pocha", target: "restaurant", name: "포장마차 횟집", gacha: 30 },
+    { id: "vip_crystal", target: "vip", name: "수정 VIP 플랫폼", gacha: 12 },
+    { id: "vip_palace", target: "vip", name: "용궁 VIP 플랫폼", gacha: 8 },
+    { id: "boat_pirate", target: "boat", name: "해적선 원정 어선", gacha: 20 },
+    { id: "boat_whale", target: "boat", name: "고래잡이 원정 어선", gacha: 20 },
+    { id: "owner_admiral", target: "owner", name: "제독 사장님", gacha: 10 },
+  ];
+  const SKIN_TARGETS = { cage: "가두리", restaurant: "횟집", vip: "VIP 플랫폼", boat: "원정 어선", owner: "사장님" };
+  // 글로벌 해양 경매장: 보유 자금 minMoney 이상이면 열림. every초마다 dur초 경매
+  // 시작가 = max(startMin, 초당 수익 × startSec), NPC 최대 입찰 = 시작가 × capMult
+  const AUCTION = {
+    minMoney: 1e10, every: 480, dur: 120, startSec: 900, startMin: 5e9, capMult: [1.8, 4], raise: 0.1,
+    npc: ["런던 수집가", "두바이 왕족", "도쿄 미식회", "뉴욕 해양재단", "상하이 거상", "모나코 요트클럽"],
+    lots: [
+      { id: "hook", type: "relic", name: "고대 고래뼈 낚싯바늘", fx: { speed: 0.05 }, desc: "입질 속도 +5%" },
+      { id: "scale", type: "relic", name: "인어의 비늘 부적", fx: { income: 0.05 }, desc: "전체 수익 +5%" },
+      { id: "anchor", type: "relic", name: "침몰선의 황금 닻", fx: { voyage: 0.05 }, desc: "원정 시간 -5%" },
+      { id: "compass", type: "relic", name: "조선 수군 나침반", fx: { legend: 0.1 }, desc: "전설·명품 출현 +10%" },
+      { id: "egg", type: "egg", name: "희귀 어종 알", fx: {}, desc: "못 낚은 명품·전설 어종 하나가 도감에 등록" },
+      { id: "statue_whale", type: "statue", name: "청동 고래 조형물", fx: { income: 0.03 }, desc: "전체 수익 +3% · 육지에 전시" },
+      { id: "statue_light", type: "statue", name: "붉은 등대 조형물", fx: { arrive: 0.05 }, desc: "손님 방문 +5% · 육지에 전시" },
+    ],
   };
 
   // 밤 별똥별 소원: buffSec 동안 전설·신종 입질 ×legendary
@@ -450,7 +537,8 @@
 
   const GameData = {
     FACILITIES, UPGRADES, RARITY, RARITY_ORDER, SPOTS, FISH, JUNK, JUNK_CHANCE, WALKIN, GOLDEN_CHANCE,
-    EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, QUEST, PRESTIGE, OCEAN, TOURNEY, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
+    EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, QUEST, PRESTIGE, OCEAN, TOURNEY,
+    DIAMOND, SKINS, SKIN_TARGETS, AUCTION, VIP_GUESTS, SKILLS, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
     GUEST_TYPES, SEASON_NAMES, WEATHER, WEATHER_ODDS, NICK_A, NICK_B, REVIEW_TEXT,
     PERSONAS, SURNAME, GIVEN, DIFF_WEIGHT, DIFF_DEFAULT, PRICE, COLLECTION_SETS, NIGHT_WEATHER,
   };

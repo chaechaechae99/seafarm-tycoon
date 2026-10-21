@@ -69,6 +69,38 @@
     leavers: [], ferry: { docked: false, x: 600 },
     onCue: null, st: null,
   };
+  /* ---------- 스킨 팔레트 (data.js SKINS의 id) ---------- */
+  const CAGE_PAL = {
+    default: { plank: "#b98552", hi: "#dcab74", seam: "#8f5f34", nail: "#e8d2a8", beam: "#a8743f", beamHi: "#c99263", face: "#6b4423", post: "#5a3a1e", water: "#1a5a8a", deep: "#14496f" },
+    cage_marble: { plank: "#e6e6ee", hi: "#ffffff", seam: "#b8b8c8", nail: "#ffffff", beam: "#d0d0dc", beamHi: "#f2f2f8", face: "#8a8a9a", post: "#6a6a7a", water: "#1f6a9a", deep: "#17557d" },
+    cage_gold: { plank: "#f2c230", hi: "#fff2a8", seam: "#c9921a", nail: "#ffffff", beam: "#e0a81e", beamHi: "#ffe680", face: "#9a6a10", post: "#7a5208", water: "#1a5a8a", deep: "#14496f" },
+    cage_coral: { plank: "#f08a8a", hi: "#ffc4c4", seam: "#c05a5a", nail: "#ffe6e6", beam: "#e07070", beamHi: "#ffb0b0", face: "#8a3a3a", post: "#6a2a2a", water: "#1a7a8a", deep: "#146a72" },
+    cage_sakura: { plank: "#d9b8a0", hi: "#ffd6e6", seam: "#a88870", nail: "#ffb3c8", beam: "#c8a088", beamHi: "#f0c8d8", face: "#7a5a48", post: "#5a4030", water: "#1a5a8a", deep: "#14496f", petals: true },
+  };
+  const REST_PAL = {
+    default: { wall: "#fff3e0", band: "#8a2318", roof: "#4a5060", roof2: "#3a3f4a", door: "#5a3a1e", noren: "#1d3557", lamp: "#e5484d" },
+    rest_hanok: { wall: "#f2e6cf", band: "#6b4423", roof: "#3a3a3a", roof2: "#2a2a2a", door: "#6b4423", noren: "#f2f2f2", lamp: "#f2c230" },
+    rest_gold: { wall: "#f6e7a8", band: "#c9921a", roof: "#f2c230", roof2: "#d9a820", door: "#7a5208", noren: "#c0392b", lamp: "#fff2a8" },
+    rest_neon: { wall: "#1d1d2b", band: "#ff3cac", roof: "#33334a", roof2: "#2a2a40", door: "#111122", noren: "#3cf0ff", lamp: "#ff3cac", neon: true },
+    rest_pocha: { wall: "#e8662b", band: "#f2c230", roof: "#e85a3a", roof2: "#d0402a", door: "#5a3a1e", noren: "#f2c230", lamp: "#ffd86b" },
+  };
+  const VIP_PAL = {
+    default: { side: "#5a3a1e", deck: "#b98552", deckHi: "#c99263", seam: "#8f5f34", pool: ["#1a0c38", "#2a1450", "#3e1f72", "#5a2a9a"], rail: "#f2c230", roof: "#c0392b", roof2: "#a8272c", glow: "rgba(190,140,255," },
+    vip_marble: { side: "#9a9aa8", deck: "#e8e8ee", deckHi: "#f6f6fa", seam: "#c8c8d4", pool: ["#0c3a4a", "#145a6e", "#1f7a8e", "#2aa0b8"], rail: "#f2c230", roof: "#f6f6fa", roof2: "#d8d8e0", glow: "rgba(140,230,255," },
+    vip_crystal: { side: "#5a8aa8", deck: "#bfe6ff", deckHi: "#e6f6ff", seam: "#8ac0e0", pool: ["#0a2a50", "#14407a", "#2060a8", "#3a90e0"], rail: "#ffffff", roof: "#5aa0d8", roof2: "#3a80b8", glow: "rgba(160,220,255," },
+    vip_palace: { side: "#6b1d14", deck: "#c0392b", deckHi: "#d65a4a", seam: "#8a2318", pool: ["#0a3a2a", "#14523a", "#1f6e4e", "#2a9a6a"], rail: "#f2c230", roof: "#f2c230", roof2: "#d9a820", glow: "rgba(120,255,190," },
+  };
+  const BOAT_PAL = {
+    default: { hull: "#f2f4f6", stripe: "#b03a2e", cabin: "#e8edf1", flag: "#f2c94c" },
+    boat_gold: { hull: "#f2c230", stripe: "#c9921a", cabin: "#fff3c0", flag: "#ffffff" },
+    boat_pirate: { hull: "#3a2a1e", stripe: "#1a1a1a", cabin: "#5a4030", flag: "#111111" },
+    boat_whale: { hull: "#5a6a78", stripe: "#2a3a4a", cabin: "#cfd8e0", flag: "#5aa0d8" },
+  };
+  function pal(table, st, target) {
+    const id = st && st.equip && st.equip[target];
+    return table[id] || table.default;
+  }
+
   function cue(name, opt) {
     if (R.onCue) {
       R.onCue(name, opt);
@@ -654,14 +686,15 @@
     const w = 38;
     const h = 30;
     const y = by - h;
-    px(x, y, w, h, "#fff3e0");
-    px(x, y + 14, w, 2, "#8a2318");
+    const C = pal(REST_PAL, st, "restaurant");
+    px(x, y, w, h, C.wall);
+    px(x, y + 14, w, 2, C.band);
     // 기와 지붕 (층층이 + 처마 끝 들림)
     for (let i = 0; i < 7; i++) {
-      px(x - 3 + i, y - 8 + i, w + 6 - i * 2, 1, i % 2 ? "#3a3f4a" : "#4a5060");
+      px(x - 3 + i, y - 8 + i, w + 6 - i * 2, 1, i % 2 ? C.roof2 : C.roof);
     }
-    px(x - 4, y - 2, 3, 1, "#3a3f4a");
-    px(x + w + 1, y - 2, 3, 1, "#3a3f4a");
+    px(x - 4, y - 2, 3, 1, C.roof2);
+    px(x + w + 1, y - 2, 3, 1, C.roof2);
     win(x + 3, y + 3, 9, 8);
     win(x + 26, y + 3, 9, 8);
     // 수조 창 (물고기 헤엄)
@@ -670,17 +703,45 @@
     px(x + 4 + Math.round((Math.sin(R.t) + 1) * 4), y + 22, 3, 1, "#f2a541");
     px(x + 6 + Math.round((Math.cos(R.t * 0.8) + 1) * 3), y + 25, 3, 1, "#e5e5e5");
     // 문 + 노렌(천 가림막)
-    px(x + 19, y + 17, 12, 13, "#5a3a1e");
+    px(x + 19, y + 17, 12, 13, C.door);
     for (let i = 0; i < 3; i++) {
-      px(x + 19 + i * 4, y + 17, 3, 6, "#1d3557");
+      px(x + 19 + i * 4, y + 17, 3, 6, C.noren);
     }
     px(x + 22, y + 19, 6, 1, "#ffffff");
+    if (C.neon && Math.floor(R.t * 2) % 2) {
+      px(x + 8, y - 13, 22, 4, "#ff3cac");
+      px(x + 9, y - 12, 20, 2, "#ffe6f6");
+      light(x + 19, y - 11, 16, "rgba(255,60,172,", 0.8);
+    }
     // 홍등
     [x + 1, x + w - 3].forEach((lx) => {
-      px(lx, y + 15, 2, 4, "#e5484d");
+      px(lx, y + 15, 2, 4, C.lamp);
       px(lx, y + 14, 2, 1, "#2a2a2a");
       light(lx + 1, y + 17, 7, "rgba(255,110,80,", 0.7);
     });
+  }
+  // 경매 낙찰 조형물: 청동 고래(수족관 옆), 붉은 등대(해안 모서리)
+  function drawStatues(st) {
+    const r = st.relics || [];
+    if (r.includes("statue_whale")) {
+      const x = AQ_X + 80;
+      const y = RB2 - 4;
+      px(x - 2, y, 20, 4, "#8a8a8a");
+      px(x, y - 9, 16, 9, "#4a7a6a");
+      px(x + 13, y - 13, 4, 4, "#4a7a6a");
+      px(x + 2, y - 7, 1, 1, "#111111");
+      px(x + 3, y - 8, 10, 1, "#7aa898");
+    }
+    if (r.includes("statue_light")) {
+      const x = 4;
+      const y = LAND_TOP + 30;
+      for (let i = 0; i < 22; i++) {
+        px(x + Math.floor(i / 8), y - i, 7 - Math.floor(i / 4), 1, i % 6 < 3 ? "#e5484d" : "#f5f5f5");
+      }
+      px(x, y - 25, 6, 3, "#33404d");
+      px(x + 1, y - 24, 4, 1, "#fff2a8");
+      light(x + 3, y - 24, 18, "rgba(255,240,170,", 0.8);
+    }
   }
   function drawGate(st, by) {
     // 매표소 키오스크 + 입구 아치
@@ -917,12 +978,13 @@
     const d = bob(i, 0.6);
     const x = p.x;
     const y = p.y + d;
+    const C = pal(CAGE_PAL, st, "cage");
     // 물 위 그림자
     R.b.fillStyle = "rgba(8,30,50,0.35)";
     R.b.fillRect(x + 3, y + MH + 1, MW, 3);
     // 그물 안 물 (더 깊은 색) + 마름모 그물코
-    px(x + 5, y + 6, MW - 10, MH - 12, "#1a5a8a");
-    px(x + 5, y + 6, MW - 10, 3, "#14496f");
+    px(x + 5, y + 6, MW - 10, MH - 12, C.water);
+    px(x + 5, y + 6, MW - 10, 3, C.deep);
     R.b.fillStyle = "rgba(170,215,240,0.22)";
     for (let k = 0; k < MW + MH; k += 6) {
       for (let s = 0; s < MH - 12; s++) {
@@ -950,25 +1012,25 @@
     }
     // 목재 테두리: 위·아래 발판(세로 판자 이음새 + 못), 좌우 들보
     const plank = (px0, py0, w, h) => {
-      px(px0, py0, w, h, "#b98552");
-      px(px0, py0, w, 1, "#dcab74");
+      px(px0, py0, w, h, C.plank);
+      px(px0, py0, w, 1, C.hi);
       for (let k = 0; k < w; k += 7) {
-        px(px0 + k, py0, 1, h, "#8f5f34");
-        px(px0 + k + 3, py0 + 1, 1, 1, "#e8d2a8");
+        px(px0 + k, py0, 1, h, C.seam);
+        px(px0 + k + 3, py0 + 1, 1, 1, C.nail);
       }
     };
     plank(x, y, MW, 6);
     plank(x, y + MH - 6, MW, 6);
-    px(x, y + 6, 5, MH - 12, "#a8743f");
-    px(x + MW - 5, y + 6, 5, MH - 12, "#a8743f");
-    px(x + 1, y + 6, 1, MH - 12, "#c99263");
-    px(x + MW - 4, y + 6, 1, MH - 12, "#c99263");
+    px(x, y + 6, 5, MH - 12, C.beam);
+    px(x + MW - 5, y + 6, 5, MH - 12, C.beam);
+    px(x + 1, y + 6, 1, MH - 12, C.beamHi);
+    px(x + MW - 4, y + 6, 1, MH - 12, C.beamHi);
     // 앞면 두께
-    px(x, y + MH, MW, 2, "#6b4423");
-    px(x, y + 6, MW, 1, "#6b4423");
+    px(x, y + MH, MW, 2, C.face);
+    px(x, y + 6, MW, 1, C.face);
     // 모서리 기둥 + 밧줄
     [[x, y], [x + MW - 3, y], [x, y + MH - 6], [x + MW - 3, y + MH - 6]].forEach(([cx, cy]) => {
-      px(cx, cy - 2, 3, 3, "#5a3a1e");
+      px(cx, cy - 2, 3, 3, C.post);
     });
     // 부표: 아래 가장자리 흰·주황 통
     for (let k = 0; k < 5; k++) {
@@ -981,6 +1043,11 @@
     for (let k = 0; k < MW; k += 4) {
       if (Math.sin(R.t * 2.5 + k * 0.4 + i) > 0.3) {
         px(x + k, y + MH + 6, 2, 1, "#e6f6ff");
+      }
+    }
+    if (C.petals) {
+      for (let k = 0; k < 4; k++) {
+        px(x + ((k * 19 + Math.floor(R.t * 6)) % (MW - 4)), y + 1 + (k % 2) * (MH - 5), 2, 1, "#ffb3c8");
       }
     }
     // 그늘막·밤 랜턴
@@ -1157,6 +1224,7 @@
     const { cx, rx, ry, deck } = SECRET;
     const cy = SECRET.cy + bob(7, 0.5);
     const irx = rx - deck;
+    const C = pal(VIP_PAL, st, "vip");
     const iry = ry - Math.round(deck * 0.55);
     // 물 위 그림자·거품
     ellipse(cx + 3, cy + 7, rx + 2, ry + 2, "rgba(8,30,50,0.35)");
@@ -1167,18 +1235,18 @@
       }
     }
     // 데크 옆면(두께) → 윗면 원형 판자
-    ellipse(cx, cy + 4, rx, ry, "#5a3a1e");
-    ellipse(cx, cy, rx, ry, "#b98552");
-    ellipse(cx, cy - 1, rx - 2, ry - 1, "#c99263");
+    ellipse(cx, cy + 4, rx, ry, C.side);
+    ellipse(cx, cy, rx, ry, C.deck);
+    ellipse(cx, cy - 1, rx - 2, ry - 1, C.deckHi);
     for (let i = 0; i < 32; i++) {
       const a = (i / 32) * Math.PI * 2;
-      line(cx + Math.cos(a) * (irx + 1), cy + Math.sin(a) * (iry + 1), cx + Math.cos(a) * (rx - 1), cy + Math.sin(a) * (ry - 1), "#8f5f34");
+      line(cx + Math.cos(a) * (irx + 1), cy + Math.sin(a) * (iry + 1), cx + Math.cos(a) * (rx - 1), cy + Math.sin(a) * (ry - 1), C.seam);
     }
     // 중앙 심해 수조: 바깥에서 안으로 밝아지는 보랏빛 + 금테
-    ellipse(cx, cy, irx, iry, "#1a0c38");
-    ellipse(cx, cy + 1, irx - 4, iry - 3, "#2a1450");
-    ellipse(cx, cy + 2, irx - 12, iry - 7, "#3e1f72");
-    ellipse(cx, cy + 3, Math.max(4, irx - 26), Math.max(2, iry - 11), "#5a2a9a");
+    ellipse(cx, cy, irx, iry, C.pool[0]);
+    ellipse(cx, cy + 1, irx - 4, iry - 3, C.pool[1]);
+    ellipse(cx, cy + 2, irx - 12, iry - 7, C.pool[2]);
+    ellipse(cx, cy + 3, Math.max(4, irx - 26), Math.max(2, iry - 11), C.pool[3]);
     ring(cx, cy, irx, iry, "#f2c230");
     ring(cx, cy, irx + 1, iry + 1, "#c9921a");
     // 수조 속 큰 그림자 물고기가 원을 그리며 돎
@@ -1190,9 +1258,9 @@
     }
     const glow = 0.5 + 0.5 * Math.sin(R.t * 2);
     px(cx - 2 + Math.round(glow * 3), cy + 3, 2, 1, "#d6b3ff");
-    light(cx, cy + 2, 30, "rgba(190,140,255,", 0.6);
+    light(cx, cy + 2, 30, C.glow, 0.6);
     // 바깥 금색 난간 + 기둥 8개 랜턴
-    ring(cx, cy - 1, rx - 1, ry - 1, "#f2c230");
+    ring(cx, cy - 1, rx - 1, ry - 1, C.rail);
     for (let i = 0; i < 8; i++) {
       const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
       const lx = Math.round(cx + Math.cos(a) * (rx - 1));
@@ -1207,11 +1275,11 @@
     });
     const roofY = cy - 22;
     for (let i = 0; i < 6; i++) {
-      px(cx - 20 + i, roofY + i, 41 - i * 2, 1, i % 2 ? "#a8272c" : "#c0392b");
+      px(cx - 20 + i, roofY + i, 41 - i * 2, 1, i % 2 ? C.roof2 : C.roof);
     }
     px(cx - 21, roofY + 5, 43, 1, "#f2c230");
     for (let i = 0; i < 4; i++) {
-      px(cx - 11 + i, roofY - 5 + i, 23 - i * 2, 1, i % 2 ? "#a8272c" : "#c0392b");
+      px(cx - 11 + i, roofY - 5 + i, 23 - i * 2, 1, i % 2 ? C.roof2 : C.roof);
     }
     px(cx - 12, roofY - 1, 25, 1, "#f2c230");
     px(cx, roofY - 12, 1, 7, "#5f6b78");
@@ -1304,7 +1372,8 @@
     const y = Math.max(HORIZON + 1, Math.round(EXP_MOOR.y + (EXP_FAR.y - EXP_MOOR.y) * e)) + (k === 0 ? bob(9, 0.6) : 0);
     const w = Math.max(14, Math.round(44 * (1 - e * 0.65)));
     const leaving = st.dispatch && st.dispatch.t < st.dispatch.dur / 2;
-    boat(x, y, { w, rods: true, passengers: k === 0 ? 0 : 3, flag: "#f2c94c", wake: k > 0 && k < 1 ? (leaving ? -1 : 1) : 0 });
+    const C = pal(BOAT_PAL, st, "boat");
+    boat(x, y, { w, rods: true, passengers: k === 0 ? 0 : 3, hull: C.hull, stripe: C.stripe, cabin: C.cabin, flag: C.flag, wake: k > 0 && k < 1 ? (leaving ? -1 : 1) : 0 });
   }
 
   /* ---------- 여객선 (셔틀) ---------- */
@@ -1630,7 +1699,8 @@
     // 대회 우승 스킨 중 가장 높은 것
     const skins = (R.st && R.st.skins) || [];
     const skin = ["legend", "gold", "navy", "bronze"].find((s) => skins.includes(s));
-    const img = S.person("front", skin ? "owner_" + skin : "owner", 0, 1, world.cast && world.cast.t > world.cast.dur * 0.55 ? "reel" : null);
+    const eqOwner = R.st && R.st.equip && R.st.equip.owner;
+    const img = S.person("front", eqOwner || (skin ? "owner_" + skin : "owner"), 0, 1, world.cast && world.cast.t > world.cast.dur * 0.55 ? "reel" : null);
     const casting = world.cast;
     const bite = casting && casting.t > casting.dur * 0.55;
     const info = ownerInfo();
@@ -2105,6 +2175,12 @@
     if (o.pension > 0) {
       tag("펜션" + (o.pension > 4 ? " " + o.pension + "실" : ""), 607, 142, "rgba(88,53,144,0.92)");
     }
+    if (o.resort > 0) {
+      tag("리조트 호텔" + (o.park > 0 ? " · 테마파크" : ""), 607, 128, "rgba(160,110,20,0.92)");
+    }
+    if (o.market > 0) {
+      tag("수산물 경매 시장", 322, 98, "rgba(29,53,87,0.92)");
+    }
     if (st.upgrades.secret) {
       tag("VIP 비밀 양식장", SECRET.cx, SECRET.cy - SECRET.ry - 22, "rgba(88,40,140,0.92)");
     }
@@ -2232,6 +2308,7 @@
       drawRestaurant(st, 94, RB1);
       drawOwnerJetty();
       drawGate(st, RB2);
+      drawStatues(st);
       drawAquariumBuilding(st, ctx.dt);
       drawDock(st);
       drawFerry(st);

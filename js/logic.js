@@ -56,7 +56,7 @@
       aquarium: [],         // "f:어종id" / "b:신종id"
       breedHints: {},       // 도감 칸 id -> 힌트 단계(1~3)
       breedLog: [],         // 최근 교배 실험 기록
-      buffs: { cat: 0, wish: 0 },   // 남은 초
+      buffs: { cat: 0, wish: 0, bait: 0, burst: 0, boost: 0 },   // 남은 초
       stats2: { catFed: 0, wishes: 0 },
       dispatch: null,       // 원정 파견 중: { t, dur, zone }
       lastDispatch: null,
@@ -70,6 +70,19 @@
       tourney: { next: 120, last: null },
       trophies: [],         // { league, rank, day }
       skins: [],            // 우승으로 얻은 사장님 스킨
+      diamonds: 0,
+      achv: { dex: [], sets: [] },   // 받은 도감 업적(종 수)·세트 id
+      skinsOwned: [],       // 상점·가챠 스킨 id
+      equip: {},            // 대상별 장착 스킨 id
+      relics: [],           // 경매 낙찰 유물·조형물 id
+      auction: null,        // { lot, price, leader, left, cap, bids }
+      auctionT: 60,
+      lastGacha: null,
+      tickets: D.DISPATCH.ticket.start, ticketT: 0,
+      vipDex: [],           // 초청한 VIP 특수 손님 id
+      pendingVip: null,     // 초청권 사용 후 아직 자리 못 잡은 VIP
+      skills: { chum: 0, haggle: 0, craft: 0 },
+      skillCd: { burst: 0, harbor: 0 },
       lastSave: Date.now(),
       created: Date.now(),
     };
@@ -234,7 +247,25 @@
     return m;
   }
   function incomeMult(state) {
-    return (1 + 0.02 * dexCount(state) + D.EXPEDITION.dexBonus * expDexCount(state)) * (1 + aquaBuff(state)) * (1 + prestigeBonus(state, "income"));
+    return (1 + 0.02 * dexCount(state) + D.EXPEDITION.dexBonus * expDexCount(state)) * (1 + aquaBuff(state)) * (1 + prestigeBonus(state, "income")) * (1 + relicBonus(state, "income")) *
+      (1 + 0.02 * (state.vipDex || []).length) * (state.buffs.burst > 0 ? D.SKILLS.burst.mult : 1);
+  }
+  function skillLv(state, id) {
+    return (state.skills && state.skills[id]) || 0;
+  }
+  function skillBonus(state, id) {
+    return skillLv(state, id) * D.SKILLS.passive.find((p) => p.id === id).per;
+  }
+  // 경매 유물·조형물 효과 합
+  function relicBonus(state, key) {
+    let s = 0;
+    (state.relics || []).forEach((id) => {
+      const lot = D.AUCTION.lots.find((x) => x.id === id);
+      if (lot && lot.fx[key]) {
+        s += lot.fx[key];
+      }
+    });
+    return s;
   }
   // 모든 진행도 비례 보상의 기준: 현재 초당 수익 × 초 (최소 floor)
   function cpsReward(state, sec, floor) {
@@ -275,8 +306,10 @@
       return 0;
     }
     const keep = {
-      dex: state.dex, expDex: state.expDex, bred: state.bred, breedHints: state.breedHints, aquarium: state.aquarium,
-      trophies: state.trophies, skins: state.skins, stats: state.stats, stats2: state.stats2, created: state.created,
+      expDex: state.expDex, bred: state.bred, breedHints: state.breedHints, aquarium: state.aquarium,
+      trophies: state.trophies, skins: state.skins, stats: state.stats,
+      diamonds: state.diamonds, skinsOwned: state.skinsOwned, equip: state.equip, relics: state.relics, stats2: state.stats2, created: state.created,
+      vipDex: state.vipDex, skills: state.skills, tickets: state.tickets,
       prestige: { points: state.prestige.points + gain, total: state.prestige.total + gain, count: state.prestige.count + 1, levels: state.prestige.levels },
     };
     const fresh = newState();
@@ -383,10 +416,24 @@
   function breedBlock(state, a, b, mutate) {
     return BM.block(state, a, b, mutate, expectedRate(state));
   }
+  // 재료 중 높은 등급 기준 시간 × 명인 손재주 × 부스터
+  function breedTime(state, a, b) {
+    const pa = a && BM.parentInfo(state, a);
+    const pb = b && BM.parentInfo(state, b);
+    const ranks = [pa, pb].filter(Boolean).map((p) => RANK[p.rarity] || 0);
+    const r = D.RARITY_ORDER[Math.max(0, ...ranks)] || "common";
+    const t = (D.BREED.timeByRarity[r] || D.BREED.time) * Math.max(0.3, 1 - skillBonus(state, "craft")) * (state.buffs.boost > 0 ? D.DIAMOND.booster.mult : 1);
+    return Math.round(t);
+  }
   function startBreed(state, a, b, mutate) {
-    return BM.start(state, a, b, mutate, expectedRate(state));
+    const ok = BM.start(state, a, b, mutate, expectedRate(state));
+    if (ok) {
+      state.breeding.dur = breedTime(state, a, b);
+    }
+    return ok;
   }
   function finishBreed(state, rng) {
+    BM.upBonus = skillLv(state, "craft") * D.SKILLS.passive.find((p) => p.id === "craft").up;
     return BM.finish(state, rng);
   }
   function breedCatalog(state) {
@@ -508,11 +555,13 @@
   }
   // 무료. 잠겨 있거나 이미 나가 있으면 불가
   function startDispatch(state, sec) {
-    if (!dispatchUnlocked(state) || state.dispatch || !dispatchTier(sec)) {
+    const tier = dispatchTier(sec);
+    if (!dispatchUnlocked(state) || state.dispatch || !tier || state.tickets < tier.tickets) {
       return false;
     }
+    state.tickets -= tier.tickets;
     // 환생 '원정 시간 단축'만큼 실제 시간이 줄어듦 (보상 등급은 고른 시간 기준)
-    state.dispatch = { t: 0, sec, dur: Math.max(30, Math.round(sec * (1 - prestigeBonus(state, "voyage")))) };
+    state.dispatch = { t: 0, sec, dur: Math.max(30, Math.round(sec * (1 - prestigeBonus(state, "voyage") - relicBonus(state, "voyage")))) };
     return true;
   }
   // 귀항: 시간 등급의 luck·deep·depth로 굴림. 결과는 요약만 저장 (24시간 = 1,440마리)
@@ -618,7 +667,7 @@
   // 전설(·명품) 출현 배수: 소원 × 환생 상점 × 고래 떼 × 태풍(연안 폭증)
   function legendaryMult(state) {
     const ev = oceanEvent(state);
-    return (state.buffs.wish > 0 ? D.WISH.legendary : 1) * (1 + prestigeBonus(state, "legend")) *
+    return (state.buffs.wish > 0 ? D.WISH.legendary : 1) * (1 + prestigeBonus(state, "legend")) * (1 + relicBonus(state, "legend")) *
       (ev && ev.legend ? ev.legend : 1) * (state.weather === "typhoon" ? D.OCEAN.typhoonLegend : 1);
   }
 
@@ -655,7 +704,7 @@
   }
   function catchSpeedMult(state) {
     const ev = oceanEvent(state);
-    return Math.pow(1.2, msCount(state.owned.seat)) * (1 + prestigeBonus(state, "speed")) * (ev && ev.speed ? ev.speed : 1) * setSpeedMult(state);
+    return Math.pow(1.2, msCount(state.owned.seat)) * (1 + prestigeBonus(state, "speed")) * (ev && ev.speed ? ev.speed : 1) * setSpeedMult(state) * (1 + relicBonus(state, "speed")) * (state.upgrades.sonar ? 1.3 : 1) * (1 + skillBonus(state, "chum"));
   }
   function spotBonus(state, night) {
     return 1 + 0.25 * (availableSpots(state, night).length - 1);
@@ -681,6 +730,10 @@
     if (state.upgrades.tv) {
       r *= 1.2;
     }
+    if (state.upgrades.drone) {
+      r *= 1.5;
+    }
+    r *= 1 + 0.01 * (o.park || 0);
     if (state.buffs.cat > 0) {
       r *= D.CAT.arrive;
     }
@@ -688,6 +741,7 @@
     if (oev && oev.arrive) {
       r *= oev.arrive;
     }
+    r *= 1 + relicBonus(state, "arrive");
     r *= repMult(state);
     if (night && !state.upgrades.night) {
       r *= 0.4;
@@ -699,13 +753,13 @@
     return r * wa;
   }
   function feePerGuest(state, g) {
-    return (20 + 4 * state.owned.rental * msMult(state.owned.rental)) * g.fee * (state.upgrades.tv ? 1.5 : 1);
+    return (20 + 4 * state.owned.rental * msMult(state.owned.rental)) * g.fee * (state.upgrades.tv ? 1.5 : 1) * (state.upgrades.member ? 2 : 1);
   }
   function shopPerGuest(state, g) {
-    return 6 * state.owned.shop * msMult(state.owned.shop) * g.shop;
+    return 6 * state.owned.shop * msMult(state.owned.shop) * g.shop * (1 + skillBonus(state, "haggle"));
   }
   function cookRate(state) {
-    return 0.05 * state.owned.restaurant * msMult(state.owned.restaurant);
+    return 0.05 * state.owned.restaurant * msMult(state.owned.restaurant) * (state.upgrades.autocook ? 2 : 1);
   }
   // 자리가 없어 낚시는 못 하고 구경·매점만 이용하는 손님 1명당 지출
   function walkinPerGuest(state, g) {
@@ -729,7 +783,12 @@
   function passivePerSec(state) {
     const pension = 60 * state.owned.pension * msMult(state.owned.pension) * (reputation(state) / 3);
     const farm = 900 * state.owned.farm * msMult(state.owned.farm);
-    return pension + farm;
+    let late = 0;
+    ["resort", "market", "park"].forEach((id) => {
+      const n = state.owned[id] || 0;
+      late += FAC[id].passive * n * msMult(n) * (id === "resort" ? reputation(state) / 3 : 1);
+    });
+    return (pension + farm + late) * (state.upgrades.smartfarm ? 2 : 1);
   }
 
   /* ---------------- 어종 뽑기 ---------------- */
@@ -764,6 +823,9 @@
         }
         if (r === "legendary" || r === "masterpiece") {
           x *= legendaryMult(state);
+        }
+        if (state.buffs.bait > 0) {
+          x *= D.DIAMOND.bait.mult;
         }
         if (state.weather === "rain" && RANK[r] >= RANK.rare) {
           x *= D.NIGHT_WEATHER.rainRare;
@@ -971,16 +1033,20 @@
   const VIP_SEAT0 = 1000;
   function spawnGuest(state, world) {
     const rng = world.rng;
+    const sp = state.pendingVip && D.VIP_GUESTS.find((v) => v.id === state.pendingVip);
+    if (state.pendingVip && !sp) {
+      state.pendingVip = null;
+    }
     // 단골이 올 차례인지
     let reg = null;
     const free = state.vip.regulars.filter((r) => !world.present[r.id]);
-    if (free.length && rng() < regularChance(state)) {
+    if (!sp && free.length && rng() < regularChance(state)) {
       reg = free[Math.floor(rng() * free.length)];
     }
     const g = reg ? guestTypeById(reg.type) : pickGuestType(state, rng);
-    const persona = (reg && personaById(reg.persona)) || pickPersona(g.id, rng);
-    const nick = reg ? reg.nick : makeNick(persona, rng);
-    const lv = reg ? vipLevel(reg) : 0;
+    const persona = sp ? { id: "vipg", look: "vipg_" + sp.id } : (reg && personaById(reg.persona)) || pickPersona(g.id, rng);
+    const nick = sp ? sp.name : reg ? reg.nick : makeNick(persona, rng);
+    const lv = sp ? D.VIP.maxLevel : reg ? vipLevel(reg) : 0;
     let seat = -1;
     // 호감도 10 VIP는 비밀 양식장 전용 좌대로
     if (lv >= 10 && state.upgrades.secret) {
@@ -1000,6 +1066,9 @@
           break;
         }
       }
+    }
+    if (seat < 0 && sp) {
+      return null;   // 자리 날 때까지 대기
     }
     if (seat < 0) {
       state.stats.missed++;
@@ -1031,6 +1100,16 @@
     const fee = feePerGuest(state, g) * (vip ? vipFeeMult(lv) : 1);
     earn(state, world, fee + shopPerGuest(state, g), { seat, src: "guest" });
     world.events.push({ kind: "arrive", seat, type: g.id, reg: reg ? { nick: reg.nick, lv } : null, vip });
+    if (sp) {
+      state.pendingVip = null;
+      const isNew = !state.vipDex.includes(sp.id);
+      if (isNew) {
+        state.vipDex.push(sp.id);
+      }
+      const tip = Math.max(1e6, Math.round(expectedRate(state) * sp.tipSec));
+      earn(state, world, tip, { seat, src: "tip" });
+      world.events.push({ kind: "vipguest", name: sp.name, tip, isNew });
+    }
     return guest;
   }
 
@@ -1090,6 +1169,253 @@
         state.quests.splice(i, 1);
       }
     }
+  }
+
+  /* ---------------- 다이아 업적 · 가챠 · 스킨 ---------------- */
+  function tickAchv(state, world, dt) {
+    world.achvT = (world.achvT || 0) - dt;
+    if (world.achvT > 0) {
+      return;
+    }
+    world.achvT = 2;
+    const n = dexCount(state);
+    D.DIAMOND.dexMilestones.forEach(([need, dia]) => {
+      if (n >= need && !state.achv.dex.includes(need)) {
+        state.achv.dex.push(need);
+        state.diamonds += dia;
+        world.events.push({ kind: "achv", name: "도감 " + need + "종 달성", dia });
+      }
+    });
+    setProgress(state).forEach((s) => {
+      if (s.done && !state.achv.sets.includes(s.id)) {
+        state.achv.sets.push(s.id);
+        state.diamonds += D.DIAMOND.setReward;
+        world.events.push({ kind: "achv", name: s.name + " 세트 완성", dia: D.DIAMOND.setReward });
+      }
+    });
+  }
+  function buyBait(state) {
+    if (state.diamonds < D.DIAMOND.bait.cost) {
+      return false;
+    }
+    state.diamonds -= D.DIAMOND.bait.cost;
+    state.buffs.bait = (state.buffs.bait || 0) + D.DIAMOND.bait.sec;
+    return true;
+  }
+  function rollGacha(state, rng) {
+    if (state.diamonds < D.DIAMOND.gachaCost) {
+      return null;
+    }
+    state.diamonds -= D.DIAMOND.gachaCost;
+    const sk = pickWeighted(rng, D.SKINS.filter((s) => s.gacha).map((s) => [s, s.gacha]));
+    const dup = state.skinsOwned.includes(sk.id);
+    if (dup) {
+      state.diamonds += D.DIAMOND.dupRefund;
+    } else {
+      state.skinsOwned.push(sk.id);
+    }
+    state.lastGacha = { id: sk.id, name: sk.name, dup };
+    return state.lastGacha;
+  }
+  function buySkin(state, id) {
+    const sk = D.SKINS.find((s) => s.id === id);
+    if (!sk || !sk.gold || state.skinsOwned.includes(id) || state.money < sk.gold) {
+      return false;
+    }
+    state.money -= sk.gold;
+    state.skinsOwned.push(id);
+    state.equip[sk.target] = id;
+    return true;
+  }
+  // id가 "default:대상"이면 기본으로
+  function equipSkin(state, id) {
+    if (/^default:/.test(id)) {
+      delete state.equip[id.slice(8)];
+      return true;
+    }
+    const sk = D.SKINS.find((s) => s.id === id);
+    if (!sk || !state.skinsOwned.includes(id)) {
+      return false;
+    }
+    state.equip[sk.target] = id;
+    return true;
+  }
+
+  /* ---------------- 시간 메카닉 · 다이아 시간 단축 · VIP 초청 · 스킬 ---------------- */
+  function tickTimers(state, dt) {
+    const T = D.DISPATCH.ticket;
+    if (state.tickets < T.max) {
+      state.ticketT += dt;
+      const n = Math.floor(state.ticketT / T.regen);
+      if (n > 0) {
+        state.tickets = Math.min(T.max, state.tickets + n);
+        state.ticketT -= n * T.regen;
+      }
+    } else {
+      state.ticketT = 0;
+    }
+    state.skillCd.burst = Math.max(0, state.skillCd.burst - dt);
+    state.skillCd.harbor = Math.max(0, state.skillCd.harbor - dt);
+    state.buffs.burst = Math.max(0, (state.buffs.burst || 0) - dt);
+    state.buffs.boost = Math.max(0, (state.buffs.boost || 0) - dt);
+  }
+  function instBreedCost(state) {
+    const b = state.breeding;
+    return b ? Math.max(1, Math.ceil((b.dur - b.t) / 600) * D.DIAMOND.instBreed) : 0;
+  }
+  function instDispatchCost(state) {
+    const d = state.dispatch;
+    return d ? Math.max(1, Math.ceil((d.dur - d.t) / 3600) * D.DIAMOND.instDispatch) : 0;
+  }
+  // 즉시완료: 남은 시간을 0으로 → 다음 틱에 기존 완료 처리
+  function instantFinish(state, what) {
+    const o = what === "breed" ? state.breeding : state.dispatch;
+    const cost = what === "breed" ? instBreedCost(state) : instDispatchCost(state);
+    if (!o || state.diamonds < cost) {
+      return false;
+    }
+    state.diamonds -= cost;
+    o.t = o.dur;
+    return true;
+  }
+  function buyBooster(state) {
+    if (state.diamonds < D.DIAMOND.booster.cost) {
+      return false;
+    }
+    state.diamonds -= D.DIAMOND.booster.cost;
+    state.buffs.boost = (state.buffs.boost || 0) + D.DIAMOND.booster.sec;
+    return true;
+  }
+  // 초청권: 아직 못 만난 VIP 우선
+  function inviteVip(state, rng) {
+    if (state.pendingVip || state.diamonds < D.DIAMOND.invite) {
+      return null;
+    }
+    const fresh = D.VIP_GUESTS.filter((v) => !state.vipDex.includes(v.id));
+    const pool = fresh.length ? fresh : D.VIP_GUESTS;
+    const v = pool[Math.floor(rng() * pool.length)];
+    state.diamonds -= D.DIAMOND.invite;
+    state.pendingVip = v.id;
+    return v;
+  }
+  function useSkill(state, id) {
+    const S = D.SKILLS[id];
+    if (!S || state.skillCd[id] > 0) {
+      return false;
+    }
+    if (id === "harbor") {
+      const d = state.dispatch;
+      if (!d || (d.sec || d.dur) > S.maxSec) {
+        return false;
+      }
+      d.t = d.dur;
+    } else {
+      state.buffs.burst = S.dur;
+    }
+    state.skillCd[id] = S.cd;
+    return true;
+  }
+  function skillCost(state, id) {
+    const S = D.SKILLS;
+    return Math.max(S.costMin, Math.round(expectedRate(state) * S.costSec * Math.pow(S.growth, skillLv(state, id))));
+  }
+  function upgradeSkill(state, id) {
+    if (!D.SKILLS.passive.some((p) => p.id === id) || skillLv(state, id) >= D.SKILLS.max) {
+      return false;
+    }
+    const c = skillCost(state, id);
+    if (state.money < c) {
+      return false;
+    }
+    state.money -= c;
+    state.skills[id] = skillLv(state, id) + 1;
+    return true;
+  }
+
+  /* ---------------- 글로벌 해양 경매장 ---------------- */
+  function auctionOpen(state) {
+    return state.money >= D.AUCTION.minMoney || (state.relics || []).length > 0 || !!state.auction;
+  }
+  function auctionLots(state) {
+    return D.AUCTION.lots.filter((l) => l.type === "egg" || !state.relics.includes(l.id));
+  }
+  function tickAuction(state, world, dt, rng) {
+    const A = state.auction;
+    if (!A) {
+      if (!auctionOpen(state)) {
+        return;
+      }
+      state.auctionT -= dt;
+      if (state.auctionT > 0) {
+        return;
+      }
+      state.auctionT = D.AUCTION.every;
+      const lots = auctionLots(state);
+      if (!lots.length) {
+        return;
+      }
+      const lot = lots[Math.floor(rng() * lots.length)];
+      const start = Math.max(D.AUCTION.startMin, Math.round(expectedRate(state) * D.AUCTION.startSec));
+      const cm = D.AUCTION.capMult;
+      state.auction = { lot: lot.id, price: start, leader: null, left: D.AUCTION.dur, cap: Math.round(start * (cm[0] + rng() * (cm[1] - cm[0]))), bids: 0 };
+      world.events.push({ kind: "auction", start: true, lot });
+      return;
+    }
+    A.left -= dt;
+    // NPC는 우리가 선두일 때 상한까지 따라붙음 (마감 직전 입찰이면 10초 연장)
+    if (A.leader === "me" && rng() < dt * 0.25) {
+      const next = Math.round(A.price * (1 + D.AUCTION.raise));
+      if (next <= A.cap) {
+        A.price = next;
+        A.leader = D.AUCTION.npc[Math.floor(rng() * D.AUCTION.npc.length)];
+        A.bids++;
+        A.left = Math.max(A.left, 10);
+        world.events.push({ kind: "auction", outbid: true, by: A.leader, price: A.price });
+      }
+    } else if (!A.leader && rng() < dt * 0.05) {
+      A.leader = D.AUCTION.npc[Math.floor(rng() * D.AUCTION.npc.length)];
+    }
+    if (A.left <= 0) {
+      const lot = D.AUCTION.lots.find((l) => l.id === A.lot);
+      state.auction = null;
+      if (A.leader === "me" && state.money >= A.price) {
+        state.money -= A.price;
+        const got = winLot(state, lot, rng);
+        world.events.push({ kind: "auction", won: true, lot, price: A.price, got });
+      } else {
+        world.events.push({ kind: "auction", lost: true, lot, by: A.leader === "me" ? "잔액 부족" : A.leader, price: A.price });
+      }
+    }
+  }
+  // 입찰: 현재가 +10% (첫 입찰은 시작가). 낙찰 때 결제하므로 그 돈이 있어야 함
+  function auctionBid(state) {
+    const A = state.auction;
+    if (!A || A.leader === "me") {
+      return false;
+    }
+    const price = A.bids ? Math.round(A.price * (1 + D.AUCTION.raise)) : A.price;
+    if (state.money < price) {
+      return false;
+    }
+    A.price = price;
+    A.leader = "me";
+    A.bids++;
+    A.left = Math.max(A.left, 10);
+    return true;
+  }
+  function winLot(state, lot, rng) {
+    if (lot.type !== "egg") {
+      state.relics.push(lot.id);
+      return lot.name;
+    }
+    const missing = D.FISH.filter((f) => (f.rarity === "legendary" || f.rarity === "masterpiece") && !state.dex[f.id]);
+    if (!missing.length) {
+      state.diamonds += 20;
+      return "다이아 20개 (명품·전설 도감이 이미 모두 참)";
+    }
+    const f = missing[Math.floor(rng() * missing.length)];
+    state.dex[f.id] = { count: 1, best: f.size[1], golden: false };
+    return f.name + " 부화 · 도감 등록";
   }
 
   /* ---------------- 자동 낚시 대회 ---------------- */
@@ -1307,6 +1633,13 @@
     if (state.tourney.next <= 0) {
       runTourney(state, world, rng);
     }
+    tickAchv(state, world, dt);
+    tickAuction(state, world, dt, rng);
+    tickTimers(state, dt);
+    if (state.pendingVip) {
+      spawnGuest(state, world);
+    }
+    state.buffs.bait = Math.max(0, (state.buffs.bait || 0) - dt);
     state.buffs.cat = Math.max(0, state.buffs.cat - dt);
     state.buffs.wish = Math.max(0, state.buffs.wish - dt);
 
@@ -1384,6 +1717,7 @@
     if (state.dispatch) {
       state.dispatch.t += elapsed;   // 다음 틱에 귀항 처리
     }
+    tickTimers(state, elapsed);
     state.buffs.cat = Math.max(0, state.buffs.cat - elapsed);
     state.buffs.wish = Math.max(0, state.buffs.wish - elapsed);
     state.quests = [];
@@ -1474,6 +1808,8 @@
     aquaEntry, aquaCandidates, aquaBuffOf, aquaBuff, aquaAdd, aquaRemove,
     catFeedCost, feedCat, makeWish, legendaryMult, fmtSize, WALK_IN,
     setProgress, setValueMult, setSpeedMult, spotWeight,
+    relicBonus, buyBait, rollGacha, buySkin, equipSkin, auctionOpen, auctionBid,
+    breedTime, instBreedCost, instDispatchCost, instantFinish, buyBooster, inviteVip, useSkill, skillLv, skillBonus, skillCost, upgradeSkill,
     cpsReward, prestigeLevel, prestigeBonus, prestigeGain, prestigeCost, buyPrestige, doPrestige,
     oceanEvent, questReward, tourneyLeague, teamPower, runTourney,
     dispatchTier, dispatchCatches, startDispatch, dispatchUnlocked, finishDispatch, vipXpFor, vipFeeMult, vipPool,
