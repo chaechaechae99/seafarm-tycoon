@@ -15,32 +15,42 @@
   const D = root.GameData;
   const S = root.Sprites;
 
-  const W = 480;
-  const H = 270;
-  const HORIZON = 64;
-  const LAND_TOP = 116;
-  const COAST = 132;
-  const ROAD_U = 166;          // 큰길·다리 중앙선
-  const ROAD_L = 242;          // 아랫길 중앙선
-  const LANE_X = 114;          // 두 길을 잇는 골목
-  const BOARD_END = 444;
+  // 640×360: 도트 크기는 그대로, 맵이 넓어져 화면에 더 많이 들어감
+  const W = 640;
+  const H = 360;
+  const HORIZON = 80;
+  const LAND_TOP = 150;
+  const COAST = 176;
+  const ROAD_U = 208;          // 큰길·윗다리 중앙선
+  const ROAD_L = 320;          // 아랫길·아랫다리 중앙선
+  const LANE_X = 156;          // 두 길을 잇는 골목
+  const BOARD_END = 582;
   const MW = 68;
   const MH = 40;
-  const MOD_X = [146, 220, 294, 368];
-  const MOD_Y = [106, 184];
+  const MOD_X = [192, 266, 340, 414, 488];
+  // 줄: 0 = 윗다리 위, 1 = 윗다리 아래, 2 = 아랫다리 위
+  const MOD_Y = [154, 222, 272];
+  const RB1 = ROAD_U - 8;      // 위 줄 건물 바닥
+  const RB2 = ROAD_L - 8;      // 아래 줄 건물 바닥
   const SEATS_PER = 10;   // 위 발판 5석(앞모습) + 아래 발판 5석(뒷모습)
   // 좌대 채우는 순서 [줄, 칸]: 입구 가까운 칸부터
-  const MOD_ORDER = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2], [1, 2], [0, 3], [1, 3]];
+  // 입구에서 가까운 칸부터 [줄, 칸]
+  const MOD_ORDER = [];
+  for (let c = 0; c < 5; c++) {
+    MOD_ORDER.push([0, c], [1, c], [2, c]);
+  }
   const SEAT_OFF = [4, 16, 28, 40, 52];
-  const MAX_SEATS_DRAWN = 80;
+  const MAX_SEATS_DRAWN = 150;
   // VIP 비밀 양식장: 위쪽 띠 오른쪽 넓은 자리, 위·아래 발판에 6석씩 (12석)
-  const SECRET = { x: 296, y: 66, w: 144, h: 32 };
+  const SECRET = { x: 400, y: 104, w: 160, h: 32 };
   const VIP_STEP = 22;
-  const LADDER_X = MOD_X[3] + SEAT_OFF[2] + 4;
-  const OWNER = { x: 126, feet: 114 };
-  const TANK = { x: 38, y: 196, w: 58, h: 26 };
-  const DOCK_X = 132;
-  const FERRY_DOCKED_X = 172;
+  const LADDER_X = MOD_X[3] + SEAT_OFF[2] + 4;   // 비밀 양식장 ↔ 4번째 칸 윗줄 좌대
+  const OWNER = { x: COAST - 6, feet: LAND_TOP - 2 };
+  const AQ_X = 36;
+  const TANK = { x: AQ_X + 8, y: RB2 - 38, w: 58, h: 26 };
+  const DOCK_X = COAST;
+  const FERRY_DOCKED_X = COAST + 26;
+  const FERRY_Y = ROAD_L + 22;
 
   const R = {
     canvas: null, ctx: null, buf: null, b: null, K: 3, t: 0,
@@ -145,8 +155,8 @@
     for (let i = 0; i < 140; i++) {
       R.rain.push({ x: rnd() * W, y: rnd() * H, v: 160 + rnd() * 70 });
     }
-    for (let i = 0; i < 48; i++) {
-      R.fish.push({ m: i % 8, x: rnd() * 60, y: rnd() * 26, v: (rnd() < 0.5 ? -1 : 1) * (4 + rnd() * 6) });
+    for (let i = 0; i < 90; i++) {
+      R.fish.push({ m: i % 15, x: rnd() * 60, y: rnd() * 26, v: (rnd() < 0.5 ? -1 : 1) * (4 + rnd() * 6) });
     }
     buildGraph();
     resize();
@@ -340,8 +350,8 @@
     const storm = st.weather === "rain" || st.weather === "typhoon";
     const dayT = (hr - 5) / 14;
     if (dayT > 0 && dayT < 1 && !storm) {
-      const x = 30 + dayT * 420;
-      const y = HORIZON - Math.sin(dayT * Math.PI) * 50 + 4;
+      const x = 40 + dayT * (W - 80);
+      const y = HORIZON - Math.sin(dayT * Math.PI) * 62 + 4;
       disc(Math.round(x), Math.round(y), 7, "#fff2a8");
       disc(Math.round(x), Math.round(y), 5, "#ffffff");
     }
@@ -354,8 +364,8 @@
       spr(img, x, 6 + ((i * 13) % 34));
     }
     // 먼 섬
-    for (let x = 300; x < W; x++) {
-      const hgt = Math.max(0, Math.round(10 * Math.sin(((x - 300) / 180) * Math.PI) + 3 * Math.sin(x * 0.13)));
+    for (let x = 400; x < W; x++) {
+      const hgt = Math.max(0, Math.round(12 * Math.sin(((x - 400) / 240) * Math.PI) + 3 * Math.sin(x * 0.13)));
       if (hgt > 0) {
         px(x, HORIZON - hgt, 1, hgt, "#5f8f76");
         px(x, HORIZON - hgt, 1, 1, "#7aa98c");
@@ -401,7 +411,7 @@
     }
     const dayT = (hr - 5) / 14;
     if (dayT > 0 && dayT < 1 && !storm) {
-      const sx = Math.round(30 + dayT * 420);
+      const sx = Math.round(40 + dayT * (W - 80));
       for (let y = HORIZON + 2; y < HORIZON + 28; y += 3) {
         const w = 2 + Math.round(Math.sin(R.t * 3 + y) * 2 + 2);
         px(sx - w, y, w * 2, 1, "#fff2c0");
@@ -410,7 +420,7 @@
     if (hr >= 19.5 || hr < 4.5) {
       const nt = ((hr - 19 + 24) % 24) / 10;
       if (!storm && nt >= 0 && nt <= 1) {
-        const mx = Math.round(30 + nt * 420);
+        const mx = Math.round(40 + nt * (W - 80));
         for (let y = HORIZON + 2; y < HORIZON + 36; y += 2) {
           if (Math.sin(R.t * 4 + y * 1.7) > -0.2) {
             const w = 1 + Math.round(Math.abs(Math.sin(R.t * 2 + y)) * 3);
@@ -436,7 +446,7 @@
     R.jumpT -= dt;
     if (R.jumpT <= 0 && st.weather !== "typhoon") {
       R.jumpT = 4 + Math.random() * 7;
-      R.jumpers.push({ x: 150 + Math.random() * 280, y: HORIZON + 4 + Math.random() * 6, dir: Math.random() < 0.5 ? -1 : 1, t: 0 });
+      R.jumpers.push({ x: COAST + 30 + Math.random() * (W - COAST - 80), y: HORIZON + 4 + Math.random() * 6, dir: Math.random() < 0.5 ? -1 : 1, t: 0 });
     }
     for (let i = R.jumpers.length - 1; i >= 0; i--) {
       const j = R.jumpers[i];
@@ -652,8 +662,8 @@
     px(ax + 16, ROAD_L - 34 + f, 5, 3, "#f2c94c");
   }
   function drawAquariumBuilding(st, dt) {
-    const x = 30;
-    const by = 234;
+    const x = AQ_X;
+    const by = RB2;
     const w = 74;
     const h = 46;
     const y = by - h;
@@ -779,6 +789,18 @@
     const end = st.owned.pension > 0 || st.upgrades.secret ? BOARD_END : MOD_X[maxCol] + MW;
     posts(COAST + 2, end, ROAD_U + 8, 16, 6);
     planks(COAST - 2, ROAD_U - 6, end - COAST + 2, 12, true);
+    // 아랫다리: 셋째 줄 좌대가 생기면 아랫길에서 이어짐
+    let maxColC = -1;
+    for (let i = 0; i < moduleCount(st); i++) {
+      if (modulePos(i).row === 2) {
+        maxColC = Math.max(maxColC, modulePos(i).col);
+      }
+    }
+    if (maxColC >= 0) {
+      const end2 = MOD_X[maxColC] + MW;
+      posts(COAST + 40, end2, ROAD_L + 8, 16, 6);
+      planks(COAST + 36, ROAD_L - 6, end2 - COAST - 36, 12, true);
+    }
     // 가로등
     for (let x = 150; x <= end; x += 48) {
       px(x, ROAD_U - 15, 1, 9, "#33404d");
@@ -793,13 +815,15 @@
   function drawDock(st) {
     posts(DOCK_X + 2, DOCK_X + 36, ROAD_L + 8, 10, 8);
     planks(DOCK_X - 2, ROAD_L - 6, 40, 12, true);
+    // 여객선 쪽으로 내려가는 잔교
+    planks(DOCK_X + 14, ROAD_L + 6, 8, FERRY_Y - ROAD_L - 6, false);
     // 계류 말뚝 + 밧줄
     px(DOCK_X + 34, ROAD_L - 9, 3, 4, "#33404d");
     void st;
   }
   function drawOwnerJetty() {
-    posts(COAST - 4, COAST + 8, 112, 8, 5);
-    planks(COAST - 12, 106, 22, 6, true);
+    posts(COAST - 4, COAST + 8, LAND_TOP - 4, 8, 5);
+    planks(COAST - 12, LAND_TOP - 10, 22, 6, true);
   }
 
   /* ---------- 좌대 (입체 목재 + 그물 + 부표) ---------- */
@@ -933,8 +957,10 @@
     const cx = p.x + MW / 2 - 4;
     if (p.row === 0) {
       planks(cx, p.y + MH, 8, ROAD_U - 6 - (p.y + MH), false);
-    } else {
+    } else if (p.row === 1) {
       planks(cx, ROAD_U + 6, 8, p.y - (ROAD_U + 6), false);
+    } else {
+      planks(cx, p.y + MH, 8, Math.max(2, ROAD_L - 6 - (p.y + MH)), false);
     }
   }
   function drawCages(st, world, night) {
@@ -969,8 +995,8 @@
     });
     if (night && st.upgrades.night) {
       const y = MOD_Y[0] - 3;
-      line(MOD_X[0] - 2, y, MOD_X[3] + MW, y, "#333a42");
-      for (let x = MOD_X[0] + 4; x < MOD_X[3] + MW; x += 14) {
+      line(MOD_X[0] - 2, y, MOD_X[4] + MW, y, "#333a42");
+      for (let x = MOD_X[0] + 4; x < MOD_X[4] + MW; x += 14) {
         px(x, y + 1, 2, 2, "#f4ffe8");
         light(x + 1, y + 2, 18, "rgba(200,255,190,", 0.4);
       }
@@ -1025,15 +1051,15 @@
     if (!st.upgrades.boat) {
       return;
     }
-    const x = Math.round(136 + (Math.sin(R.t * 0.07) + 1) * 6);
-    const y = 84 + bob(2, 0.6);
+    const x = Math.round(192 + (Math.sin(R.t * 0.07) + 1) * 12);
+    const y = 124 + bob(2, 0.6);
     boat(x, y, { w: 52, rods: true, passengers: 4, wake: Math.cos(R.t * 0.07) > 0 ? -1 : 1 });
   }
   function drawFarm(st) {
     const n = Math.min(6, st.owned.farm);
     for (let i = 0; i < n; i++) {
-      const cx = 216 + (i % 3) * 24;
-      const cy = 72 + Math.floor(i / 3) * 13 + bob(i, 0.6);
+      const cx = 296 + (i % 3) * 26;
+      const cy = 108 + Math.floor(i / 3) * 14 + bob(i, 0.6);
       ring(cx, cy, 11, 4, "#d6b66e");
       ring(cx, cy, 8, 3, "rgba(220,240,255,0.5)");
       px(cx - 1, cy - 1, 2, 2, "rgba(8,30,50,0.5)");
@@ -1083,7 +1109,7 @@
   }
   function drawPension(st) {
     const n = Math.min(4, st.owned.pension);
-    const slots = [[448, 100], [448, 128], [448, 184], [448, 212]];
+    const slots = [[594, 150], [594, 180], [594, 224], [594, 254]];
     for (let i = 0; i < n; i++) {
       const [x, y] = slots[i];
       const d = bob(i + 3, 0.5);
@@ -1122,9 +1148,9 @@
   }
 
   /* ---------- 원정 전용 선착장 (매점·대여점 위 모래사장) ---------- */
-  const EXP_DOCK = { x: 50, y0: 94, y1: LAND_TOP + 2 };
-  const EXP_MOOR = { x: 60, y: 102 };          // 정박 위치 (선체 윗면)
-  const EXP_FAR = { x: 230, y: HORIZON + 1 };  // 수평선 (여기서 사라지고 나타남)
+  const EXP_DOCK = { x: 50, y0: LAND_TOP - 26, y1: LAND_TOP + 2 };
+  const EXP_MOOR = { x: 60, y: LAND_TOP - 18 };   // 정박 위치 (선체 윗면)
+  const EXP_FAR = { x: 300, y: HORIZON + 1 };     // 수평선 (여기서 사라지고 나타남)
   const SAIL = 20;                              // 출항·귀항 연출 시간 (초)
   function drawExpDock(st) {
     if (!(st.owned.crew > 0)) {
@@ -1196,11 +1222,11 @@
     if (!f.visible) {
       return;
     }
-    const y = ROAD_L + 2 + bob(5, 0.8);
+    const y = FERRY_Y + bob(5, 0.8);
     boat(Math.round(f.x), y, { w: 72, hull: "#f5f5f5", stripe: "#f39c12", cabin: "#eef2f5", passengers: f.docked ? 2 : 7, flag: "#2e6fd0", wake: f.dir });
     if (f.docked) {
       // 승하선 발판
-      planks(DOCK_X + 36, ROAD_L - 3, FERRY_DOCKED_X - DOCK_X - 32, 4, true);
+      planks(DOCK_X + 22, FERRY_Y - 4, FERRY_DOCKED_X - DOCK_X - 18, 4, true);
     }
   }
 
@@ -1228,9 +1254,13 @@
     NODE.gateOut = node(-10, ROAD_L);
     NODE.gateIn = node(34, ROAD_L);
     NODE.laneBot = node(LANE_X, ROAD_L);
-    NODE.dock = node(DOCK_X + 20, ROAD_L);
-    NODE.gang = node(FERRY_DOCKED_X + 12, ROAD_L);
-    chain([NODE.gateOut, NODE.gateIn, NODE.laneBot, NODE.dock, NODE.gang]);
+    NODE.dock = node(DOCK_X + 18, ROAD_L);
+    NODE.gang = node(FERRY_DOCKED_X + 12, FERRY_Y - 2);
+    const dockDown = node(DOCK_X + 18, FERRY_Y - 2);
+    chain([NODE.gateOut, NODE.gateIn, NODE.laneBot, NODE.dock, dockDown, NODE.gang]);
+    // 아랫다리
+    const board2 = MOD_X.map((mx) => node(mx + MW / 2, ROAD_L));
+    chain([NODE.dock].concat(board2));
     NODE.laneTop = node(LANE_X, ROAD_U);
     link(NODE.laneBot, NODE.laneTop);
     NODE.pier = node(COAST + 2, ROAD_U);
@@ -1252,7 +1282,11 @@
       link(TL, BL);
       link(TR, BR);
       // 다리 → 경사로 → 가까운 발판 가운데 자리
-      link(board[p.col], p.row === 0 ? bot[2] : top[2]);
+      if (p.row === 2) {
+        link(board2[p.col], bot[2]);
+      } else {
+        link(board[p.col], p.row === 0 ? bot[2] : top[2]);
+      }
     }
     // 비밀 양식장: 오른쪽 위 좌대의 먼 발판 가운데에서 사다리
     const vyT = SECRET.y + 3;
@@ -1506,12 +1540,12 @@
       const r = Math.random();
       c.mode = r < 0.45 ? "walk" : r < 0.72 && st.owned.shop > 0 ? "loaf" : "watch";
       c.t = c.mode === "walk" ? 7 : 8 + Math.random() * 6;
-      c.tx = 6 + Math.random() * 110;
+      c.tx = 6 + Math.random() * (COAST - 30);
       c.road = Math.random() < 0.6 ? ROAD_U + 4 : ROAD_L + 4;
     }
     let frame = "walk0";
     if (c.mode === "walk" || (c.mode === "watch" && Math.abs(c.x - 120) > 1)) {
-      const target = c.mode === "watch" ? 120 : c.tx;
+      const target = c.mode === "watch" ? COAST - 12 : c.tx;
       c.y = c.mode === "watch" ? ROAD_U + 4 : c.road;
       const dir = target > c.x ? 1 : -1;
       c.dir = dir;
@@ -1522,13 +1556,13 @@
       frame = Math.floor(R.t * 6) % 2 ? "walk1" : "walk0";
     } else if (c.mode === "loaf") {
       c.x = 14;
-      c.y = 128;
+      c.y = RB1 - 30;
       frame = "loaf";
     } else if (c.mode === "watch") {
       c.dir = 1;
       frame = "sit";
     } else if (c.mode === "eat") {
-      if (c.y === 128) {
+      if (c.y === RB1 - 30) {
         c.y = ROAD_U + 4;
       }
       frame = "eat";
@@ -1556,22 +1590,22 @@
     if (!st.upgrades.rock) {
       return;
     }
-    const pts = [[0, 60], [10, 50], [22, 56], [34, 44], [48, 52], [62, 58], [76, 66], [90, 76]];
+    const pts = [[0, 76], [10, 66], [22, 72], [34, 60], [48, 68], [62, 74], [76, 82], [90, 92]];
     for (let x = 0; x < 92; x++) {
-      let top = 80;
+      let top = 96;
       for (let i = 0; i < pts.length - 1; i++) {
         if (x >= pts[i][0] && x <= pts[i + 1][0]) {
           const t = (x - pts[i][0]) / (pts[i + 1][0] - pts[i][0]);
           top = Math.round(pts[i][1] + (pts[i + 1][1] - pts[i][1]) * t);
         }
       }
-      px(x, top, 1, 84 - top, x % 7 < 3 ? "#5d636c" : "#6e757e");
+      px(x, top, 1, 100 - top, x % 7 < 3 ? "#5d636c" : "#6e757e");
       px(x, top, 1, 1, "#8b929b");
       if (Math.sin(R.t * 2 + x * 0.4) > 0.4) {
-        px(x, 83, 1, 1, "#e6f6ff");
+        px(x, 99, 1, 1, "#e6f6ff");
       }
     }
-    [[16, 54], [40, 48]].forEach(([x, y], i) => {
+    [[16, 70], [40, 64]].forEach(([x, y], i) => {
       spr(S.person("front", i ? "angler" : "tourist", i, i + 1), x - 4, y - 13);
       line(x + 3, y - 6, x + 12, y - 16, "#6b4423");
       line(x + 12, y - 16, x + 16, y + 14, "rgba(255,255,255,0.6)");
@@ -1631,7 +1665,7 @@
       if (Math.random() < dt * 0.2) {
         R.flash = 0.2;
         R.shake = Math.max(R.shake, 1.5);
-        R.bolt = { x: 40 + Math.random() * 400, t: 0.18 };
+        R.bolt = { x: 40 + Math.random() * (W - 80), t: 0.18 };
         cue("thunder");
       }
       if (R.bolt && R.bolt.t > 0) {
@@ -1673,7 +1707,7 @@
       });
       const nt = ((hr - 19 + 24) % 24) / 10;
       if (nt >= 0 && nt <= 1) {
-        const x = Math.round(30 + nt * 420);
+        const x = Math.round(40 + nt * (W - 80));
         const y = Math.round(HORIZON - Math.sin(nt * Math.PI) * 48 + 4);
         disc(x, y, 6, "#f2f0dc");
         disc(x + 3, y - 2, 5, lerpHex("#1b2550", "#2d3c70", 0.3));
@@ -1706,7 +1740,7 @@
       if (night && !storm && R.starT <= 0) {
         R.starT = 35 + Math.random() * 50;
         const dir = Math.random() < 0.5 ? -1 : 1;
-        R.star = { x: dir < 0 ? 360 + Math.random() * 90 : 30 + Math.random() * 90, y: 6 + Math.random() * 14, vx: dir * 60, vy: 16, t: 0, life: 2.8, trail: [] };
+        R.star = { x: dir < 0 ? W - 160 + Math.random() * 100 : 40 + Math.random() * 100, y: 6 + Math.random() * 14, vx: dir * 60, vy: 16, t: 0, life: 2.8, trail: [] };
         cue("starfall");
       }
       return;
@@ -1761,7 +1795,7 @@
     }
     if (ev.kind === "money" && ev.src === "passive") {
       if (st.owned.pension > 0) {
-        R.texts.push({ x: 460, y: 96, s: "+" + G.fmt(ev.amount), c: "#e7d2ff", life: 1.6, vy: -10 });
+        R.texts.push({ x: 607, y: 144, s: "+" + G.fmt(ev.amount), c: "#e7d2ff", life: 1.6, vy: -10 });
       }
       return;
     }
@@ -1776,7 +1810,7 @@
       return;
     }
     if (ev.kind === "money" && ev.src === "exp") {
-      R.texts.push({ x: 380, y: HORIZON - 10, s: "+" + G.fmt(ev.amount) + " 원정", c: "#bfe6ff", life: 1.6, vy: -6 });
+      R.texts.push({ x: W - 120, y: HORIZON - 10, s: "+" + G.fmt(ev.amount) + " 원정", c: "#bfe6ff", life: 1.6, vy: -6 });
       return;
     }
     if (ev.kind === "bred") {
@@ -1934,26 +1968,26 @@
       c.fillText(s, cx, Y);
     };
     const o = st.owned;
-    tag(o.shop ? "매점" : "매점 자리", 24, 124, o.shop ? "rgba(29,79,154,0.92)" : "rgba(90,58,30,0.85)");
-    tag(o.rental ? "대여점" : "대여점 자리", 66, 128, o.rental ? "rgba(31,106,66,0.92)" : "rgba(90,58,30,0.85)");
-    tag(o.restaurant ? "횟집" : "횟집 자리", 105, 116, o.restaurant ? "rgba(138,35,24,0.92)" : "rgba(90,58,30,0.85)");
-    tag("매표소 · 입구", 22, 206, "rgba(176,58,46,0.92)");
-    tag("수족관", 67, 180, "rgba(30,80,120,0.92)");
+    tag(o.shop ? "매점" : "매점 자리", 26, RB1 - 34, o.shop ? "rgba(29,79,154,0.92)" : "rgba(90,58,30,0.85)");
+    tag(o.rental ? "대여점" : "대여점 자리", 70, RB1 - 30, o.rental ? "rgba(31,106,66,0.92)" : "rgba(90,58,30,0.85)");
+    tag(o.restaurant ? "횟집" : "횟집 자리", 113, RB1 - 42, o.restaurant ? "rgba(138,35,24,0.92)" : "rgba(90,58,30,0.85)");
+    tag("매표소 · 입구", 22, RB2 - 28, "rgba(176,58,46,0.92)");
+    tag("수족관", AQ_X + 37, RB2 - 56, "rgba(30,80,120,0.92)");
     if (o.shuttle > 0) {
-      tag("손님 선착장", DOCK_X + 18, ROAD_L + 18, "rgba(29,53,87,0.92)");
+      tag("손님 선착장", DOCK_X + 18, ROAD_L + 34, "rgba(29,53,87,0.92)");
     }
     if (o.crew > 0) {
       tag("원정 선착장", EXP_DOCK.x + 5, EXP_DOCK.y0 - 4, "rgba(122,74,34,0.92)");
     }
     if (o.pension > 0) {
-      tag("펜션" + (o.pension > 4 ? " " + o.pension + "실" : ""), 461, 94, "rgba(88,53,144,0.92)");
+      tag("펜션" + (o.pension > 4 ? " " + o.pension + "실" : ""), 607, 142, "rgba(88,53,144,0.92)");
     }
     if (st.upgrades.secret) {
       tag("VIP 비밀 양식장", SECRET.x + SECRET.w / 2, SECRET.y - 6, "rgba(88,40,140,0.92)");
     }
     tag("사장님", OWNER.x + 4, OWNER.feet + 9, "rgba(29,53,87,0.92)");
     if (G.seats(st) > MAX_SEATS_DRAWN) {
-      tag("+ 좌석 " + (G.seats(st) - MAX_SEATS_DRAWN) + "석", 300, 262, "rgba(8,20,32,0.75)");
+      tag("+ 좌석 " + (G.seats(st) - MAX_SEATS_DRAWN) + "석", W / 2, H - 6, "rgba(8,20,32,0.75)");
     }
   }
   function drawBanner(dt) {
@@ -1998,12 +2032,12 @@
   function facilitySpot(st, id) {
     if (id === "seat") {
       const info = seatInfo(st, Math.min(G.seats(st), MAX_SEATS_DRAWN) - 1);
-      return info ? [info.x + 4, info.feet - 6] : [290, 166];
+      return info ? [info.x + 4, info.feet - 6] : [W / 2, ROAD_U];
     }
     const fixed = {
-      shop: [24, 140], rental: [66, 144], restaurant: [105, 136], shuttle: [DOCK_X + 18, ROAD_L],
-      pension: [461, 110], farm: [240, 78], boat: [190, 78], rock: [40, 56], night: [290, 86],
-      shade: [190, 100], crew: [EXP_MOOR.x + 20, EXP_MOOR.y], secret: [SECRET.x + SECRET.w / 2, SECRET.y + 6],
+      shop: [26, RB1 - 14], rental: [70, RB1 - 10], restaurant: [113, RB1 - 20], shuttle: [DOCK_X + 18, ROAD_L],
+      pension: [607, 160], farm: [322, 112], boat: [220, 116], rock: [40, 72], night: [W / 2, MOD_Y[0] - 4],
+      shade: [226, MOD_Y[0]], crew: [EXP_MOOR.x + 20, EXP_MOOR.y], secret: [SECRET.x + SECRET.w / 2, SECRET.y + 6],
     };
     if (/^z_/.test(id)) {
       return [380, HORIZON - 4];
@@ -2069,11 +2103,11 @@
       drawBoardwalk(st);
       drawCages(st, world, ctx.night);
       drawPension(st);
-      drawShop(st, 4, 158);
-      drawRental(st, 48, 158);
-      drawRestaurant(st, 86, 158);
+      drawShop(st, 6, RB1);
+      drawRental(st, 52, RB1);
+      drawRestaurant(st, 94, RB1);
       drawOwnerJetty();
-      drawGate(st, 234);
+      drawGate(st, RB2);
       drawAquariumBuilding(st, ctx.dt);
       drawDock(st);
       drawFerry(st);
