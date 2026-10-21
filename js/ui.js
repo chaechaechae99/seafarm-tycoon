@@ -452,6 +452,8 @@
     }
   }
   function dispatchResultHtml(state, last) {
+    const br = last.byRarity || { Common: 0, Rare: 0, Epic: 0, Legendary: 0 };
+    last = Object.assign({ name: "", total: (last.catches || []).length, gold: 0, newCount: 0 }, last, { byRarity: br, catches: last.catches || [] });
     return '<div class="box"><h3>' + esc(last.name) + " 원정 결과 · " + last.total + "마리 · +" + fmt(last.gold) + "원 · 새 어종 " + last.newCount + "종</h3>" +
       '<div class="row"><span>일반 ' + last.byRarity.Common + " · 희귀 " + last.byRarity.Rare + " · 영웅 " + last.byRarity.Epic + "</span><b>전설 " + last.byRarity.Legendary + "</b></div>" +
       '<div class="disp-list">' + last.catches.map((c) => '<div class="disp-row"><img class="pix" alt="" src="' + root.Sprites.catchURL({ id: c.id }, state.bred, G.EXP.byId) + '"><span>' +

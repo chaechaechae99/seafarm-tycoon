@@ -75,7 +75,19 @@
     }
   }
 
+  let frameErrors = 0;
   function frame(now) {
+    try {
+      step(now);
+    } catch (e) {
+      // 오류가 나도 다음 프레임은 계속 (같은 오류로 콘솔이 넘치지 않게 몇 번만 기록)
+      if (frameErrors++ < 5) {
+        console.error("프레임 오류", e);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  function step(now) {
     const dt = Math.min((now - last) / 1000, 1);
     last = now;
     G.tick(state, world, dt);
@@ -99,7 +111,6 @@
       saveAcc = 0;
       save();
     }
-    requestAnimationFrame(frame);
   }
 
   function sfx(name, opt) {
@@ -339,7 +350,11 @@
       checkOffline();
     }
     UI.update(state, world);
-    UI.showDispatchResult(state);
+    try {
+      UI.showDispatchResult(state);
+    } catch (e) {
+      console.error("원정 결과 표시 실패", e);
+    }
     if (state.stats.guests === 0) {
       UI.toast("낡은 좌대 2석으로 시작해요. 사장님 낚시로 첫 자금을 모아보세요!");
     }

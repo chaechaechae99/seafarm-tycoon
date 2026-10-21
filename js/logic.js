@@ -1141,6 +1141,16 @@
     // 버전 마이그레이션 체인 (현재 v1)
     const st = mergeDefaults(newState(), raw);
     BM.migrate(st);
+    const ld = st.lastDispatch;
+    if (ld && (!ld.byRarity || !Array.isArray(ld.catches))) {
+      const cs = Array.isArray(ld.catches) ? ld.catches : [];
+      const byRarity = { Common: 0, Rare: 0, Epic: 0, Legendary: 0 };
+      cs.forEach((c) => { if (byRarity[c.rarity] !== undefined) { byRarity[c.rarity]++; } });
+      st.lastDispatch = {
+        dur: ld.dur || 60, name: (dispatchTier(ld.dur) || {}).name || Math.round((ld.dur || 60) / 60) + "분",
+        total: cs.length, byRarity, catches: cs.slice(0, 20), gold: ld.gold || 0, newCount: ld.newCount || 0, seen: true,
+      };
+    }
     st.version = VERSION;
     if (!isFinite(st.money)) {
       st.money = 0;
