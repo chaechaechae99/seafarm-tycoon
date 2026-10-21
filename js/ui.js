@@ -602,7 +602,7 @@
     state.trophies.forEach((t) => { trophyCount[t.rank] = (trophyCount[t.rank] || 0) + 1; });
     const tourney = '<div class="box"><h3>자동 낚시 대회 · ' + esc(lg.name) + '</h3><div class="row"><span>다음 대회</span><b>' + mmss(Math.max(0, state.tourney.next)) + "</b></div>" +
       '<div class="row"><span>우리 팀 전력 (리그 평균 ' + lg.ref + ")</span><b>" + G.teamPower(state).toFixed(1) + "</b></div>" +
-      '<p class="note">도감·원정 도감·신종·원정 어선·단골 호감도·수족관·좌석·환생이 전력이 돼요. 상금은 순위에 따라 초당 수익의 10~600초분.</p>' +
+      '<p class="note">도감·원정 도감·신종·원정 어선·단골 호감도·수족관·좌석·환생이 전력이 돼요. 상금은 순위에 따라 초당 수익의 1~60초분.</p>' +
       (last ? '<div class="row"><span>지난 대회 (' + esc(last.league) + ")</span><b>" + last.rank + "위 · +" + fmt(last.prize) + "원</b></div>" +
         '<div class="disp-list">' + last.board.map((b, i) => '<div class="row"><span>' + (i + 1) + ". " + esc(b.name) + (b.me ? " [우리]" : "") + "</span><b>" + b.score + "</b></div>").join("") + "</div>" : "") +
       '<div class="row"><span>트로피</span><b>금 ' + (trophyCount[1] || 0) + " · 은 " + (trophyCount[2] || 0) + " · 동 " + (trophyCount[3] || 0) + "</b></div>" +

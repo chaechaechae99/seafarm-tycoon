@@ -1441,12 +1441,22 @@
     NODE.dock = node(DOCK_X + 18, ROAD_L);
     NODE.gang = node(FERRY_DOCKED_X + 12, FERRY_Y - 2);
     const dockDown = node(DOCK_X + 18, FERRY_Y - 2);
+    NODE.dockWait = dockDown;
     chain([NODE.gateOut, NODE.gateIn, NODE.laneBot, NODE.dock, dockDown, NODE.gang]);
     // 아랫다리
     const board2 = MOD_X.map((mx) => node(mx + MW / 2, ROAD_L));
     chain([NODE.dock].concat(board2));
     NODE.laneTop = node(LANE_X, ROAD_U);
     link(NODE.laneBot, NODE.laneTop);
+    // 윗줄 건물 앞 길 → 각 건물 문 (매점·대여소·횟집)
+    let prevRoad = NODE.laneTop;
+    [["restaurant", 113], ["rental", 70], ["shop", 26]].forEach(([id, x]) => {
+      const road = node(x, ROAD_U);
+      link(prevRoad, road);
+      NODE["door_" + id] = node(x, RB1 + 1);
+      link(road, NODE["door_" + id]);
+      prevRoad = road;
+    });
     NODE.pier = node(COAST + 2, ROAD_U);
     link(NODE.laneTop, NODE.pier);
     const board = MOD_X.map((mx) => node(mx + MW / 2, ROAD_U));
@@ -1581,28 +1591,94 @@
       drawWalker(g.vip ? "vip" : g.look || g.type.id, g._skin, g._hair, pointAt(g._route, f), true);
     });
   }
+  const LEAVE_SPEED = 45;   // px/초
+  function walkStep(from, to) {
+    const path = shortestPath(from, to);
+    if (!path) {
+      return null;
+    }
+    const route = measure(path);
+    return { route, dur: Math.max(0.3, route.len / LEAVE_SPEED) };
+  }
   function startLeaver(st, ev) {
     const g = ev.guest;
     const from = SEAT_NODE[ev.seat];
     if (!g || from === undefined) {
       return;
     }
-    const exit = st.owned.shuttle > 0 && Math.random() < 0.4 ? NODE.gang : NODE.gateOut;
-    const path = shortestPath(from, exit);
-    if (!path) {
+    const steps = [];
+    let at = from;
+    // 60%는 갖고 있는 가게 하나에 들렀다 감 (횟집에 더 많이)
+    const shops = [["restaurant", 3], ["shop", 2], ["rental", 1]].filter(([id]) => st.owned[id] > 0);
+    if (shops.length && Math.random() < 0.6) {
+      let r = Math.random() * shops.reduce((s, x) => s + x[1], 0);
+      const pick = shops.find((x) => (r -= x[1]) < 0) || shops[0];
+      const s1 = walkStep(at, NODE["door_" + pick[0]]);
+      if (s1) {
+        steps.push(s1, { wait: 1.5 + Math.random() * 2, hide: true });
+        at = NODE["door_" + pick[0]];
+      }
+    }
+    const ferry = st.owned.shuttle > 0 && Math.random() < 0.4;
+    const s2 = walkStep(at, ferry ? NODE.dockWait : NODE.gateOut);
+    if (!s2) {
       return;
     }
-    R.leavers.push({ route: measure(path), t: 0, dur: G.WALK_IN, look: g.vip ? "vip" : g.look || g.type.id, skin: g._skin || 0, hair: g._hair || 0 });
+    steps.push(s2);
+    if (ferry) {
+      steps.push({ ferry: true, wait: 40 }, walkStep(NODE.dockWait, NODE.gang));
+    }
+    R.leavers.push({ steps, i: 0, t: 0, jx: Math.round(Math.random() * 8 - 4), look: g.vip ? "vip" : g.look || g.type.id, skin: g._skin || 0, hair: g._hair || 0 });
+  }
+  // 자리가 없어 구경·쇼핑만 하는 손님: 매표소 → 가게 → 매표소
+  const SHOP_LOOKS = ["tourist", "family", "student", "college", "youngwoman", "youngman", "couple", "office", "elder"];
+  function startShopper(st) {
+    const shops = ["restaurant", "shop", "rental"].filter((id) => st.owned[id] > 0);
+    if (!shops.length || R.leavers.length > 40 || Math.random() > 0.5) {
+      return;
+    }
+    const door = NODE["door_" + shops[Math.floor(Math.random() * shops.length)]];
+    const s1 = walkStep(NODE.gateOut, door);
+    const s2 = walkStep(door, NODE.gateOut);
+    if (!s1 || !s2) {
+      return;
+    }
+    R.leavers.push({ steps: [s1, { wait: 1.5 + Math.random() * 2, hide: true }, s2], i: 0, t: 0, jx: 0,
+      look: SHOP_LOOKS[Math.floor(Math.random() * SHOP_LOOKS.length)], skin: Math.floor(Math.random() * S.SKINS.length), hair: Math.floor(Math.random() * S.HAIRS.length) });
   }
   function drawLeavers(dt) {
+    const docked = ferryState(R.st || { owned: {} }).docked;
     for (let i = R.leavers.length - 1; i >= 0; i--) {
       const l = R.leavers[i];
-      l.t += dt;
-      if (l.t >= l.dur) {
+      const s = l.steps[l.i];
+      if (!s) {
         R.leavers.splice(i, 1);
         continue;
       }
-      drawWalker(l.look, l.skin, l.hair, pointAt(l.route, l.t / l.dur), true);
+      l.t += dt;
+      if (s.route) {
+        const pos = pointAt(s.route, l.t / s.dur);
+        if (l.t >= s.dur) {
+          l.last = pos;
+          l.i++;
+          l.t = 0;
+        }
+        drawWalker(l.look, l.skin, l.hair, pos, true);
+        continue;
+      }
+      // 기다리기: 가게 안(안 보임) 또는 선착장에서 배 기다림
+      const done = s.ferry ? docked : l.t >= s.wait;
+      if (done || l.t >= s.wait) {
+        if (s.ferry && !docked) {
+          R.leavers.splice(i, 1);   // 배가 끝내 안 오면 조용히 퇴장 (셔틀이 없어진 경우)
+          continue;
+        }
+        l.i++;
+        l.t = 0;
+      }
+      if (!s.hide && l.last) {
+        drawWalker(l.look, l.skin, l.hair, { x: l.last.x + l.jx, y: l.last.y, dx: 0, dy: 0 }, false);
+      }
     }
     if (R.leavers.length > 60) {
       R.leavers.splice(0, R.leavers.length - 60);
@@ -1994,6 +2070,7 @@
     }
     if (ev.kind === "money" && ev.src === "walkin") {
       R.walkAcc += ev.amount;
+      startShopper(st);
       return;
     }
     // 입장료는 손님이 들어오는 곳(매표소·여객선)에서
@@ -2417,6 +2494,7 @@
     init, resize, draw, pushEvent, resync, drawAquariumView,
     panBy, panWorld, zoomAt, resetCam, screenToWorld, hitTest, catFed, starCaught,
     get cam() { return R.cam; },
+    get leavers() { return R.leavers; },
     set onCue(fn) { R.onCue = fn; },
     W, H,
   };
