@@ -210,6 +210,24 @@
       }
       return false;
     },
+    buyPrestige(id) {
+      if (G.buyPrestige(state, id)) {
+        sfx("levelup");
+        save();
+      }
+    },
+    prestige() {
+      const gain = G.doPrestige(state);
+      if (gain) {
+        world = G.newWorld();
+        Rd.resync();
+        UI.refreshAll();
+        UI.toast("리조트를 매각했어요! 명성 포인트 +" + gain + " · 새 바다에서 다시 시작", "gold", root.Sprites.iconURL("vip"));
+        sfx("fanfare");
+        save();
+        UI.update(state, world);
+      }
+    },
     toggleAuto() {
       state.autoCast = !state.autoCast;
       world.autoT = 0;   // 켜자마자 한 번 던짐

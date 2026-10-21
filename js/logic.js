@@ -61,6 +61,15 @@
       dispatch: null,       // 원정 파견 중: { t, dur, zone }
       lastDispatch: null,
       autoCast: false,      // 사장님 자동 낚시 (30초마다)
+      quests: [],           // 손님 특별 의뢰 { id, fish, name, rarity, reward, left, nick }
+      questCd: 30,
+      questSeq: 1,
+      prestige: { points: 0, total: 0, count: 0, levels: {} },   // 환생: 남은·누적 포인트, 횟수, 상점 레벨
+      ocean: null,          // 해양 이벤트 { id, left }
+      oceanT: 300,
+      tourney: { next: 120, last: null },
+      trophies: [],         // { league, rank, day }
+      skins: [],            // 우승으로 얻은 사장님 스킨
       lastSave: Date.now(),
       created: Date.now(),
     };
@@ -174,7 +183,55 @@
   }
   // 도감 1종당 +2%, 원정 도감 1종당 +0.5%, 수족관 버프는 곱으로
   function incomeMult(state) {
-    return (1 + 0.02 * dexCount(state) + D.EXPEDITION.dexBonus * expDexCount(state)) * (1 + aquaBuff(state));
+    return (1 + 0.02 * dexCount(state) + D.EXPEDITION.dexBonus * expDexCount(state)) * (1 + aquaBuff(state)) * (1 + prestigeBonus(state, "income"));
+  }
+  // 모든 진행도 비례 보상의 기준: 현재 초당 수익 × 초 (최소 floor)
+  function cpsReward(state, sec, floor) {
+    return Math.max(floor || 0, Math.round(expectedRate(state) * sec));
+  }
+
+  /* ---------------- 환생 (리조트 매각) ---------------- */
+  function prestigeLevel(state, id) {
+    return (state.prestige && state.prestige.levels[id]) || 0;
+  }
+  function prestigeBonus(state, id) {
+    const item = D.PRESTIGE.shop.find((x) => x.id === id);
+    return item ? item.per * prestigeLevel(state, id) : 0;
+  }
+  function prestigeGain(state) {
+    if (state.totalEarned < D.PRESTIGE.minEarned) {
+      return 0;
+    }
+    return Math.floor(D.PRESTIGE.k * Math.sqrt(state.totalEarned / D.PRESTIGE.minEarned));
+  }
+  function prestigeCost(state, id) {
+    return (prestigeLevel(state, id) + 1) * D.PRESTIGE.costStep;
+  }
+  function buyPrestige(state, id) {
+    const item = D.PRESTIGE.shop.find((x) => x.id === id);
+    const cost = prestigeCost(state, id);
+    if (!item || prestigeLevel(state, id) >= item.max || state.prestige.points < cost) {
+      return false;
+    }
+    state.prestige.points -= cost;
+    state.prestige.levels[id] = prestigeLevel(state, id) + 1;
+    return true;
+  }
+  // 매각: 자금·시설·업그레이드·단골·진행 중 작업 초기화. 도감·원정 도감·신종·수족관·트로피·스킨·환생은 유지
+  function doPrestige(state) {
+    const gain = prestigeGain(state);
+    if (!gain) {
+      return 0;
+    }
+    const keep = {
+      dex: state.dex, expDex: state.expDex, bred: state.bred, breedHints: state.breedHints, aquarium: state.aquarium,
+      trophies: state.trophies, skins: state.skins, stats: state.stats, stats2: state.stats2, created: state.created,
+      prestige: { points: state.prestige.points + gain, total: state.prestige.total + gain, count: state.prestige.count + 1, levels: state.prestige.levels },
+    };
+    const fresh = newState();
+    Object.keys(state).forEach((k) => { delete state[k]; });
+    Object.assign(state, fresh, keep);
+    return gain;
   }
 
   /* ---------------- 원정 낚시 (350종) ---------------- */
@@ -403,14 +460,16 @@
     if (!dispatchUnlocked(state) || state.dispatch || !dispatchTier(sec)) {
       return false;
     }
-    state.dispatch = { t: 0, dur: sec };
+    // 환생 '원정 시간 단축'만큼 실제 시간이 줄어듦 (보상 등급은 고른 시간 기준)
+    state.dispatch = { t: 0, sec, dur: Math.max(30, Math.round(sec * (1 - prestigeBonus(state, "voyage")))) };
     return true;
   }
   // 귀항: 시간 등급의 luck·deep·depth로 굴림. 결과는 요약만 저장 (24시간 = 1,440마리)
   function finishDispatch(state, world, rng) {
     const dp = state.dispatch;
     state.dispatch = null;
-    const tier = dispatchTier(dp.dur) || D.DISPATCH.tiers[0];
+    const tier = dispatchTier(dp.sec || dp.dur) || D.DISPATCH.tiers[0];
+    const storm = state.weather === "typhoon";
     const prog = expProgress(state);
     const ctx = { luck: tier.luck, deep: tier.deep, depth: tier.depth };
     const byRarity = { Common: 0, Rare: 0, Epic: 0, Legendary: 0 };
@@ -418,7 +477,8 @@
     let gold = 0;
     let total = 0;
     let newCount = 0;
-    for (let i = 0; i < dispatchCatches(dp.dur); i++) {
+    const n = Math.round(dispatchCatches(tier.sec) * (storm ? 1 - D.OCEAN.typhoonDispatchLoss : 1));
+    for (let i = 0; i < n; i++) {
       const c = EXP.rollCatch(prog, ctx, rng);
       if (!c) {
         continue;
@@ -436,7 +496,7 @@
     }
     earn(state, world, gold, null);
     const top = Object.values(best).sort((a, b) => (b.isNew - a.isNew) || b.value - a.value).slice(0, 20);
-    const res = { dur: dp.dur, name: tier.name, total, byRarity, catches: top, gold: gold * incomeMult(state), newCount, seen: false };
+    const res = { dur: dp.dur, name: tier.name, total, byRarity, catches: top, gold: gold * incomeMult(state), newCount, seen: false, storm };
     state.lastDispatch = res;
     world.events.push({ kind: "dispatch", res });
     return res;
@@ -504,8 +564,33 @@
     state.stats2.wishes++;
     return true;
   }
+  // 전설(·명품) 출현 배수: 소원 × 환생 상점 × 고래 떼 × 태풍(연안 폭증)
   function legendaryMult(state) {
-    return state.buffs.wish > 0 ? D.WISH.legendary : 1;
+    const ev = oceanEvent(state);
+    return (state.buffs.wish > 0 ? D.WISH.legendary : 1) * (1 + prestigeBonus(state, "legend")) *
+      (ev && ev.legend ? ev.legend : 1) * (state.weather === "typhoon" ? D.OCEAN.typhoonLegend : 1);
+  }
+
+  /* ---------------- 해양 이벤트 ---------------- */
+  function oceanEvent(state) {
+    return state.ocean ? D.OCEAN.events.find((e) => e.id === state.ocean.id) || null : null;
+  }
+  function tickOcean(state, world, dt, rng) {
+    if (state.ocean) {
+      state.ocean.left -= dt;
+      if (state.ocean.left <= 0) {
+        world.events.push({ kind: "ocean", end: true, ev: oceanEvent(state) });
+        state.ocean = null;
+        state.oceanT = D.OCEAN.every[0] + rng() * (D.OCEAN.every[1] - D.OCEAN.every[0]);
+      }
+      return;
+    }
+    state.oceanT -= dt;
+    if (state.oceanT <= 0) {
+      const ev = pickWeighted(rng, D.OCEAN.events.map((e) => [e, e.weight]));
+      state.ocean = { id: ev.id, left: D.OCEAN.dur };
+      world.events.push({ kind: "ocean", ev });
+    }
   }
   const MILESTONES = [25, 50, 100, 200, 400];
   function msCount(n) {
@@ -518,7 +603,8 @@
     return MILESTONES.find((m) => n < m) || null;
   }
   function catchSpeedMult(state) {
-    return Math.pow(1.2, msCount(state.owned.seat));
+    const ev = oceanEvent(state);
+    return Math.pow(1.2, msCount(state.owned.seat)) * (1 + prestigeBonus(state, "speed")) * (ev && ev.speed ? ev.speed : 1);
   }
   function spotBonus(state, night) {
     return 1 + 0.25 * (availableSpots(state, night).length - 1);
@@ -546,6 +632,10 @@
     }
     if (state.buffs.cat > 0) {
       r *= D.CAT.arrive;
+    }
+    const oev = oceanEvent(state);
+    if (oev && oev.arrive) {
+      r *= oev.arrive;
     }
     r *= repMult(state);
     if (night && !state.upgrades.night) {
@@ -618,7 +708,7 @@
         if (spot === "cage") {
           x *= 1 + Math.min(0.5, 0.02 * state.owned.farm);
         }
-        if (r === "legendary") {
+        if (r === "legendary" || r === "masterpiece") {
           x *= legendaryMult(state);
         }
       }
@@ -837,7 +927,9 @@
     let seat = -1;
     // 호감도 10 VIP는 비밀 양식장 전용 좌대로
     if (lv >= 10 && state.upgrades.secret) {
-      for (let k = 0; k < D.VIP.secretSeats; k++) {
+      // 원형 플랫폼에 고르게 앉도록 7칸씩 건너뛰며 빈자리를 찾음 (24와 서로소라 모든 자리를 한 번씩 돎)
+      for (let i = 0; i < D.VIP.secretSeats; i++) {
+        const k = (i * 7) % D.VIP.secretSeats;
         if (!world.vipOcc[k]) {
           seat = VIP_SEAT0 + k;
           break;
@@ -878,10 +970,113 @@
     }
     world.guests.push(guest);
     state.stats.guests++;
+    maybeQuest(state, world, guest);
     const fee = feePerGuest(state, g) * (vip ? vipFeeMult(lv) : 1);
     earn(state, world, fee + shopPerGuest(state, g), { seat, src: "guest" });
     world.events.push({ kind: "arrive", seat, type: g.id, reg: reg ? { nick: reg.nick, lv } : null, vip });
     return guest;
+  }
+
+  /* ---------------- 손님 특별 의뢰 ---------------- */
+  // 지금 가두리에서 실제로 낚일 수 있는 어종(장소·제철) 중에서 고름 → 항상 달성 가능
+  function questFish(state, rng) {
+    const ck = clockInfo(state);
+    const spots = availableSpots(state, ck.night);
+    const pool = [];
+    D.FISH.forEach((f) => {
+      const w = D.QUEST.pickWeight[f.rarity];
+      if (w && f.spots.some((s) => spots.includes(s))) {
+        pool.push([f, w * (f.seasons.includes(ck.season) ? 2 : 1)]);
+      }
+    });
+    return pool.length ? pickWeighted(rng, pool) : null;
+  }
+  function questReward(state, f) {
+    const avgValue = D.RARITY[f.rarity].base * f.v;
+    return Math.max(cpsReward(state, D.QUEST.sec[f.rarity], D.QUEST.floor), Math.round(avgValue * D.QUEST.valueMult));
+  }
+  function maybeQuest(state, world, guest) {
+    if (guest.vip || state.questCd > 0 || state.quests.length >= D.QUEST.max || world.rng() >= D.QUEST.chance) {
+      return;
+    }
+    const f = questFish(state, world.rng);
+    if (!f) {
+      return;
+    }
+    const q = { id: state.questSeq++, fish: f.id, name: f.name, rarity: f.rarity, reward: questReward(state, f), left: D.QUEST.limit, nick: guest.nick };
+    state.quests.push(q);
+    state.questCd = D.QUEST.cooldown;
+    guest.questId = q.id;
+    world.events.push({ kind: "quest", q, seat: guest.seat });
+  }
+  // 누가 낚든(손님·사장님) 의뢰 어종이면 완료
+  function checkQuest(state, world, c) {
+    if (!c || c.junk) {
+      return;
+    }
+    const i = state.quests.findIndex((q) => q.fish === c.id);
+    if (i < 0) {
+      return;
+    }
+    const q = state.quests.splice(i, 1)[0];
+    state.money += q.reward;
+    state.totalEarned += q.reward;
+    state.stats2.quests = (state.stats2.quests || 0) + 1;
+    world.events.push({ kind: "quest", q, done: true });
+  }
+  function tickQuests(state, world, dt) {
+    state.questCd = Math.max(0, state.questCd - dt);
+    for (let i = state.quests.length - 1; i >= 0; i--) {
+      state.quests[i].left -= dt;
+      if (state.quests[i].left <= 0) {
+        world.events.push({ kind: "quest", q: state.quests[i], failed: true });
+        state.quests.splice(i, 1);
+      }
+    }
+  }
+
+  /* ---------------- 자동 낚시 대회 ---------------- */
+  function tourneyLeague(state) {
+    const cps = expectedRate(state);
+    let lg = D.TOURNEY.leagues[0];
+    D.TOURNEY.leagues.forEach((l) => {
+      if (cps >= l.minCps) {
+        lg = l;
+      }
+    });
+    return lg;
+  }
+  // 팀 전력: 도감·원정 도감·신종·원정 어선·단골 호감도·수족관·좌석·환생 (CPS는 리그를 정하고 전력엔 안 넣음)
+  function teamPower(state) {
+    const vipLv = state.vip.regulars.reduce((s, r) => s + vipLevel(r), 0);
+    return dexCount(state) * 0.4 + expDexCount(state) * 0.08 + state.bred.length * 0.8 + (state.owned.crew || 0) * 0.2 +
+      vipLv * 0.03 + aquaBuff(state) * 40 + Math.min(150, state.owned.seat) * 0.05 + state.prestige.total * 0.2;
+  }
+  function runTourney(state, world, rng) {
+    const lg = tourneyLeague(state);
+    const me = teamPower(state) * (0.85 + rng() * 0.3);
+    const names = D.TOURNEY.rivals.slice().sort(() => rng() - 0.5).slice(0, D.TOURNEY.entrants - 1);
+    const board = names.map((name) => ({ name, score: lg.ref * (0.7 + rng() * 0.6) })).concat([{ name: "우리 낚시터", score: me, me: true }]);
+    board.sort((a, b) => b.score - a.score);
+    const rank = board.findIndex((x) => x.me) + 1;
+    const prize = cpsReward(state, D.TOURNEY.prizeSec[rank - 1] || 0, 100);
+    state.money += prize;
+    state.totalEarned += prize;
+    const ck = clockInfo(state);
+    let skin = null;
+    if (rank <= 3) {
+      state.trophies.unshift({ league: lg.id, rank, day: ck.day });
+      state.trophies.length = Math.min(state.trophies.length, 30);
+    }
+    if (rank === 1 && !state.skins.includes(lg.skin)) {
+      state.skins.push(lg.skin);
+      skin = lg.skin;
+    }
+    const res = { league: lg.name, leagueId: lg.id, rank, prize, board: board.map((x) => ({ name: x.name, score: Math.round(x.score * 10) / 10, me: !!x.me })), skin, day: ck.day };
+    state.tourney.last = res;
+    state.tourney.next = D.TOURNEY.period;
+    world.events.push({ kind: "tourney", res });
+    return res;
   }
 
   function guestCatch(state, world, guest) {
@@ -899,6 +1094,7 @@
       earn(state, world, c.value * cookRate(state), { seat: guest.seat, src: "cook" });
     }
     world.events.push({ kind: "catch", seat: guest.seat, fish: c, isNew, who: guest.nick || guest.type.name });
+    checkQuest(state, world, c);
   }
 
   function makeReview(state, world, guest) {
@@ -1048,6 +1244,12 @@
         world.autoT = D.AUTO_CAST_SEC;
       }
     }
+    tickQuests(state, world, dt);
+    tickOcean(state, world, dt, rng);
+    state.tourney.next -= dt;
+    if (state.tourney.next <= 0) {
+      runTourney(state, world, rng);
+    }
     state.buffs.cat = Math.max(0, state.buffs.cat - dt);
     state.buffs.wish = Math.max(0, state.buffs.wish - dt);
 
@@ -1082,6 +1284,7 @@
         const bonus = expectedRate(state) * 3 / incomeMult(state);
         const got = earn(state, world, c.value + bonus, { src: "owner" });
         world.events.push({ kind: "catch", owner: true, fish: c, isNew, amount: got });
+        checkQuest(state, world, c);
         world.cast = null;
       }
     }
@@ -1126,6 +1329,8 @@
     }
     state.buffs.cat = Math.max(0, state.buffs.cat - elapsed);
     state.buffs.wish = Math.max(0, state.buffs.wish - elapsed);
+    state.quests = [];
+    state.tourney.next = Math.min(state.tourney.next - elapsed, 1);
     return { elapsed, gain, eff, expFound, expBest };
   }
 
@@ -1193,7 +1398,9 @@
       const units = [["경", 1e16], ["조", 1e12], ["억", 1e8], ["만", 1e4]];
       const u = units.find((x) => n >= x[1]);
       const v = n / u[1];
-      out = (v >= 1000 ? Math.floor(v).toLocaleString("ko-KR") : v.toFixed(v >= 100 ? 0 : v >= 10 ? 1 : 2).replace(/\.?0+$/, "")) + u[0];
+      // 소수점 아래 0만 지움 (정수의 0까지 지우면 100억이 "1억"이 됨)
+      const s = v.toFixed(v >= 100 ? 0 : v >= 10 ? 1 : 2);
+      out = (v >= 1000 ? Math.floor(v).toLocaleString("ko-KR") : s.includes(".") ? s.replace(/\.?0+$/, "") : s) + u[0];
     }
     return (neg ? "-" : "") + out;
   }
@@ -1209,6 +1416,8 @@
     breedCatalog, hintCost, buyHint,
     aquaEntry, aquaCandidates, aquaBuffOf, aquaBuff, aquaAdd, aquaRemove,
     catFeedCost, feedCat, makeWish, legendaryMult, fmtSize, WALK_IN,
+    cpsReward, prestigeLevel, prestigeBonus, prestigeGain, prestigeCost, buyPrestige, doPrestige,
+    oceanEvent, questReward, tourneyLeague, teamPower, runTourney,
     dispatchTier, dispatchCatches, startDispatch, dispatchUnlocked, finishDispatch, vipXpFor, vipFeeMult, vipPool,
     arrivalRate, feePerGuest, shopPerGuest, walkinPerGuest, weatherArriveAvg, cookRate, passivePerSec, availableSpots,
     rollFish, registerCatch, expectedFishValue, expectedRate, tick, startCast, spawnGuest,

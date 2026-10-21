@@ -1,7 +1,7 @@
 # 진행 상황 (2026-10-21)
 
 ## 상태
-플레이 가능한 완성 빌드, GitHub Pages 배포 중 (https://chaechaechae99.github.io/seafarm-tycoon/). `npm test` 22개 통과, 헤드리스 브라우저로 낮·밤·확대·각 탭·예전 저장 불러오기 확인.
+플레이 가능한 완성 빌드, GitHub Pages 배포 중 (https://chaechaechae99.github.io/seafarm-tycoon/). `npm test` 30개 통과, 헤드리스 브라우저로 낮·밤·확대·각 탭·예전 저장 불러오기 확인.
 
 ## 숫자로 본 현재 게임
 - 어종: 가두리 120종(실존 양식·연안, 5등급·난이도) + 원정 350종(크기 보정 52종), 신종 도감 44칸

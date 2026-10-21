@@ -96,6 +96,7 @@
         <button class="tab" role="tab" data-tab="vip" id="tab-vip" type="button">VIP</button>
         <button class="tab" role="tab" data-tab="aqua" id="tab-aqua" type="button">수족관</button>
         <button class="tab" role="tab" data-tab="dex" id="tab-dex" type="button">도감 <span id="dexCount" class="tab-count">0/120</span></button>
+        <button class="tab" role="tab" data-tab="meta" id="tab-meta" type="button">명예</button>
         <button class="tab" role="tab" data-tab="reviews" id="tab-reviews" type="button">후기</button>
         <button class="tab" role="tab" data-tab="settings" id="tab-settings" type="button">설정</button>
       </nav>
@@ -146,6 +147,10 @@
           <button type="button" class="amt" data-rar="legendary" id="rar-legendary">전설</button>
         </div>
         <div id="dexGrid" class="dex-grid"></div>
+      </div>
+
+      <div class="tab-body" data-body="meta" hidden>
+        <div id="metaBody"></div>
       </div>
 
       <div class="tab-body" data-body="reviews" hidden>

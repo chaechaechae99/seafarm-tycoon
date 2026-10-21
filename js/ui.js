@@ -463,7 +463,7 @@
     const dp = state.dispatch;
     let html;
     if (dp) {
-      html = '<div class="box"><div class="row"><span>출항 중 · ' + esc((G.dispatchTier(dp.dur) || {}).name || "") + " 원정</span><b>" + mmss(Math.max(0, dp.dur - dp.t)) + ' 남음</b></div>' +
+      html = '<div class="box"><div class="row"><span>출항 중 · ' + esc((G.dispatchTier(dp.sec || dp.dur) || {}).name || "") + " 원정</span><b>" + mmss(Math.max(0, dp.dur - dp.t)) + ' 남음</b></div>' +
         '<div class="progress"><i style="width:' + Math.min(100, (dp.t / dp.dur) * 100) + '%"></i></div></div>';
     } else {
       html = '<p class="note">파견은 무료예요. 1분에 1마리씩 잡고, 오래 보낼수록 더 먼 바다까지 나가 전설·고래·심해 생물 확률이 크게 올라요.</p>' +
@@ -489,6 +489,57 @@
     U.dispHtml = "";
     $("dispatchModal").hidden = false;
     renderDispatch(state);
+  }
+
+  /* ---------- 명예: 의뢰 · 해양 · 대회 · 환생 ---------- */
+  const LEAGUE_NAME = Object.fromEntries(D.TOURNEY.leagues.map((l) => [l.id, l.name]));
+  const SKIN_NAME = { bronze: "청동 선장복", navy: "남색 선장복", gold: "황금 선장복", legend: "전설의 선장복" };
+  function updateMeta(state, dt) {
+    if (U.tab !== "meta") {
+      return;
+    }
+    U.metaT = (U.metaT || 0) - dt;
+    if (U.metaT > 0 && !U.metaDirty) {
+      return;
+    }
+    U.metaT = 1;
+    U.metaDirty = false;
+    const ev = G.oceanEvent(state);
+    const storm = state.weather === "typhoon";
+    const ocean = '<div class="box"><h3>바다 상황</h3>' +
+      (ev ? '<div class="row"><span>' + esc(ev.name) + "</span><b>" + Math.ceil(state.ocean.left) + "초 남음</b></div><p class=\"note\">" + esc(ev.desc) + "</p>" : '<p class="note">평온해요. 4~8분마다 멸치 떼·적조·고래 떼 같은 해양 이벤트가 찾아와요.</p>') +
+      (storm ? '<p class="note">[태풍 경보] 손님은 줄지만 연안에 전설·명품 어종이 ×' + D.OCEAN.typhoonLegend + "로 몰려와요. 이때 귀항하는 원정선은 어획 " + Math.round(D.OCEAN.typhoonDispatchLoss * 100) + "%를 잃어요.</p>" : "") + "</div>";
+    const quests = '<div class="box"><h3>손님 특별 의뢰 (' + state.quests.length + "/" + D.QUEST.max + ")</h3>" +
+      (state.quests.length ? state.quests.map((q) => '<div class="row"><span>' + esc(q.nick || "손님") + " · " + esc(q.name) + " (" + D.RARITY[q.rarity].name + ")</span><b>+" + fmt(q.reward) + "원 · " + Math.ceil(q.left) + "초</b></div>").join("") :
+        '<p class="note">손님 머리 위에 [!]가 뜨면 의뢰예요. 정해진 어종을 누가 낚든 3분 안에 낚으면 보상(초당 수익의 15~60초분)을 받아요.</p>') + "</div>";
+    const lg = G.tourneyLeague(state);
+    const last = state.tourney.last;
+    const trophyCount = {};
+    state.trophies.forEach((t) => { trophyCount[t.rank] = (trophyCount[t.rank] || 0) + 1; });
+    const tourney = '<div class="box"><h3>자동 낚시 대회 · ' + esc(lg.name) + '</h3><div class="row"><span>다음 대회</span><b>' + mmss(Math.max(0, state.tourney.next)) + "</b></div>" +
+      '<div class="row"><span>우리 팀 전력 (리그 평균 ' + lg.ref + ")</span><b>" + G.teamPower(state).toFixed(1) + "</b></div>" +
+      '<p class="note">도감·원정 도감·신종·원정 어선·단골 호감도·수족관·좌석·환생이 전력이 돼요. 상금은 순위에 따라 초당 수익의 10~600초분.</p>' +
+      (last ? '<div class="row"><span>지난 대회 (' + esc(last.league) + ")</span><b>" + last.rank + "위 · +" + fmt(last.prize) + "원</b></div>" +
+        '<div class="disp-list">' + last.board.map((b, i) => '<div class="row"><span>' + (i + 1) + ". " + esc(b.name) + (b.me ? " [우리]" : "") + "</span><b>" + b.score + "</b></div>").join("") + "</div>" : "") +
+      '<div class="row"><span>트로피</span><b>금 ' + (trophyCount[1] || 0) + " · 은 " + (trophyCount[2] || 0) + " · 동 " + (trophyCount[3] || 0) + "</b></div>" +
+      '<div class="row"><span>사장님 스킨</span><b>' + (state.skins.length ? state.skins.map((s) => SKIN_NAME[s] || s).join(", ") : "없음 (리그 우승 시)") + "</b></div></div>";
+    const gain = G.prestigeGain(state);
+    const P = state.prestige;
+    const prestige = '<div class="box"><h3>환생 · 리조트 매각</h3>' +
+      '<div class="row"><span>이번 회차 누적 수익</span><b>' + fmt(state.totalEarned) + " / " + fmt(D.PRESTIGE.minEarned) + "원</b></div>" +
+      '<div class="row"><span>매각하면 받는 명성 포인트</span><b>' + gain + "</b></div>" +
+      '<p class="note">자금·시설·업그레이드·단골이 초기화돼요. 도감·원정 도감·신종·수족관·트로피·스킨은 남아요. (' + P.count + "회 환생)</p>" +
+      '<button type="button" class="btn btn-danger' + (U.prestigeArm ? " is-armed" : "") + '" data-act="prestige"' + (gain ? "" : " disabled") + ">" +
+      (U.prestigeArm ? "한 번 더 누르면 매각" : "리조트 매각 (명성 +" + gain + ")") + "</button>" +
+      '<div class="row"><span>보유 명성 포인트</span><b>' + P.points + " (누적 " + P.total + ")</b></div>" +
+      D.PRESTIGE.shop.map((it) => {
+        const lv = G.prestigeLevel(state, it.id);
+        const cost = G.prestigeCost(state, it.id);
+        const max = lv >= it.max;
+        return '<div class="vip-row"><div class="vip-lv">' + lv + '</div><div><div class="vip-name">' + esc(it.name) + '</div><div class="vip-meta">' + esc(it.desc) + " · 현재 +" + Math.round(G.prestigeBonus(state, it.id) * 100) + "%</div></div>" +
+          '<button type="button" class="mini-btn" data-pshop="' + it.id + '"' + (max || P.points < cost ? " disabled" : "") + ">" + (max ? "최대" : cost + "점") + "</button></div>";
+      }).join("") + "</div>";
+    $("metaBody").innerHTML = ocean + quests + tourney + prestige;
   }
 
   /* ---------- 도감 ---------- */
@@ -695,6 +746,22 @@
       if (f.rarity === "Legendary" || (ev.isNew && Math.random() < 0.3)) {
         addNews(fishImg(f) + "<b>원정대</b> · " + esc(f.name) + " " + G.fmtSize(f.size) + (ev.isNew ? " (새 어종)" : ""));
       }
+    } else if (ev.kind === "quest") {
+      U.metaDirty = true;
+      if (ev.done) {
+        toast("의뢰 완료! " + ev.q.name + " · 보상 +" + fmt(ev.q.reward) + "원", "gold", fishURL({ id: ev.q.fish }));
+      } else if (!ev.failed) {
+        toast((ev.q.nick || "손님") + "의 의뢰: " + ev.q.name + " 낚아주세요 (+" + fmt(ev.q.reward) + "원)", "new", fishURL({ id: ev.q.fish }));
+      }
+    } else if (ev.kind === "ocean") {
+      U.metaDirty = true;
+      if (!ev.end) {
+        toast("[해양 이벤트] " + ev.ev.name + " · " + ev.ev.desc, "gold");
+      }
+    } else if (ev.kind === "tourney") {
+      U.metaDirty = true;
+      const r = ev.res;
+      toast(r.league + " 대회 " + r.rank + "위! 상금 +" + fmt(r.prize) + "원" + (r.skin ? " · 새 스킨 " + (SKIN_NAME[r.skin] || r.skin) : ""), r.rank <= 3 ? "gold" : "new", root.Sprites.iconURL("vip"));
     } else if (ev.kind === "dispatch") {
       U.expDirty = U.farmDirty = U.aquaDirty = true;
       showDispatchResult(state);
@@ -751,7 +818,7 @@
     }
     // 새 탭 버튼들 (내용을 다시 그려도 동작하도록 위임)
     document.querySelector(".sidebar").addEventListener("click", (e) => {
-      const b = e.target.closest("[data-act], [data-zone], [data-cat], [data-hint]");
+      const b = e.target.closest("[data-act], [data-zone], [data-cat], [data-hint], [data-pshop]");
       if (!b) {
         return;
       }
@@ -763,6 +830,23 @@
       if (b.dataset.cat) {
         U.catKind = b.dataset.cat;
         U.farmDirty = true;
+        return;
+      }
+      if (b.dataset.pshop) {
+        actions.buyPrestige(b.dataset.pshop);
+        U.metaDirty = true;
+        return;
+      }
+      if (b.dataset.act === "prestige") {
+        if (!U.prestigeArm) {
+          U.prestigeArm = true;
+          U.metaDirty = true;
+          setTimeout(() => { U.prestigeArm = false; U.metaDirty = true; }, 3000);
+          return;
+        }
+        U.prestigeArm = false;
+        actions.prestige();
+        U.metaDirty = true;
         return;
       }
       if (b.dataset.hint) {
@@ -872,6 +956,7 @@
     updateExp(state);
     updateFarm(state);
     updateVip(state, world, 0.2);
+    updateMeta(state, 0.2);
     updateAqua(state);
     updateDex(state);
     updateReviews(state);

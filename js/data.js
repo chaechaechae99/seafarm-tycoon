@@ -233,7 +233,7 @@
     lv5Rarity: 1.2,
     feeLv10: 20,           // VIP VVIP 이용료 배수 (레벨 10 초과분 1레벨당 +feePerLv)
     feePerLv: 0.5,
-    secretSeats: 12,       // 비밀 양식장 VIP 전용 좌대
+    secretSeats: 24,       // 비밀 양식장(원형 플랫폼) VIP 전용 좌석
   };
 
   // 비밀 양식장 교배
@@ -323,6 +323,49 @@
   };
   // 사장님 자동 낚시 간격 (초)
   const AUTO_CAST_SEC = 30;
+  /* ---- 진행도 비례 보상: 모든 자금 보상 = 현재 초당 수익(CPS) × 초 (최소값 floor) ---- */
+  // 손님 특별 의뢰: 손님 머리 위 '!' → 정해진 어종을 limit초 안에 낚으면 보상
+  // 보상 = max(CPS × sec[희귀도], 어종 평균 가치 × valueMult)
+  const QUEST = {
+    chance: 0.06, max: 2, cooldown: 90, limit: 180, valueMult: 25, floor: 200,
+    sec: { common: 15, premium: 30, rare: 60 },
+    pickWeight: { common: 60, premium: 30, rare: 10 },
+  };
+  // 환생(리조트 매각): 이번 회차 누적 수익 minEarned 이상이면 가능
+  // 명성 포인트 = floor(k × sqrt(누적 수익 / minEarned)). 상점 n레벨 가격 = (n+1) × costStep
+  const PRESTIGE = {
+    minEarned: 1e10, k: 10, costStep: 5,
+    shop: [
+      { id: "speed", name: "기본 낚시 속도", per: 0.1, max: 20, desc: "입질 속도 +10%/레벨" },
+      { id: "legend", name: "전설 어종 출현", per: 0.2, max: 15, desc: "전설·명품 확률 +20%/레벨" },
+      { id: "voyage", name: "원정 시간 단축", per: 0.08, max: 6, desc: "원정 파견 시간 -8%/레벨" },
+      { id: "income", name: "리조트 브랜드", per: 0.15, max: 30, desc: "전체 수익 +15%/레벨" },
+    ],
+  };
+  // 해양 이벤트: every초마다 확률로 발생, dur초 지속. 태풍(날씨)은 연안 전설 폭증 + 원정 위험
+  const OCEAN = {
+    every: [240, 480], dur: 90,
+    events: [
+      { id: "anchovy", name: "멸치 떼 출현", weight: 2, speed: 1.5, arrive: 1.2, desc: "입질 속도 ×1.5, 손님 ×1.2" },
+      { id: "redtide", name: "적조 발생", weight: 1.5, speed: 0.6, arrive: 0.8, desc: "입질 속도 ×0.6, 손님 ×0.8" },
+      { id: "whale", name: "고래 떼 회유", weight: 1, legend: 3, desc: "전설·명품 출현 ×3" },
+    ],
+    typhoonLegend: 2.5,        // 태풍 중 연안 전설·명품 출현 배수
+    typhoonDispatchLoss: 0.3,  // 태풍 중 귀항하면 어획 30% 유실
+  };
+  // 자동 낚시 대회: period초마다 자동 출전. 리그는 CPS로 결정, 상금 = CPS × prizeSec[순위]
+  const TOURNEY = {
+    period: 600, entrants: 8, firstAt: 120,
+    leagues: [
+      { id: "rookie", name: "초급 리그", minCps: 0, ref: 12, skin: "bronze" },
+      { id: "pro", name: "중급 리그", minCps: 1e3, ref: 28, skin: "navy" },
+      { id: "elite", name: "고급 리그", minCps: 1e5, ref: 50, skin: "gold" },
+      { id: "legend", name: "전설 리그", minCps: 1e7, ref: 80, skin: "legend" },
+    ],
+    prizeSec: [600, 300, 150, 80, 50, 30, 20, 10],
+    rivals: ["남해 바다낚시클럽", "통영 좌대연합", "거제 갯바위회", "여수 선상팀", "제주 다금바리파", "부산 감성돔클럽", "목포 민어회", "완도 전복낚시단", "삼척 방어팀", "속초 대게연합"],
+  };
+
   // 밤 별똥별 소원: buffSec 동안 전설·신종 입질 ×legendary
   const WISH = { buffSec: 1800, legendary: 2.5 };
 
@@ -388,7 +431,7 @@
 
   const GameData = {
     FACILITIES, UPGRADES, RARITY, RARITY_ORDER, SPOTS, FISH, JUNK, JUNK_CHANCE, WALKIN, GOLDEN_CHANCE,
-    EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
+    EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, QUEST, PRESTIGE, OCEAN, TOURNEY, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
     GUEST_TYPES, SEASON_NAMES, WEATHER, WEATHER_ODDS, NICK_A, NICK_B, REVIEW_TEXT,
     PERSONAS, SURNAME, GIVEN, DIFF_WEIGHT, DIFF_DEFAULT,
   };

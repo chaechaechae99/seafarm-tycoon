@@ -42,9 +42,15 @@
   const SEAT_OFF = [4, 16, 28, 40, 52];
   const MAX_SEATS_DRAWN = 150;
   // VIP 비밀 양식장: 위쪽 띠 오른쪽 넓은 자리, 위·아래 발판에 6석씩 (12석)
-  const SECRET = { x: 400, y: 104, w: 160, h: 32 };
-  const VIP_STEP = 22;
-  const LADDER_X = MOD_X[3] + SEAT_OFF[2] + 4;   // 비밀 양식장 ↔ 4번째 칸 윗줄 좌대
+  // VIP 비밀 양식장: 위에서 비스듬히 내려다본 원형 해상 플랫폼 (타원 cx, cy, 반지름 rx·ry)
+  const SECRET = { cx: 480, cy: 112, rx: 80, ry: 29, deck: 13 };
+  const VIP_SEATS = D.VIP.secretSeats;
+  // VIP 전용 나무 다리: 해안 골목 → 북쪽 → 바다 위 가로 다리 → 경사로 → 플랫폼 서쪽 입구
+  const VBR = { x0: COAST - 8, y: 137, x1: 362 };
+  // 좌석 k의 각도: 맨 위(-90도)에서 시작해 30도 간격, 반 칸 비켜서 맨 아래 입구를 비워둠
+  function vipAngle(k) {
+    return -Math.PI / 2 + ((k + 0.5) * Math.PI * 2) / VIP_SEATS;
+  }
   const OWNER = { x: COAST - 6, feet: LAND_TOP - 2 };
   const AQ_X = 36;
   const TANK = { x: AQ_X + 8, y: RB2 - 38, w: 58, h: 26 };
@@ -441,6 +447,43 @@
       });
     }
   }
+  // 해양 이벤트 연출: 적조(붉은 물빛) · 멸치 떼(은빛 반짝임) · 고래 떼(등과 물기둥)
+  function drawOcean(st) {
+    const ev = st.ocean && st.ocean.id;
+    if (ev === "redtide") {
+      R.b.fillStyle = "rgba(170,40,40,0.18)";
+      R.b.fillRect(0, HORIZON, W, H - HORIZON);
+    } else if (ev === "anchovy") {
+      const cx = COAST + 60 + ((R.t * 14) % (W - COAST - 120));
+      for (let i = 0; i < 40; i++) {
+        const a = i * 2.4 + R.t * 2;
+        const x = cx + Math.cos(a) * (8 + (i % 7) * 3);
+        const y = HORIZON + 30 + Math.sin(a * 1.3) * 8 + (i % 5);
+        if (Math.sin(R.t * 8 + i) > 0) {
+          px(x, y, 2, 1, "#e6eef4");
+        }
+      }
+    } else if (ev === "whale") {
+      for (let i = 0; i < 2; i++) {
+        const x = Math.round(((R.t * (6 + i * 3) + i * 180) % (W - COAST)) + COAST);
+        const y = HORIZON + 14 + i * 10;
+        ellipseW(x, y, 16, 3, "#2a3a4a");
+        px(x - 3, y - 2, 6, 1, "#4a5a6a");
+        if (Math.floor(R.t * 1.5 + i) % 3 === 0) {
+          for (let k = 0; k < 6; k++) {
+            px(x + (k % 3) - 1, y - 4 - k * 2, 1, 2, "#e6f6ff");
+          }
+        }
+      }
+    }
+  }
+  function ellipseW(cx, cy, rx, ry, c) {
+    for (let dy = -ry; dy <= 0; dy++) {
+      const w = Math.round(rx * Math.sqrt(1 - (dy * dy) / (ry * ry)));
+      px(cx - w, cy + dy, w * 2, 1, c);
+    }
+  }
+
   // 먼바다에서 뛰어오르는 물고기
   function drawJumpers(st, dt) {
     R.jumpT -= dt;
@@ -836,15 +879,20 @@
   }
   function seatInfo(st, seat) {
     if (seat >= G.VIP_SEAT0) {
-      const k = seat - G.VIP_SEAT0;
-      const sx = SECRET.x + 8 + (k % 6) * VIP_STEP;
-      const d = bob(7, 0.6);
-      if (k < 6) {
-        const feet = SECRET.y + 5 + d;
-        return { x: sx, feet, view: "front", hand: [sx + 7, feet - 6], tip: [sx + 11, feet + 4], bob: [sx + 11, feet + 11], m: -1 };
-      }
-      const feet = SECRET.y + SECRET.h - 1 + d;
-      return { x: sx, feet, view: "back", hand: [sx + 7, feet - 6], tip: [sx + 10, feet - 14], bob: [sx + 10, feet - 19], m: -1 };
+      const a = vipAngle(seat - G.VIP_SEAT0);
+      const S2 = SECRET;
+      const d = bob(7, 0.5);
+      // 데크 가운데 줄 위에 섬
+      const px0 = S2.cx + Math.cos(a) * (S2.rx - S2.deck / 2);
+      const feet = Math.round(S2.cy + Math.sin(a) * (S2.ry - 4) + d + 3);
+      // 중앙을 향하는 방향 (먼 쪽은 앞모습, 가까운 쪽은 뒷모습)
+      const view = Math.sin(a) < 0 ? "front" : "back";
+      const nx = -Math.cos(a);
+      const ny = -Math.sin(a);
+      const hand = [Math.round(px0 + nx * 3), feet - 6];
+      const tip = [Math.round(hand[0] + nx * 9), Math.round(hand[1] + ny * 5 - (view === "back" ? 6 : 0))];
+      const bobPt = [Math.round(S2.cx + (px0 - S2.cx) * 0.42), Math.round(S2.cy + (feet - 3 - S2.cy) * 0.42 + d)];
+      return { x: Math.round(px0) - 4, feet, view, hand, tip, bob: bobPt, m: -1 };
     }
     if (seat >= MAX_SEATS_DRAWN) {
       return null;
@@ -1065,47 +1113,114 @@
       px(cx - 1, cy - 1, 2, 2, "rgba(8,30,50,0.5)");
     }
   }
+  // 타원 채우기 (도트)
+  function ellipse(cx, cy, rx, ry, c) {
+    for (let dy = -ry; dy <= ry; dy++) {
+      const w = Math.round(rx * Math.sqrt(Math.max(0, 1 - (dy * dy) / (ry * ry))));
+      px(cx - w, cy + dy, w * 2 + 1, 1, c);
+    }
+  }
+  // VIP 전용 나무 다리 (난간 + 금색 등)
+  function drawVipBridge(st) {
+    if (!st.upgrades.secret) {
+      return;
+    }
+    // 해안 골목 돌길 (큰길 → 다리 시작)
+    stoneRoad(VBR.x0 - 5, LAND_TOP, 10, ROAD_U - 6 - LAND_TOP);
+    // 북쪽으로 올라가는 짧은 잔교 + 바다 위 가로 다리
+    planks(VBR.x0 - 5, VBR.y - 3, 10, LAND_TOP - VBR.y + 3, false);
+    posts(VBR.x0 + 12, VBR.x1, VBR.y + 5, 14, 7);
+    planks(VBR.x0 - 5, VBR.y - 3, VBR.x1 - VBR.x0 + 8, 7, true);
+    // 경사로: 다리 끝 → 플랫폼 서쪽 입구 (계단식 판자)
+    const gx = SECRET.cx - SECRET.rx + 4;
+    const gy = SECRET.cy + 3;
+    const steps = 14;
+    for (let i = 0; i <= steps; i++) {
+      const k = i / steps;
+      const x = Math.round(VBR.x1 + (gx - VBR.x1) * k);
+      const y = Math.round(VBR.y + (gy - VBR.y) * k);
+      planks(x - 3, y - 3, 8, 6, true);
+    }
+    // 난간 줄 + 금색 등 기둥
+    line(VBR.x0 - 5, VBR.y - 4, VBR.x1 + 3, VBR.y - 4, "#6b4423");
+    line(VBR.x1 + 3, VBR.y - 4, gx, gy - 4, "#6b4423");
+    for (let x = VBR.x0 + 20; x < VBR.x1; x += 40) {
+      px(x, VBR.y - 10, 1, 7, "#c9921a");
+      px(x - 1, VBR.y - 12, 3, 2, "#ffd86b");
+      light(x, VBR.y - 11, 8, "rgba(255,210,120,", 0.55);
+    }
+  }
   function drawSecretFarm(st, world, night) {
     if (!st.upgrades.secret) {
       return;
     }
-    const d = bob(7, 0.6);
-    const x = SECRET.x;
-    const y = SECRET.y + d;
-    const w = SECRET.w;
-    const h = SECRET.h;
-    px(x + 4, y + 5, w - 8, h - 10, "#3a1f5f");
-    R.b.fillStyle = "rgba(200,150,255,0.35)";
-    for (let gx = x + 7; gx < x + w - 4; gx += 4) {
-      R.b.fillRect(gx, y + 5, 1, h - 10);
+    const { cx, rx, ry, deck } = SECRET;
+    const cy = SECRET.cy + bob(7, 0.5);
+    const irx = rx - deck;
+    const iry = ry - Math.round(deck * 0.55);
+    // 물 위 그림자·거품
+    ellipse(cx + 3, cy + 7, rx + 2, ry + 2, "rgba(8,30,50,0.35)");
+    for (let i = 0; i < 40; i++) {
+      const a = (i / 40) * Math.PI * 2 + R.t * 0.3;
+      if (Math.sin(R.t * 3 + i) > 0.2) {
+        px(cx + Math.cos(a) * (rx + 3), cy + 4 + Math.sin(a) * (ry + 2), 2, 1, "#e6f6ff");
+      }
+    }
+    // 데크 옆면(두께) → 윗면 원형 판자
+    ellipse(cx, cy + 4, rx, ry, "#5a3a1e");
+    ellipse(cx, cy, rx, ry, "#b98552");
+    ellipse(cx, cy - 1, rx - 2, ry - 1, "#c99263");
+    for (let i = 0; i < 32; i++) {
+      const a = (i / 32) * Math.PI * 2;
+      line(cx + Math.cos(a) * (irx + 1), cy + Math.sin(a) * (iry + 1), cx + Math.cos(a) * (rx - 1), cy + Math.sin(a) * (ry - 1), "#8f5f34");
+    }
+    // 중앙 심해 수조: 바깥에서 안으로 밝아지는 보랏빛 + 금테
+    ellipse(cx, cy, irx, iry, "#1a0c38");
+    ellipse(cx, cy + 1, irx - 4, iry - 3, "#2a1450");
+    ellipse(cx, cy + 2, irx - 12, iry - 7, "#3e1f72");
+    ellipse(cx, cy + 3, Math.max(4, irx - 26), Math.max(2, iry - 11), "#5a2a9a");
+    ring(cx, cy, irx, iry, "#f2c230");
+    ring(cx, cy, irx + 1, iry + 1, "#c9921a");
+    // 수조 속 큰 그림자 물고기가 원을 그리며 돎
+    for (let i = 0; i < 3; i++) {
+      const a = R.t * 0.4 + (i * Math.PI * 2) / 3;
+      const fx = cx + Math.cos(a) * (irx - 14);
+      const fy = cy + 2 + Math.sin(a) * (iry - 6);
+      spr(S.shadowFish(Math.sin(a) > 0 ? -1 : 1), fx - 2, fy - 1);
     }
     const glow = 0.5 + 0.5 * Math.sin(R.t * 2);
-    px(x + 8 + Math.round(glow * (w - 20)), y + 10, 4, 1, "#d6b3ff");
-    px(x, y, w, 5, "#c99a63");
-    px(x, y, w, 1, "#e6c08a");
-    px(x, y + h - 5, w, 5, "#c99a63");
-    px(x, y + h, w, 2, "#6b4423");
-    px(x, y + 5, 4, h - 10, "#b07f4c");
-    px(x + w - 4, y + 5, 4, h - 10, "#b07f4c");
-    for (let i = 0; i < w; i += 6) {
-      px(x + i, y - 4, 1, 4, "#f2c230");
+    px(cx - 2 + Math.round(glow * 3), cy + 3, 2, 1, "#d6b3ff");
+    light(cx, cy + 2, 30, "rgba(190,140,255,", 0.6);
+    // 바깥 금색 난간 + 기둥 8개 랜턴
+    ring(cx, cy - 1, rx - 1, ry - 1, "#f2c230");
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
+      const lx = Math.round(cx + Math.cos(a) * (rx - 1));
+      const ly = Math.round(cy - 1 + Math.sin(a) * (ry - 1));
+      px(lx, ly - 7, 1, 7, "#c9921a");
+      px(lx - 1, ly - 9, 3, 2, Math.floor(R.t * 2 + i) % 4 === 0 ? "#fff6c8" : "#ffd86b");
+      light(lx, ly - 8, 9, "rgba(255,210,120,", 0.6);
     }
-    px(x, y - 4, w, 1, "#f2c230");
-    light(x + w / 2, y + 10, 18, "rgba(190,140,255,", 0.5);
-    // 아래 좌대로 내려가는 사다리
-    const lx = LADDER_X;
-    for (let yy = y + h + 2; yy < MOD_Y[0]; yy += 2) {
-      px(lx - 2, yy, 5, 1, "#8f5f34");
-    }
-    void night;
-    ["front", "back"].forEach((view) => {
-      world.guests.forEach((g) => {
-        const info = g.seat >= G.VIP_SEAT0 && !(g.walk > 0) ? seatInfo(st, g.seat) : null;
-        if (info && info.view === view) {
-          drawOneGuest(st, g, info, "vip");
-        }
-      });
+    // 중앙 정자: 금기둥 4개 + 2단 붉은 지붕 + 깃발 (수조 위로 떠 보이게)
+    [[-14, -4], [14, -4], [-10, 4], [10, 4]].forEach(([ox, oy]) => {
+      px(cx + ox, cy + oy - 16, 1, 16, "#f2c230");
     });
+    const roofY = cy - 22;
+    for (let i = 0; i < 6; i++) {
+      px(cx - 20 + i, roofY + i, 41 - i * 2, 1, i % 2 ? "#a8272c" : "#c0392b");
+    }
+    px(cx - 21, roofY + 5, 43, 1, "#f2c230");
+    for (let i = 0; i < 4; i++) {
+      px(cx - 11 + i, roofY - 5 + i, 23 - i * 2, 1, i % 2 ? "#a8272c" : "#c0392b");
+    }
+    px(cx - 12, roofY - 1, 25, 1, "#f2c230");
+    px(cx, roofY - 12, 1, 7, "#5f6b78");
+    px(cx + 1, roofY - 12 + (Math.floor(R.t * 3) % 2), 5, 3, "#7b3fd0");
+    light(cx, roofY + 6, 14, "rgba(255,190,110,", 0.5);
+    void night;
+    // 손님: 먼 쪽(위)부터 가까운 쪽(아래) 순서로
+    world.guests.filter((g) => g.seat >= G.VIP_SEAT0 && !(g.walk > 0)).map((g) => [g, seatInfo(st, g.seat)])
+      .filter((x) => x[1]).sort((a, b) => a[1].feet - b[1].feet).forEach(([g, info]) => drawOneGuest(st, g, info, "vip"));
   }
   function drawPension(st) {
     const n = Math.min(4, st.owned.pension);
@@ -1288,28 +1403,24 @@
         link(board[p.col], p.row === 0 ? bot[2] : top[2]);
       }
     }
-    // 비밀 양식장: 오른쪽 위 좌대의 먼 발판 가운데에서 사다리
-    const vyT = SECRET.y + 3;
-    const vyB = SECRET.y + SECRET.h - 3;
-    const vTop = [];
-    const vBot = [];
-    for (let k = 0; k < 6; k++) {
-      const vx = SECRET.x + 8 + k * VIP_STEP + 4;
-      vTop.push(SEAT_NODE[G.VIP_SEAT0 + k] = node(vx, vyT));
-      vBot.push(SEAT_NODE[G.VIP_SEAT0 + 6 + k] = node(vx, vyB));
+    // 비밀 양식장: 좌석을 고리로 잇고, 서쪽 입구 ← VIP 전용 다리 ← 해안 골목 ← 큰길
+    const ringIds = [];
+    for (let k = 0; k < VIP_SEATS; k++) {
+      const a = vipAngle(k);
+      const id = node(SECRET.cx + Math.cos(a) * (SECRET.rx - SECRET.deck / 2), SECRET.cy + Math.sin(a) * (SECRET.ry - 4) + 3);
+      SEAT_NODE[G.VIP_SEAT0 + k] = id;
+      ringIds.push(id);
     }
-    const vTL = node(SECRET.x + 2, vyT);
-    const vTR = node(SECRET.x + SECRET.w - 2, vyT);
-    const vBL = node(SECRET.x + 2, vyB);
-    const vBR = node(SECRET.x + SECRET.w - 2, vyB);
-    const ladder = node(LADDER_X, vyB);
-    const botLine = vBot.concat([ladder]).sort((a, b) => NODES[a].x - NODES[b].x);
-    chain([vTL].concat(vTop, [vTR]));
-    chain([vBL].concat(botLine, [vBR]));
-    link(vTL, vBL);
-    link(vTR, vBR);
-    const upperRight = MOD_ORDER.findIndex(([r, c]) => r === 0 && c === 3);
-    link(ladder, SEAT_NODE[upperRight * SEATS_PER + 2]);
+    chain(ringIds.concat([ringIds[0]]));
+    const west = node(SECRET.cx - SECRET.rx + 4, SECRET.cy + 3);
+    link(west, ringIds[(VIP_SEATS * 3) / 4 - 1]);
+    link(west, ringIds[(VIP_SEATS * 3) / 4]);
+    const shoreRoad = node(VBR.x0, ROAD_U);
+    link(NODE.laneTop, shoreRoad);
+    link(shoreRoad, NODE.pier);
+    const shoreTop = node(VBR.x0, VBR.y);
+    const bridgeEnd = node(VBR.x1, VBR.y);
+    chain([shoreRoad, shoreTop, bridgeEnd, west]);
   }
   // 다익스트라 (노드 수가 적어 단순 구현)
   function shortestPath(a, b) {
@@ -1491,6 +1602,15 @@
       px(info.x + 3, info.feet - 21, 2, 4, "#ffe066");
       px(info.x + 3, info.feet - 16, 2, 1, "#ffe066");
     }
+    // 의뢰를 낸 손님: 머리 위 말풍선 '!'
+    if (g.questId && R.st && R.st.quests.some((q) => q.id === g.questId)) {
+      const by = yTop - 11 - (Math.floor(R.t * 3) % 2);
+      px(info.x + 1, by, 7, 8, "#1d2b3f");
+      px(info.x + 2, by + 1, 5, 6, "#ffe066");
+      px(info.x + 4, by + 2, 1, 3, "#1d2b3f");
+      px(info.x + 4, by + 6, 1, 1, "#1d2b3f");
+      px(info.x + 4, by + 8, 1, 1, "#1d2b3f");
+    }
     if (g.lv >= 10) {
       px(info.x + 2, yTop - 3, 5, 1, "#f2c230");
       px(info.x + 2, yTop - 4, 1, 1, "#f2c230");
@@ -1507,7 +1627,10 @@
     return { view: "front", hand: [OWNER.x + 7, OWNER.feet - 6], tip: [OWNER.x + 14, OWNER.feet - 10], bob: [OWNER.x + 20, OWNER.feet - 20] };
   }
   function drawOwner(world) {
-    const img = S.person("front", "owner", 0, 1, world.cast && world.cast.t > world.cast.dur * 0.55 ? "reel" : null);
+    // 대회 우승 스킨 중 가장 높은 것
+    const skins = (R.st && R.st.skins) || [];
+    const skin = ["legend", "gold", "navy", "bronze"].find((s) => skins.includes(s));
+    const img = S.person("front", skin ? "owner_" + skin : "owner", 0, 1, world.cast && world.cast.t > world.cast.dur * 0.55 ? "reel" : null);
     const casting = world.cast;
     const bite = casting && casting.t > casting.dur * 0.55;
     const info = ownerInfo();
@@ -1814,7 +1937,7 @@
       return;
     }
     if (ev.kind === "bred") {
-      burst(SECRET.x + SECRET.w / 2, SECRET.y + 8, 18, ["#d6b3ff", "#7cf5a0", "#ffffff"]);
+      burst(SECRET.cx, SECRET.cy, 22, ["#d6b3ff", "#7cf5a0", "#ffffff"]);
       cue("levelup");
       if (!ev.dup) {
         const sub = { upgrade: "등급 상승 교배 성공", family: "계열 대표종 발견!", recipe: "이색 조합 레시피 발견!", hybrid: "돌연변이 잡종" }[ev.route] || "";
@@ -1983,7 +2106,7 @@
       tag("펜션" + (o.pension > 4 ? " " + o.pension + "실" : ""), 607, 142, "rgba(88,53,144,0.92)");
     }
     if (st.upgrades.secret) {
-      tag("VIP 비밀 양식장", SECRET.x + SECRET.w / 2, SECRET.y - 6, "rgba(88,40,140,0.92)");
+      tag("VIP 비밀 양식장", SECRET.cx, SECRET.cy - SECRET.ry - 22, "rgba(88,40,140,0.92)");
     }
     tag("사장님", OWNER.x + 4, OWNER.feet + 9, "rgba(29,53,87,0.92)");
     if (G.seats(st) > MAX_SEATS_DRAWN) {
@@ -2037,7 +2160,7 @@
     const fixed = {
       shop: [26, RB1 - 14], rental: [70, RB1 - 10], restaurant: [113, RB1 - 20], shuttle: [DOCK_X + 18, ROAD_L],
       pension: [607, 160], farm: [322, 112], boat: [220, 116], rock: [40, 72], night: [W / 2, MOD_Y[0] - 4],
-      shade: [226, MOD_Y[0]], crew: [EXP_MOOR.x + 20, EXP_MOOR.y], secret: [SECRET.x + SECRET.w / 2, SECRET.y + 6],
+      shade: [226, MOD_Y[0]], crew: [EXP_MOOR.x + 20, EXP_MOOR.y], secret: [SECRET.cx, SECRET.cy],
     };
     if (/^z_/.test(id)) {
       return [380, HORIZON - 4];
@@ -2091,7 +2214,7 @@
   const LAYERS = [
     ["sky", (st, world, ctx) => { drawSky(st, ctx.hr); drawGulls(st, ctx.hr); drawStar(st, ctx.dt, ctx.night); }],
     ["far", (st) => { drawExpBoats(st); }],
-    ["water", (st, world, ctx) => { drawSea(st, ctx.hr); drawJumpers(st, ctx.dt); }],
+    ["water", (st, world, ctx) => { drawSea(st, ctx.hr); drawOcean(st); drawJumpers(st, ctx.dt); }],
     ["land", (st, world, ctx) => { drawLand(st, ctx.dt); }],
     ["stage", (st, world, ctx) => {
       drawRocks(st);
@@ -2099,6 +2222,7 @@
       drawExpBoat(st);
       drawTourShip(st);
       drawFarm(st);
+      drawVipBridge(st);
       drawSecretFarm(st, world, ctx.night);
       drawBoardwalk(st);
       drawCages(st, world, ctx.night);

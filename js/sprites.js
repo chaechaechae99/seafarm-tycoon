@@ -84,6 +84,11 @@
     pro: { hat: "cap", H: "#1c1c22", h: "#000000", T: "#7b3fd0", t: "#f2f2f2", P: "#1c1c22", B: "#f2f2f2" },
     owner: { hat: "captain", H: "#f5f7fa", h: "#1d3557", T: "#1d3557", t: "#f2c14e", P: "#14213d", B: "#3a2414" },
     vip: { hat: "captain", H: "#1c1c22", h: "#f2c230", T: "#2a2a33", t: "#f2c230", P: "#1c1c22", B: "#111111", shades: true },
+    // 대회 우승 스킨 (사장님)
+    owner_bronze: { hat: "captain", H: "#f5f7fa", h: "#a8693a", T: "#8a5a32", t: "#f2c14e", P: "#3a2414", B: "#3a2414" },
+    owner_navy: { hat: "captain", H: "#f5f7fa", h: "#1d3557", T: "#24406e", t: "#ffffff", P: "#14213d", B: "#111111" },
+    owner_gold: { hat: "captain", H: "#f2c230", h: "#c9921a", T: "#f2c230", t: "#ffffff", P: "#1d3557", B: "#111111" },
+    owner_legend: { hat: "captain", H: "#2a1450", h: "#f2c230", T: "#7b3fd0", t: "#f2c230", P: "#2a1450", B: "#111111", shades: true },
     // 손님 페르소나 (data.js PERSONAS의 look)
     student: { hat: "none", H: "#000", h: "#000", T: "#1d3557", t: "#f2f2f2", P: "#2a2a3a", B: "#111111" },
     college: { hat: "cap", H: "#4fa36b", h: "#2f6b45", T: "#7a8a99", t: "#5a6a79", P: "#3e5c8a", B: "#f2f2f2" },

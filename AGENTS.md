@@ -10,7 +10,7 @@
 5. **외부 요청 없음**: CDN·외부 폰트·API 호출 금지(배포 CSP가 막음). 소리는 `js/sound.js`의 Web Audio 합성만 쓴다.
 
 ## 작업 방식
-- 수정 후 `npm test`(검증 22개)와 `npm run sim`(밸런스) 결과를 확인한다.
+- 수정 후 `npm test`(검증 30개)와 `npm run sim`(밸런스) 결과를 확인한다.
 - 350종 데이터는 `data/korean_fishing_350_species.json`과 `data/size-overrides.json`을 고친 뒤 `npm run data`로 `js/species-data.js`를 다시 만든다. 생성 파일을 직접 고치지 않는다.
 - 저장 형식을 바꾸면 `logic.js`의 `deserialize`(와 `BreedingManager.migrate`)에서 예전 저장을 받아준다.
 - 코드 스타일: 블록은 항상 중괄호, 2칸 들여쓰기, 한국어 주석은 "왜"를 적는다.
