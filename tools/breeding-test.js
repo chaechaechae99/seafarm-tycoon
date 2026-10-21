@@ -114,8 +114,11 @@ test("도감에 없는 재료·잠긴 양식장은 거절", () => {
 test("신종은 VIP 좌대에서 낚이고 수족관 등록 가능 (희귀 이상)", () => {
   const { s, whale } = fresh();
   breed(s, whale, "f:mackerel");
-  const c = G.rollBred(s, rng);
-  assert.ok(c.bred && c.name === "고등고래");
+  // VIP 좌대: 가두리 어종은 안 나오고 원정 어종·교배 신종만
+  for (let i = 0; i < 300; i++) {
+    const c = G.rollBred(s, rng);
+    assert.ok(c && (c.bred || c.exp), "VIP 좌대에 가두리 어종: " + (c && c.name));
+  }
   assert.ok(G.aquaAdd(s, "b:rx_mackwhale"));
 });
 test("예전 저장(접두어 없는 부모 키) 불러오기 호환", () => {

@@ -209,7 +209,7 @@
     dispatch(dur) {
       if (G.startDispatch(state, dur)) {
         sfx("buy");
-        UI.toast("원정 어선 출항! " + dur / 60 + "분 뒤 귀항", "new", root.Sprites.iconURL("crew"));
+        UI.toast("원정 어선 출항! " + G.dispatchTier(dur).name + " 뒤 귀항", "new", root.Sprites.iconURL("crew"));
         save();
         return true;
       }
@@ -339,6 +339,7 @@
       checkOffline();
     }
     UI.update(state, world);
+    UI.showDispatchResult(state);
     if (state.stats.guests === 0) {
       UI.toast("낡은 좌대 2석으로 시작해요. 사장님 낚시로 첫 자금을 모아보세요!");
     }

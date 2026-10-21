@@ -213,14 +213,20 @@
   }
 
   /* ---------------- VIP 단골 ---------------- */
+  // 레벨 L에 필요한 누적 호감도 (최대 D.VIP.maxLevel)
+  function vipXpFor(L) {
+    return Math.round(0.6 * (L - 1) * (L - 1) + 0.6 * (L - 1));   // Lv10 = 54 (예전 저장과 같음)
+  }
   function vipLevel(r) {
     let lv = 1;
-    D.VIP.xp.forEach((x, i) => {
-      if (r.xp >= x) {
-        lv = i + 1;
-      }
-    });
+    while (lv < D.VIP.maxLevel && r.xp >= vipXpFor(lv + 1)) {
+      lv++;
+    }
     return lv;
+  }
+  // VIP 좌대 이용료 배수: Lv10 = 20배, 이후 1레벨당 +0.5배 (Lv100 = 65배)
+  function vipFeeMult(lv) {
+    return D.VIP.feeLv10 + Math.max(0, lv - 10) * D.VIP.feePerLv;
   }
   function vipTitle(lv) {
     return D.VIP.titles.find((t) => lv >= t[0])[1];
@@ -273,29 +279,55 @@
     return BM.buyHint(state, rid, expectedRate(state));
   }
   // VIP 전용 좌대에서만 낚이는 신종
-  function rollBred(state, rng) {
-    if (!state.bred.length) {
-      return rollFish(state, rng, { rarityMult: 2, junkChance: 0 });
-    }
-    const b = pickWeighted(rng, state.bred.map((x) => [x, D.RARITY[x.rarity].weight * x.stock * (x.rarity === "legendary" ? legendaryMult(state) : 1)]));
-    const t = rng();
-    const size = Math.round(b.size[0] + (b.size[1] - b.size[0]) * Math.pow(t, 1.6));
-    const value = Math.round(D.RARITY[b.rarity].base * b.v * (0.7 + 0.9 * t));
-    const tier = t > 0.9 ? "대물" : t > 0.6 ? "대" : t > 0.3 ? "중" : "소";
-    return { junk: false, bred: true, id: b.id, name: b.name, rarity: b.rarity, spot: "secret", size, value, golden: false, tier };
+  const EXP_RANK_W = { Common: 1, Rare: 3, Epic: 6, Legendary: 10 };
+  function vipPool(state) {
+    const out = [];
+    // 원정 어종 중 일반 등급이 아니거나 심해·대형 생물만 (흔한 연안 어종 제외)
+    Object.keys(state.expDex).forEach((id) => {
+      const s = EXP.byId.get(Number(id));
+      if (s && (s.rarity !== "Common" || /고래|미지|심해|대왕|상어/.test(s.name))) {
+        out.push([{ exp: s }, EXP_RANK_W[s.rarity] * (s.rarity === "Legendary" ? legendaryMult(state) : 1)]);
+      }
+    });
+    state.bred.forEach((b) => {
+      out.push([{ bred: b }, D.RARITY[b.rarity].weight * 0.2 * b.stock * (b.rarity === "legendary" ? legendaryMult(state) : 1)]);
+    });
+    return out;
   }
-  function avgBredValue(state) {
-    if (!state.bred.length) {
-      return 0;
+  function rollBred(state, rng) {
+    const pool = vipPool(state);
+    if (!pool.length) {
+      return null;   // 원정·교배로 얻은 어종이 없으면 VIP 좌대에선 아무것도 안 낚임
     }
+    const pick = pickWeighted(rng, pool);
+    const t = rng();
+    const tier = t > 0.9 ? "대물" : t > 0.6 ? "대" : t > 0.3 ? "중" : "소";
+    if (pick.exp) {
+      const s = pick.exp;
+      const zone = EXP.zoneOf(s.id);
+      return {
+        junk: false, exp: true, id: s.id, name: s.name, rarity: EXP_RARITY[s.rarity], spot: "secret", golden: false, tier,
+        size: Math.round(s.minSize + (s.maxSize - s.minSize) * Math.pow(t, 1.6)),
+        value: Math.round(s.price * (zone ? zone.mult || 1 : 1) * (0.7 + 0.6 * t)),
+      };
+    }
+    const b = pick.bred;
+    return {
+      junk: false, bred: true, id: b.id, name: b.name, rarity: b.rarity, spot: "secret", golden: false, tier,
+      size: Math.round(b.size[0] + (b.size[1] - b.size[0]) * Math.pow(t, 1.6)),
+      value: Math.round(D.RARITY[b.rarity].base * b.v * (0.7 + 0.9 * t)),
+    };
+  }
+  function avgVipValue(state) {
+    const pool = vipPool(state);
     let w = 0;
     let v = 0;
-    state.bred.forEach((b) => {
-      const x = D.RARITY[b.rarity].weight * b.stock;
+    pool.forEach(([p, x]) => {
+      const val = p.exp ? p.exp.price * ((EXP.zoneOf(p.exp.id) || {}).mult || 1) : D.RARITY[p.bred.rarity].base * p.bred.v * 1.15;
       w += x;
-      v += x * D.RARITY[b.rarity].base * b.v * 1.15;
+      v += x * val;
     });
-    return v / w;
+    return w ? v / w : 0;
   }
 
   /* ---------------- 수족관 ---------------- */
@@ -344,39 +376,51 @@
    * 파견: 배 1척이 dur초(60/120/180) 뒤 귀항 → 해금한 구역 풀에서 catches마리 획득 → 원정 도감에 등록되어
    * 교배 재료("s:번호")·수족관 등록에 바로 쓰임 */
   // 비용 = max(초당 수익 × 시간 × costRatio, 예상 어획 판매가 × haulRatio) → 초반에도 남는 장사지만 과하지 않게
-  function dispatchCost(state, dur) {
-    const haul = dispatchCatches(dur) * EXP.avgCatchValue(expProgress(state), { luck: D.DISPATCH.luck });
-    return Math.max(100, Math.ceil(Math.max(expectedRate(state) * dur * D.DISPATCH.costRatio, haul * D.DISPATCH.haulRatio)));
+  function dispatchTier(sec) {
+    return D.DISPATCH.tiers.find((x) => x.sec === sec) || null;
   }
-  function dispatchCatches(dur) {
-    return Math.round((dur / 60) * D.DISPATCH.perMinute);
+  function dispatchCatches(sec) {
+    return Math.max(1, Math.round((sec / 60) * D.DISPATCH.perMinute));
   }
-  function startDispatch(state, dur) {
-    if (state.dispatch || !D.DISPATCH.durations.includes(dur) || state.money < dispatchCost(state, dur)) {
+  // 무료. 이미 나가 있으면 불가
+  function startDispatch(state, sec) {
+    if (state.dispatch || !dispatchTier(sec)) {
       return false;
     }
-    state.money -= dispatchCost(state, dur);
-    state.dispatch = { t: 0, dur, zone: EXP.depth(expProgress(state)) };
+    state.dispatch = { t: 0, dur: sec };
     return true;
   }
-  // 귀항: 기본보다 희귀 쪽으로 기울인 확률(luck)로 굴림. 판매 수익도 지급
+  // 귀항: 시간 등급의 luck·deep·depth로 굴림. 결과는 요약만 저장 (24시간 = 1,440마리)
   function finishDispatch(state, world, rng) {
     const dp = state.dispatch;
     state.dispatch = null;
+    const tier = dispatchTier(dp.dur) || D.DISPATCH.tiers[0];
     const prog = expProgress(state);
-    const got = [];
+    const ctx = { luck: tier.luck, deep: tier.deep, depth: tier.depth };
+    const byRarity = { Common: 0, Rare: 0, Epic: 0, Legendary: 0 };
+    const best = {};
     let gold = 0;
+    let total = 0;
+    let newCount = 0;
     for (let i = 0; i < dispatchCatches(dp.dur); i++) {
-      const c = EXP.rollCatch(prog, { luck: D.DISPATCH.luck }, rng);
-      if (c) {
-        c.isNew = registerExp(state, c);
-        got.push(c);
-        gold += c.value;
+      const c = EXP.rollCatch(prog, ctx, rng);
+      if (!c) {
+        continue;
+      }
+      if (registerExp(state, c)) {
+        newCount++;
+        c.isNew = true;
+      }
+      total++;
+      gold += c.value;
+      byRarity[c.rarity]++;
+      if (!best[c.id] || c.value > best[c.id].value || c.isNew) {
+        best[c.id] = Object.assign({}, c, { isNew: c.isNew || (best[c.id] && best[c.id].isNew) });
       }
     }
     earn(state, world, gold, null);
-    got.sort((a, b) => b.value - a.value);
-    const res = { dur: dp.dur, catches: got, gold: gold * incomeMult(state), newCount: got.filter((c) => c.isNew).length };
+    const top = Object.values(best).sort((a, b) => (b.isNew - a.isNew) || b.value - a.value).slice(0, 20);
+    const res = { dur: dp.dur, name: tier.name, total, byRarity, catches: top, gold: gold * incomeMult(state), newCount, seen: false };
     state.lastDispatch = res;
     world.events.push({ kind: "dispatch", res });
     return res;
@@ -609,6 +653,13 @@
     if (c.junk) {
       return false;
     }
+    if (c.exp) {
+      const d = state.expDex[c.id] || { count: 0, best: 0 };
+      d.count++;
+      d.best = Math.max(d.best, c.size);
+      state.expDex[c.id] = d;
+      return false;
+    }
     if (c.bred) {
       const b = bredById(state, c.id);
       state.stats.bredCatches++;
@@ -712,8 +763,7 @@
       const stay = BASE_STAY * stayMult(state) * D.VIP.lv5Stay;
       vipRate = Math.min(vipRate, D.VIP.secretSeats / (stay + WALK_IN));
       const catches = stay * catchSpeedMult(state) / BASE_CATCH_INTERVAL;
-      const bredVal = state.bred.length ? avgBredValue(state) : expectedFishValue(state, night, 2);
-      extra += vipRate * (fee * (D.VIP.feeLv10 - 1) + catches * bredVal * cookRate(state));
+      extra += vipRate * (fee * (vipFeeMult(maxVipLevel(state)) - 1) + catches * avgVipValue(state) * cookRate(state));
     }
     return extra;
   }
@@ -810,7 +860,7 @@
     }
     world.guests.push(guest);
     state.stats.guests++;
-    const fee = feePerGuest(state, g) * (vip ? D.VIP.feeLv10 : 1);
+    const fee = feePerGuest(state, g) * (vip ? vipFeeMult(lv) : 1);
     earn(state, world, fee + shopPerGuest(state, g), { seat, src: "guest" });
     world.events.push({ kind: "arrive", seat, type: g.id, reg: reg ? { nick: reg.nick, lv } : null, vip });
     return guest;
@@ -818,6 +868,9 @@
 
   function guestCatch(state, world, guest) {
     const c = guest.vip ? rollBred(state, world.rng) : rollFish(state, world.rng, { rarityMult: guest.rarity });
+    if (!c) {
+      return;
+    }
     guest.caught.push(c);
     guest.bite = 1.2;
     const isNew = registerCatch(state, c);
@@ -1128,7 +1181,7 @@
     breedCatalog, hintCost, buyHint,
     aquaEntry, aquaCandidates, aquaBuffOf, aquaBuff, aquaAdd, aquaRemove,
     catFeedCost, feedCat, makeWish, legendaryMult, fmtSize, WALK_IN,
-    dispatchCost, dispatchCatches, startDispatch, finishDispatch,
+    dispatchTier, dispatchCatches, startDispatch, finishDispatch, vipXpFor, vipFeeMult, vipPool,
     arrivalRate, feePerGuest, shopPerGuest, walkinPerGuest, weatherArriveAvg, cookRate, passivePerSec, availableSpots,
     rollFish, registerCatch, expectedFishValue, expectedRate, tick, startCast, spawnGuest,
     applyOffline, serialize, deserialize, exportSave, importSave, fmt,

@@ -26,4 +26,4 @@ sky → far(원정선·파견선) → water(물결 4프레임·반사) → land(
 노드: 매표소·골목·선착장·여객선 발판·다리·좌대 발판 모서리·좌석. 손님은 생성 시 자리를 예약하고 `WALK_IN`(6초) 동안 경로 위를 걷는다(이동 중엔 낚시 안 함). 퇴장은 좌석 → 매표소 또는 여객선.
 
 ## 배포
-`tools/build.js` → `dist/`(파일 해시 캐시, `_headers` CSP, `.nojekyll`) → Cloudflare Pages(`wrangler.toml`) 또는 GitHub Pages(`.github/workflows/pages.yml`).
+`tools/build.js` → `dist/`(파일 해시 캐시, `_headers` CSP, `.nojekyll`) → Cloudflare Pages(`wrangler.toml`) 또는 GitHub Pages(`.github/workflows/deploy.yml`).

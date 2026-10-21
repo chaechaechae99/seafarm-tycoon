@@ -386,11 +386,12 @@
       '<div class="row"><span>Lv.1 일반 손님</span><b>기본 입장료</b></div>' +
       '<div class="row"><span>Lv.5 단골 조사님</span><b>팁 확률 +20% · 고급 좌대</b></div>' +
       '<div class="row"><span>Lv.10 VIP VVIP 손님</span><b>비밀 양식장 좌대 · 이용료 ×20</b></div>' +
+      '<div class="row"><span>Lv.11~100 (명예 VIP · 전설의 단골 · 낚시터의 전설)</span><b>레벨마다 이용료 +0.5배 (최대 ×65)</b></div>' +
       '<p class="note">별 4개 이상 남긴 손님 중 일부가 단골이 돼요 (최대 ' + D.VIP.max + "명). 방문할 때마다 호감도가 쌓여요.</p></div>";
     const rows = regs.length ? regs.map((r) => {
       const lv = G.vipLevel(r);
-      const cur = D.VIP.xp[lv - 1];
-      const next = D.VIP.xp[lv];
+      const cur = G.vipXpFor(lv);
+      const next = lv < D.VIP.maxLevel ? G.vipXpFor(lv + 1) : undefined;
       const pct = next === undefined ? 100 : Math.round(((r.xp - cur) / (next - cur)) * 100);
       const here = world.present[r.id];
       return '<div class="vip-row' + (here ? " is-here" : "") + '"><div class="vip-lv' + (lv >= 10 ? " lv10" : lv >= 5 ? " lv5" : "") + '">' + lv + "</div>" +
@@ -447,33 +448,42 @@
       renderDispatch(state);
     }
   }
+  function dispatchResultHtml(state, last) {
+    return '<div class="box"><h3>' + esc(last.name) + " 원정 결과 · " + last.total + "마리 · +" + fmt(last.gold) + "원 · 새 어종 " + last.newCount + "종</h3>" +
+      '<div class="row"><span>일반 ' + last.byRarity.Common + " · 희귀 " + last.byRarity.Rare + " · 영웅 " + last.byRarity.Epic + "</span><b>전설 " + last.byRarity.Legendary + "</b></div>" +
+      '<div class="disp-list">' + last.catches.map((c) => '<div class="disp-row"><img class="pix" alt="" src="' + root.Sprites.catchURL({ id: c.id }, state.bred, G.EXP.byId) + '"><span>' +
+        esc(c.name) + " · " + G.fmtSize(c.size) + (c.isNew ? " [NEW]" : "") + "</span><b>" + ({ Common: "일반", Rare: "희귀", Epic: "영웅", Legendary: "전설" }[c.rarity] || "") + "</b></div>").join("") + "</div></div>";
+  }
   function renderDispatch(state) {
     const dp = state.dispatch;
-    const zone = G.EXP.zones[G.EXP.depth(G.expProgress(state))];
     let html;
     if (dp) {
-      html = '<div class="box"><div class="row"><span>출항 중 · ' + esc(zone.name) + "까지</span><b>" + mmss(Math.max(0, dp.dur - dp.t)) + ' 남음</b></div>' +
+      html = '<div class="box"><div class="row"><span>출항 중 · ' + esc((G.dispatchTier(dp.dur) || {}).name || "") + " 원정</span><b>" + mmss(Math.max(0, dp.dur - dp.t)) + ' 남음</b></div>' +
         '<div class="progress"><i style="width:' + Math.min(100, (dp.t / dp.dur) * 100) + '%"></i></div></div>';
     } else {
-      html = '<div class="box"><div class="row"><span>파견 해역</span><b>' + esc(zone.name) + "까지 (원정 탭에서 구역 해금)</b></div></div>" +
-        '<div class="disp-opts">' + D.DISPATCH.durations.map((d) => {
-          const cost = G.dispatchCost(state, d);
-          return '<button type="button" class="btn disp-opt" data-disp="' + d + '"' + (state.money < cost ? " disabled" : "") + "><b>" + d / 60 + "분</b><span>" +
-            G.dispatchCatches(d) + "마리</span><span>" + fmt(cost) + "원</span></button>";
-        }).join("") + "</div>";
+      html = '<p class="note">파견은 무료예요. 1분에 1마리씩 잡고, 오래 보낼수록 더 먼 바다까지 나가 전설·고래·심해 생물 확률이 크게 올라요.</p>' +
+        '<div class="disp-opts">' + D.DISPATCH.tiers.map((x) =>
+          '<button type="button" class="btn disp-opt" data-disp="' + x.sec + '"><b>' + x.name + "</b><span>" + G.dispatchCatches(x.sec) + "마리</span><span>" +
+          esc(G.EXP.zones[x.depth].name) + "까지</span><span>희귀↑ x" + x.luck + "</span></button>").join("") + "</div>";
     }
-    const last = state.lastDispatch;
-    if (last) {
-      html += '<div class="box"><h3>지난 원정 결과 · +' + fmt(last.gold) + "원 · 새 어종 " + last.newCount + "종</h3><div class=\"disp-list\">" +
-        last.catches.slice(0, 12).map((c) => '<div class="disp-row"><img class="pix" alt="" src="' + root.Sprites.catchURL({ id: c.id }, state.bred, G.EXP.byId) + '"><span>' +
-          esc(c.name) + " · " + G.fmtSize(c.size) + (c.isNew ? " [NEW]" : "") + "</span><b>" + ({ Common: "일반", Rare: "희귀", Epic: "영웅", Legendary: "전설" }[c.rarity] || "") + "</b></div>").join("") +
-        "</div></div>";
+    if (state.lastDispatch) {
+      html += dispatchResultHtml(state, state.lastDispatch);
     }
-    const key = html;
-    if (U.dispHtml !== key) {
-      U.dispHtml = key;
+    if (U.dispHtml !== html) {
+      U.dispHtml = html;
       $("dispBody").innerHTML = html;
     }
+  }
+  // 귀항 결과는 팝업으로 한 번만
+  function showDispatchResult(state) {
+    const last = state.lastDispatch;
+    if (!last || last.seen) {
+      return;
+    }
+    last.seen = true;
+    U.dispHtml = "";
+    $("dispatchModal").hidden = false;
+    renderDispatch(state);
   }
 
   /* ---------- 도감 ---------- */
@@ -638,6 +648,12 @@
     }
   }
   function onEvent(state, ev) {
+    if (ev.kind === "catch" && !ev.owner) {
+      if (ev.isNew) {
+        U.dexDirty = U.aquaDirty = U.farmDirty = true;
+      }
+      return;
+    }
     if (ev.kind === "catch") {
       const f = ev.fish;
       const who = ev.owner ? "사장님" : ev.who;
@@ -675,10 +691,8 @@
         addNews(fishImg(f) + "<b>원정대</b> · " + esc(f.name) + " " + G.fmtSize(f.size) + (ev.isNew ? " (새 어종)" : ""));
       }
     } else if (ev.kind === "dispatch") {
-      const top = ev.res.catches[0];
-      toast("원정 어선 귀항! " + ev.res.catches.length + "마리 · +" + fmt(ev.res.gold) + "원 · 새 어종 " + ev.res.newCount + "종", "gold", top ? fishURL({ id: top.id }) : root.Sprites.iconURL("crew"));
       U.expDirty = U.farmDirty = U.aquaDirty = true;
-      U.dispHtml = "";
+      showDispatchResult(state);
     } else if (ev.kind === "vipLevel") {
       toast(ev.nick + "님 호감도 Lv." + ev.lv + " · " + ev.title + (ev.lv === 10 ? " — 비밀 양식장 입장 가능!" : ev.lv === 5 ? " — 팁·고급 좌대" : ""), ev.lv >= 5 ? "gold" : "new", root.Sprites.iconURL("vip"));
       U.farmDirty = true;
@@ -883,5 +897,5 @@
     $("news").innerHTML = "";
   }
 
-  root.UI = { init, update, onEvent, toast, showOffline, refreshAll, setTab, currentTab: () => U.tab };
+  root.UI = { showDispatchResult, init, update, onEvent, toast, showOffline, refreshAll, setTab, currentTab: () => U.tab };
 })(typeof globalThis !== "undefined" ? globalThis : this);

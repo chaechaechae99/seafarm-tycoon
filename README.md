@@ -19,7 +19,7 @@ PC 웹 브라우저에서 돌아가는 도트 방치형 낚시터 타이쿤 게�
    git push -u origin main
    ```
 2. 저장소 **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 바꾼다
-3. 끝. `main`에 push할 때마다 `.github/workflows/pages.yml`이 테스트 → `dist/` 빌드 → 배포를 자동으로 한다 (Actions 탭에서 진행 확인, 1~2분)
+3. 끝. `main`에 push할 때마다 `.github/workflows/deploy.yml`이 테스트 → `dist/` 빌드 → 배포를 자동으로 한다 (Actions 탭에서 진행 확인, 1~2분)
 4. 주소: `https://<내아이디>.github.io/<저장소이름>/` 을 친구에게 보내면 됨
 
 Actions 없이 하려면: Source를 **Deploy from a branch**, 브랜치 `main`, 폴더 `/ (root)`로 두어도 저장소 루트의 `index.html`이 그대로 실행된다(캐시 버전 표시만 빠짐).

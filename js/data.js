@@ -36,7 +36,7 @@
     { id: "golden", name: "황금 낚싯바늘", cost: 450000, desc: "황금 개체 확률 ×3" },
     { id: "rock", name: "갯바위 포인트 개척", cost: 2500000, spot: "rock", desc: "갯바위 포인트 해금 (돌돔·다금바리…)" },
     { id: "tv", name: "낚시 방송 촬영 유치", cost: 6000000, desc: "프로·유튜버 손님 ×3, 방문객 ×1.2, 입장료 ×1.5" },
-    { id: "secret", name: "비밀 양식장", cost: 8000000, needFac: { farm: 1 }, needVip: 10,
+    { id: "secret", name: "비밀 양식장", cost: 70000000, needFac: { farm: 1 }, needVip: 10,
       desc: "어종 교배·유전자 변형으로 신종 육성 + VIP 전용 좌대 3석 (호감도 10 VIP 손님이 있어야 공사 가능)" },
     // 원정 구역 (원정 탭에 표시). zone = species-manager의 구역 id
     { id: "z_bay", name: "내만 선착장 원정", cost: 300000, zone: "bay", tab: "exp", desc: "원정 구역 2 · 어종 풀 확장, 어획 가치 ×1.4" },
@@ -139,15 +139,16 @@
     joinChance: 0.15,      // 별 4개 이상 남긴 손님이 단골이 될 확률
     visitPer: 0.03,        // 단골 1명당 '이번 손님이 단골' 확률 (최대 visitCap)
     visitCap: 0.35,
-    xp: [0, 2, 5, 9, 14, 20, 27, 35, 44, 54],   // 레벨 1~10에 필요한 누적 호감도
-    titles: [[10, "VIP VVIP 손님"], [5, "단골 조사님"], [1, "일반 손님"]],
+    maxLevel: 100,         // 레벨 L에 필요한 누적 호감도 = round(0.6(L-1)^2 + 0.6(L-1)), Lv10 = 54
+    titles: [[100, "낚시터의 전설"], [50, "전설의 단골"], [20, "명예 VIP"], [10, "VIP VVIP 손님"], [5, "단골 조사님"], [1, "일반 손님"]],
     tipBase: 0.1,          // 팁 확률 (레벨 5부터 +tipLv5)
     tipLv5: 0.2,
     tipShare: 0.5,         // 팁 = (입장료+매점) × tipShare
     lv5Stay: 1.2,          // 고급 좌대: 체류 ×, 희귀 어종 ×
     lv5Rarity: 1.2,
-    feeLv10: 20,           // VIP VVIP 이용료 배수
-    secretSeats: 3,        // 비밀 양식장 VIP 전용 좌대
+    feeLv10: 20,           // VIP VVIP 이용료 배수 (레벨 10 초과분 1레벨당 +feePerLv)
+    feePerLv: 0.5,
+    secretSeats: 12,       // 비밀 양식장 VIP 전용 좌대
   };
 
   // 비밀 양식장 교배
@@ -223,8 +224,18 @@
 
   // 마스코트 고양이 '나비': 생선을 주면 buffSec 동안 명성(평판)·방문율 상승
   const CAT = { buffSec: 600, rep: 0.4, arrive: 1.25, feedCostSec: 20 };   // 비용 = 초당 수익 × feedCostSec (최소 30원)
-  // 원정 파견: 60/120/180초 출항 → 분당 perMinute마리, 희귀 쪽 luck 배, 비용 = 초당 수익 × 시간 × costRatio
-  const DISPATCH = { durations: [60, 120, 180], perMinute: 4, luck: 1.6, costRatio: 0.4, haulRatio: 0.6 };
+  // 원정 파견 (무료): 1분당 1마리. 오래 보낼수록 희귀 이상 확률(luck)·심해 생물 가중(deep)이 커지고
+  // 더 먼 구역(depth: 0 연안 ~ 5 심해)까지 나감
+  const DISPATCH = {
+    perMinute: 1,
+    tiers: [
+      { sec: 60, name: "1분", luck: 1, deep: 1, depth: 0 },
+      { sec: 900, name: "15분", luck: 2, deep: 2, depth: 2 },
+      { sec: 3600, name: "1시간", luck: 4, deep: 4, depth: 3 },
+      { sec: 21600, name: "6시간", luck: 8, deep: 8, depth: 4 },
+      { sec: 86400, name: "24시간", luck: 16, deep: 16, depth: 5 },
+    ],
+  };
   // 사장님 자동 낚시 간격 (초)
   const AUTO_CAST_SEC = 30;
   // 밤 별똥별 소원: buffSec 동안 전설·신종 입질 ×legendary

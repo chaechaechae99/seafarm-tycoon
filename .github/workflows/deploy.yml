@@ -1,5 +1,5 @@
 # main 브랜치에 push하면 dist/를 빌드해 GitHub Pages에 배포
-name: Deploy to GitHub Pages
+name: deploy
 on:
   push:
     branches: [main]

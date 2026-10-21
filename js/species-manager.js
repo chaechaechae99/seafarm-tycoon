@@ -25,6 +25,7 @@
   // 하루 중 시간대 비율: 아침 05~10시, 낮 10~17시, 저녁 17~21시, 밤 21~05시
   const TIME_SHARE = { Morning: 5 / 24, Day: 7 / 24, Evening: 4 / 24, Night: 8 / 24 };
   const WEATHER_ODDS = { Clear: 55, Cloudy: 25, Rainy: 14, Stormy: 6 };
+  const LUCK_EXP = { Common: 0, Rare: 1, Epic: 1.5, Legendary: 2 };
   const PREFERRED_BONUS = 1.5;        // 선호 날씨일 때 그 어종 출현 가중치
   // 가장 깊이 연 구역에서 주로 낚음: 한 구역 얕을수록 출현 가중치 ÷ZONE_FOCUS
   // (1이면 전 구역 균등 → 새 구역을 열어도 수익이 거의 안 오름)
@@ -228,11 +229,13 @@
       return c.preferredWeather === weather ? PREFERRED_BONUS : 1;
     }
     // 한 날씨·시간대에서의 확률표. 희귀도 → 어종 순서로 뽑음
-    function contextTable(pool, weather, time, luck, d) {
+    // deep: 고래·심해·거대 생물 가중 (원정 파견이 길수록 큼)
+    const DEEP_RE = /고래|미지|심해|대왕|상어/;
+    function contextTable(pool, weather, time, luck, d, deep) {
       const inR = {};
       RARITIES.forEach((r) => { inR[r] = []; });
       pool.forEach((s) => {
-        const w = condWeight(s, weather, time) * Math.pow(zoneFocus, zoneOf.get(s.id) - d);
+        const w = condWeight(s, weather, time) * Math.pow(zoneFocus, zoneOf.get(s.id) - d) * (deep > 1 && DEEP_RE.test(s.name) ? deep : 1);
         if (w > 0) {
           inR[s.rarity].push([s, w]);
         }
@@ -240,7 +243,8 @@
       const rw = {};
       let tot = 0;
       RARITIES.forEach((r) => {
-        rw[r] = inR[r].length ? RARITY_INFO[r].weight * (r === "Common" ? 1 : luck) : 0;
+        // 행운은 희귀할수록 더 세게: 희귀 ×luck, 영웅 ×luck^1.5, 전설 ×luck^2
+        rw[r] = inR[r].length ? RARITY_INFO[r].weight * Math.pow(luck, LUCK_EXP[r]) : 0;
         tot += rw[r];
       });
       const byRarity = {};
@@ -258,14 +262,16 @@
     function dropTable(progress, ctx) {
       ctx = ctx || {};
       const luck = ctx.luck || 1;
-      const pool = poolFor(progress);
-      const d = depth(progress);
+      const deep = ctx.deep || 1;
+      // ctx.depth: 해금과 상관없이 그 구역까지 나감 (긴 원정 파견)
+      const d = Math.max(depth(progress), Math.min(zones.length - 1, ctx.depth || 0));
+      const pool = list.filter((s) => zoneOf.get(s.id) <= d);
       if (ctx.weather && ctx.time) {
-        const t = contextTable(pool, ctx.weather, ctx.time, luck, d);
+        const t = contextTable(pool, ctx.weather, ctx.time, luck, d, deep);
         return { byRarity: t.byRarity, species: t.species, active: t.active ? 1 : 0 };
       }
       const odds = ctx.weatherOdds || WEATHER_ODDS;
-      const key = d + "|" + luck + "|" + JSON.stringify(odds);
+      const key = d + "|" + luck + "|" + deep + "|" + JSON.stringify(odds);
       if (tableCache.has(key)) {
         return tableCache.get(key);
       }
@@ -278,7 +284,7 @@
       WEATHERS.forEach((w) => {
         TIMES.forEach((tm) => {
           const p = ((odds[w] || 0) / oddsTot) * TIME_SHARE[tm];
-          const t = contextTable(pool, w, tm, luck, d);
+          const t = contextTable(pool, w, tm, luck, d, deep);
           if (!p || !t.active) {
             return;
           }

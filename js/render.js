@@ -24,15 +24,18 @@
   const ROAD_L = 242;          // 아랫길 중앙선
   const LANE_X = 114;          // 두 길을 잇는 골목
   const BOARD_END = 444;
-  const MW = 86;
-  const MH = 50;
-  const MOD_X = [146, 246, 346];
-  const MOD_Y = [100, 182];
+  const MW = 80;
+  const MH = 46;
+  const MOD_X = [146, 240, 334];
+  const MOD_Y = [104, 184];
   // 좌대 채우는 순서 [줄, 칸]: 입구 가까운 칸부터
   const MOD_ORDER = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2], [1, 2]];
-  const SEAT_OFF = [12, 38, 64];
+  const SEAT_OFF = [10, 35, 60];
   const MAX_SEATS_DRAWN = 36;
-  const SECRET = { x: 346, y: 68, w: 86, h: 24 };
+  // VIP 비밀 양식장: 위쪽 띠 오른쪽 넓은 자리, 위·아래 발판에 6석씩 (12석)
+  const SECRET = { x: 296, y: 66, w: 144, h: 32 };
+  const VIP_STEP = 22;
+  const LADDER_X = MOD_X[2] + SEAT_OFF[1] + 4;
   const OWNER = { x: 126, feet: 114 };
   const TANK = { x: 38, y: 196, w: 58, h: 26 };
   const DOCK_X = 132;
@@ -809,9 +812,14 @@
   function seatInfo(st, seat) {
     if (seat >= G.VIP_SEAT0) {
       const k = seat - G.VIP_SEAT0;
-      const sx = SECRET.x + SEAT_OFF[k];
-      const feet = SECRET.y + 5;
-      return { x: sx, feet, view: "front", hand: [sx + 7, feet - 6], tip: [sx + 11, feet + 3], bob: [sx + 11, feet + 10], m: -1 };
+      const sx = SECRET.x + 8 + (k % 6) * VIP_STEP;
+      const d = bob(7, 0.6);
+      if (k < 6) {
+        const feet = SECRET.y + 5 + d;
+        return { x: sx, feet, view: "front", hand: [sx + 7, feet - 6], tip: [sx + 11, feet + 4], bob: [sx + 11, feet + 11], m: -1 };
+      }
+      const feet = SECRET.y + SECRET.h - 1 + d;
+      return { x: sx, feet, view: "back", hand: [sx + 7, feet - 6], tip: [sx + 10, feet - 14], bob: [sx + 10, feet - 19], m: -1 };
     }
     if (seat >= MAX_SEATS_DRAWN) {
       return null;
@@ -959,7 +967,7 @@
       }
     });
     if (night && st.upgrades.night) {
-      const y = MOD_Y[0] - 14;
+      const y = MOD_Y[0] - 3;
       line(MOD_X[0] - 2, y, MOD_X[2] + MW, y, "#333a42");
       for (let x = MOD_X[0] + 4; x < MOD_X[2] + MW; x += 14) {
         px(x, y + 1, 2, 2, "#f4ffe8");
@@ -1016,15 +1024,15 @@
     if (!st.upgrades.boat) {
       return;
     }
-    const x = Math.round(150 + (Math.sin(R.t * 0.07) + 1) * 22);
+    const x = Math.round(136 + (Math.sin(R.t * 0.07) + 1) * 6);
     const y = 84 + bob(2, 0.6);
     boat(x, y, { w: 52, rods: true, passengers: 4, wake: Math.cos(R.t * 0.07) > 0 ? -1 : 1 });
   }
   function drawFarm(st) {
     const n = Math.min(6, st.owned.farm);
     for (let i = 0; i < n; i++) {
-      const cx = 260 + (i % 3) * 26;
-      const cy = 74 + Math.floor(i / 3) * 12 + bob(i, 0.6);
+      const cx = 216 + (i % 3) * 24;
+      const cy = 72 + Math.floor(i / 3) * 13 + bob(i, 0.6);
       ring(cx, cy, 11, 4, "#d6b66e");
       ring(cx, cy, 8, 3, "rgba(220,240,255,0.5)");
       px(cx - 1, cy - 1, 2, 2, "rgba(8,30,50,0.5)");
@@ -1058,15 +1066,18 @@
     px(x, y - 4, w, 1, "#f2c230");
     light(x + w / 2, y + 10, 18, "rgba(190,140,255,", 0.5);
     // 아래 좌대로 내려가는 사다리
-    const lx = SECRET.x + MW / 2;
+    const lx = LADDER_X;
     for (let yy = y + h + 2; yy < MOD_Y[0]; yy += 2) {
       px(lx - 2, yy, 5, 1, "#8f5f34");
     }
     void night;
-    world.guests.forEach((g) => {
-      if (g.seat >= G.VIP_SEAT0 && !(g.walk > 0)) {
-        drawOneGuest(st, g, seatInfo(st, g.seat), "vip");
-      }
+    ["front", "back"].forEach((view) => {
+      world.guests.forEach((g) => {
+        const info = g.seat >= G.VIP_SEAT0 && !(g.walk > 0) ? seatInfo(st, g.seat) : null;
+        if (info && info.view === view) {
+          drawOneGuest(st, g, info, "vip");
+        }
+      });
     });
   }
   function drawPension(st) {
@@ -1207,14 +1218,27 @@
       link(board[p.col], p.row === 0 ? bot[1] : top[1]);
     }
     // 비밀 양식장: 오른쪽 위 좌대의 먼 발판 가운데에서 사다리
-    const vipTop = SEAT_OFF.map((o, k) => (SEAT_NODE[G.VIP_SEAT0 + k] = node(SECRET.x + o + 4, SECRET.y + 3)));
-    const vL = node(SECRET.x + 2, SECRET.y + 3);
-    const vR = node(SECRET.x + SECRET.w - 2, SECRET.y + 3);
-    chain([vL].concat(vipTop, [vR]));
-    const vipLadder = node(SECRET.x + MW / 2, SECRET.y + SECRET.h - 2);
-    link(vipLadder, vipTop[1]);
+    const vyT = SECRET.y + 3;
+    const vyB = SECRET.y + SECRET.h - 3;
+    const vTop = [];
+    const vBot = [];
+    for (let k = 0; k < 6; k++) {
+      const vx = SECRET.x + 8 + k * VIP_STEP + 4;
+      vTop.push(SEAT_NODE[G.VIP_SEAT0 + k] = node(vx, vyT));
+      vBot.push(SEAT_NODE[G.VIP_SEAT0 + 6 + k] = node(vx, vyB));
+    }
+    const vTL = node(SECRET.x + 2, vyT);
+    const vTR = node(SECRET.x + SECRET.w - 2, vyT);
+    const vBL = node(SECRET.x + 2, vyB);
+    const vBR = node(SECRET.x + SECRET.w - 2, vyB);
+    const ladder = node(LADDER_X, vyB);
+    const botLine = vBot.concat([ladder]).sort((a, b) => NODES[a].x - NODES[b].x);
+    chain([vTL].concat(vTop, [vTR]));
+    chain([vBL].concat(botLine, [vBR]));
+    link(vTL, vBL);
+    link(vTR, vBR);
     const upperRight = MOD_ORDER.findIndex(([r, c]) => r === 0 && c === 2);
-    link(vipLadder, SEAT_NODE[upperRight * 6 + 1]);
+    link(ladder, SEAT_NODE[upperRight * 6 + 1]);
   }
   // 다익스트라 (노드 수가 적어 단순 구현)
   function shortestPath(a, b) {
@@ -1745,7 +1769,7 @@
     if (ev.kind !== "money" && ev.kind !== "catch") {
       return;
     }
-    if (ev.kind === "money" && (ev.src === "owner" || ev.amount < 1)) {
+    if (ev.kind === "money" && (ev.src === "owner" || ev.src === "cook" || ev.amount < 1)) {
       return;
     }
     const p = headPos(st, ev);
@@ -1763,6 +1787,9 @@
     splash(p.bx, p.by, big ? 14 : f.junk ? 3 : 6);
     ripple(p.bx, p.by + 1, big || f.rarity === "rare");
     cue("splash");
+    if (!ev.owner) {
+      return;
+    }
     cue(big ? "fanfare" : f.rarity === "rare" ? "rare" : f.junk ? "junk" : "catch");
     if (!f.junk && f.rarity !== "common") {
       const cols = f.golden ? ["#fff2a8", "#f2c230", "#ffffff"]
@@ -1935,7 +1962,7 @@
     }
     const fixed = {
       shop: [24, 140], rental: [66, 144], restaurant: [105, 136], shuttle: [DOCK_X + 18, ROAD_L],
-      pension: [461, 110], farm: [286, 78], boat: [190, 78], rock: [40, 56], night: [290, 86],
+      pension: [461, 110], farm: [240, 78], boat: [190, 78], rock: [40, 56], night: [290, 86],
       shade: [190, 100], crew: [380, HORIZON - 4], secret: [SECRET.x + SECRET.w / 2, SECRET.y + 6],
     };
     if (/^z_/.test(id)) {
