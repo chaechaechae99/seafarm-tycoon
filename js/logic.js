@@ -382,9 +382,13 @@
   function dispatchCatches(sec) {
     return Math.max(1, Math.round((sec / 60) * D.DISPATCH.perMinute));
   }
-  // 무료. 이미 나가 있으면 불가
+  // 원정 낚시꾼을 1명 이상 고용해야 해금
+  function dispatchUnlocked(state) {
+    return (state.owned.crew || 0) > 0;
+  }
+  // 무료. 잠겨 있거나 이미 나가 있으면 불가
   function startDispatch(state, sec) {
-    if (state.dispatch || !dispatchTier(sec)) {
+    if (!dispatchUnlocked(state) || state.dispatch || !dispatchTier(sec)) {
       return false;
     }
     state.dispatch = { t: 0, dur: sec };
@@ -1181,7 +1185,7 @@
     breedCatalog, hintCost, buyHint,
     aquaEntry, aquaCandidates, aquaBuffOf, aquaBuff, aquaAdd, aquaRemove,
     catFeedCost, feedCat, makeWish, legendaryMult, fmtSize, WALK_IN,
-    dispatchTier, dispatchCatches, startDispatch, finishDispatch, vipXpFor, vipFeeMult, vipPool,
+    dispatchTier, dispatchCatches, startDispatch, dispatchUnlocked, finishDispatch, vipXpFor, vipFeeMult, vipPool,
     arrivalRate, feePerGuest, shopPerGuest, walkinPerGuest, weatherArriveAvg, cookRate, passivePerSec, availableSpots,
     rollFish, registerCatch, expectedFishValue, expectedRate, tick, startCast, spawnGuest,
     applyOffline, serialize, deserialize, exportSave, importSave, fmt,

@@ -443,7 +443,10 @@
     ab.setAttribute("aria-pressed", state.autoCast ? "true" : "false");
     ab.textContent = state.autoCast ? "자동 낚시 ON · " + Math.max(0, Math.ceil(world.autoT || 0)) + "초" : "자동 낚시 OFF";
     const dp = state.dispatch;
-    $("dispatchBtn").lastChild.textContent = dp ? "원정 중 " + mmss(Math.max(0, dp.dur - dp.t)) : "원정 파견";
+    const open = G.dispatchUnlocked(state);
+    $("dispatchBtn").disabled = !open;
+    $("dispatchBtn").title = open ? "" : "시설 탭에서 원정 낚시꾼을 고용하면 열려요";
+    $("dispatchBtn").lastChild.textContent = !open ? "원정 파견 [잠김]" : dp ? "원정 중 " + mmss(Math.max(0, dp.dur - dp.t)) : "원정 파견";
     if (!$("dispatchModal").hidden) {
       renderDispatch(state);
     }
@@ -807,6 +810,10 @@
     $("castBtn").addEventListener("click", () => actions.cast());
     $("autoBtn").addEventListener("click", () => actions.toggleAuto());
     $("dispatchBtn").addEventListener("click", () => {
+      if (!G.dispatchUnlocked(U.state)) {
+        toast("원정 낚시꾼을 고용하면 원정 파견이 열려요 (시설 탭)");
+        return;
+      }
       U.dispHtml = "";
       $("dispatchModal").hidden = false;
       renderDispatch(U.state);

@@ -448,3 +448,4 @@ textarea {
 .disp-list { display: grid; gap: 4px; max-height: 220px; overflow-y: auto; }
 .disp-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 12px; border-bottom: 1px dashed var(--edge-soft); padding: 2px 0; }
 .disp-row img { width: 28px; height: auto; }
+.act-btn:disabled { opacity: 0.55; cursor: not-allowed; filter: grayscale(1); }
