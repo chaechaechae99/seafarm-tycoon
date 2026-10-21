@@ -1,0 +1,14 @@
+{
+  "name": "seafarm-tycoon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "바다 가두리 낚시터 - PC 웹 브라우저용 도트 방치형 타이쿤 게임",
+  "scripts": {
+    "data": "node tools/patch-sizes.js && node tools/build-species.js",
+    "test": "node tools/species-test.js && node tools/breeding-test.js",
+    "sim": "node tools/sim.js 7200",
+    "build": "node tools/build.js",
+    "preview": "npm run build && npx wrangler pages dev dist",
+    "deploy": "npm run build && npx wrangler pages deploy dist"
+  }
+}

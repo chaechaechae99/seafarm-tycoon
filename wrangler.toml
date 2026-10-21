@@ -1,0 +1,5 @@
+# Cloudflare Pages 설정 (정적 사이트 · 서버 코드 없음)
+# 배포: npm run deploy  (처음 한 번 npx wrangler login 필요)
+name = "seafarm-tycoon"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"

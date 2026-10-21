@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>바다 가두리 낚시터</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="css/font.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <img class="brand-mark pix" id="brandIcon" alt="">
+      <div>
+        <h1>바다 가두리 낚시터</h1>
+        <p class="brand-sub" id="placeName">남해 소리만 · 해상 낚시 리조트</p>
+      </div>
+    </div>
+    <dl class="stats">
+      <div class="stat stat-money">
+        <dt>보유 자금</dt>
+        <dd><span id="money">0</span><small>원</small></dd>
+      </div>
+      <div class="stat">
+        <dt>초당 수익</dt>
+        <dd><span id="rate">0</span><small>원/초</small></dd>
+      </div>
+      <div class="stat">
+        <dt>명성</dt>
+        <dd><span id="stars" class="stars" aria-label="명성">★★★☆☆</span> <span id="repNum" class="num-sm">3.0</span></dd>
+      </div>
+      <div class="stat">
+        <dt id="clockLabel">봄 · 1일차</dt>
+        <dd><img id="dayIcon" class="pix ic-sm" alt="밤" hidden><span id="clock">06:00</span> <span id="weather" class="chip"><img id="weatherIcon" class="pix ic-sm" alt=""><span id="weatherName">맑음</span></span></dd>
+      </div>
+    </dl>
+    <div class="top-tools">
+      <div id="buffs" class="buffs" aria-live="polite"></div>
+      <div class="sound" role="group" aria-label="사운드">
+        <button type="button" class="snd" data-snd="bgm" id="snd-bgm" aria-pressed="true">BGM</button>
+        <button type="button" class="snd" data-snd="amb" id="snd-amb" aria-pressed="true">파도</button>
+        <button type="button" class="snd" data-snd="sfx" id="snd-sfx" aria-pressed="true">효과음</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout" id="layout">
+    <section class="scene-col" aria-label="낚시터 화면">
+      <div class="scene-card">
+        <div class="scene-wrap" id="sceneWrap">
+          <canvas id="scene" aria-label="바다 위 가두리 좌대와 손님들. 드래그·WASD로 이동, 휠로 확대"></canvas>
+          <div class="scene-hud">
+            <span id="hudGuests" class="hud-pill">손님 0 / 2석</span>
+            <span id="hudHint" class="hud-pill hud-hint"></span>
+          </div>
+          <div class="cam-ctl" role="group" aria-label="카메라">
+            <button type="button" class="cam-btn" id="zoomIn" aria-label="확대">+</button>
+            <button type="button" class="cam-btn" id="zoomOut" aria-label="축소">−</button>
+            <button type="button" class="cam-btn" id="zoomReset" aria-label="줌 1배">1x</button>
+            <button type="button" class="cam-btn cam-home" id="camHome" aria-label="홈 위치로 (H)" title="홈 위치로 (H)"><img class="pix" data-icon="home" alt=""></button>
+          </div>
+          <p class="cam-help">드래그·WASD 이동 · 휠 확대 · H 홈 · 고양이·별똥별 클릭</p>
+        </div>
+        <div class="action-bar">
+          <button id="castBtn" class="cast-btn" type="button">
+            <span class="cast-label">사장님이 직접 낚시</span>
+            <span class="cast-key">Space</span>
+            <span id="castFill" class="cast-fill" aria-hidden="true"></span>
+          </button>
+          <div class="side-actions">
+            <button id="autoBtn" class="btn act-btn" type="button" aria-pressed="false">자동 낚시 OFF</button>
+            <button id="dispatchBtn" class="btn act-btn" type="button"><img class="pix" data-icon="crew" alt="">원정 파견</button>
+          </div>
+          <ul id="news" class="news" aria-live="polite"></ul>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel sidebar" id="sidebar" aria-label="운영 메뉴">
+      <div class="side-head">
+        <div class="quick" role="group" aria-label="빠른 열기">
+          <button type="button" class="quick-btn" data-quick="farm" id="q-farm"><img class="pix" data-icon="secret" alt=""><span>비밀 양식장</span></button>
+          <button type="button" class="quick-btn" data-quick="vip" id="q-vip"><img class="pix" data-icon="vip" alt=""><span>VIP 호감도</span></button>
+          <button type="button" class="quick-btn" data-quick="aqua" id="q-aqua"><img class="pix" data-icon="aqua" alt=""><span>수족관</span></button>
+        </div>
+        <button type="button" class="side-toggle" id="sideToggle" aria-expanded="true" aria-controls="sidebar" aria-label="사이드바 접기">&gt;</button>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button class="tab is-on" role="tab" data-tab="facilities" id="tab-facilities" type="button">시설</button>
+        <button class="tab" role="tab" data-tab="upgrades" id="tab-upgrades" type="button">업그레이드</button>
+        <button class="tab" role="tab" data-tab="exp" id="tab-exp" type="button">원정 <span id="expCount" class="tab-count">0/350</span></button>
+        <button class="tab" role="tab" data-tab="farm" id="tab-farm" type="button">양식장</button>
+        <button class="tab" role="tab" data-tab="vip" id="tab-vip" type="button">VIP</button>
+        <button class="tab" role="tab" data-tab="aqua" id="tab-aqua" type="button">수족관</button>
+        <button class="tab" role="tab" data-tab="dex" id="tab-dex" type="button">도감 <span id="dexCount" class="tab-count">0/48</span></button>
+        <button class="tab" role="tab" data-tab="reviews" id="tab-reviews" type="button">후기</button>
+        <button class="tab" role="tab" data-tab="settings" id="tab-settings" type="button">설정</button>
+      </nav>
+
+      <div class="tab-body" data-body="facilities">
+        <div class="buy-amount" role="group" aria-label="구매 수량">
+          <span>구매 수량</span>
+          <button type="button" class="amt is-on" data-amt="1" id="amt-1">×1</button>
+          <button type="button" class="amt" data-amt="10" id="amt-10">×10</button>
+          <button type="button" class="amt" data-amt="max" id="amt-max">최대</button>
+        </div>
+        <ul id="facilityList" class="list"></ul>
+      </div>
+
+      <div class="tab-body" data-body="upgrades" hidden>
+        <ul id="upgradeList" class="list"></ul>
+      </div>
+
+      <div class="tab-body" data-body="exp" hidden>
+        <div id="expSummary" class="box"></div>
+        <ul id="zoneList" class="list"></ul>
+        <div id="expRates" class="box"></div>
+        <div class="dex-filter" id="expZoneFilter" role="group" aria-label="원정 구역"></div>
+        <div id="expGrid" class="dex-grid dex-grid-sm"></div>
+      </div>
+
+      <div class="tab-body" data-body="farm" hidden>
+        <div id="farmBody"></div>
+      </div>
+
+      <div class="tab-body" data-body="vip" hidden>
+        <div id="vipBody"></div>
+      </div>
+
+      <div class="tab-body" data-body="aqua" hidden>
+        <canvas id="aquaView" class="aqua-view" aria-label="수족관 내부 화면"></canvas>
+        <div id="aquaBody"></div>
+      </div>
+
+      <div class="tab-body" data-body="dex" hidden>
+        <p class="note" id="dexNote">새 어종을 낚을 때마다 전체 수익 +2%</p>
+        <div class="dex-filter" role="group" aria-label="희귀도 필터">
+          <button type="button" class="amt is-on" data-rar="all" id="rar-all">전체</button>
+          <button type="button" class="amt" data-rar="common" id="rar-common">일반</button>
+          <button type="button" class="amt" data-rar="premium" id="rar-premium">고급</button>
+          <button type="button" class="amt" data-rar="rare" id="rar-rare">희귀</button>
+          <button type="button" class="amt" data-rar="legendary" id="rar-legendary">전설</button>
+        </div>
+        <div id="dexGrid" class="dex-grid"></div>
+      </div>
+
+      <div class="tab-body" data-body="reviews" hidden>
+        <p class="note" id="reviewNote">최근 손님 40명의 별점 평균이 명성이 돼요. 명성이 높을수록 손님이 많이 와요.</p>
+        <ul id="reviewList" class="reviews"></ul>
+      </div>
+
+      <div class="tab-body" data-body="settings" hidden>
+        <div class="settings">
+          <div class="set-row">
+            <div>
+              <h3>저장</h3>
+              <p class="note">15초마다 이 브라우저에 자동 저장돼요.</p>
+            </div>
+            <button type="button" class="btn" id="saveBtn">지금 저장</button>
+          </div>
+          <div class="set-row">
+            <div>
+              <h3>음량</h3>
+              <p class="note">첫 클릭 뒤부터 소리가 나요.</p>
+            </div>
+            <input type="range" id="volume" min="0" max="100" value="60" aria-label="전체 음량">
+          </div>
+          <div class="set-block">
+            <h3>저장 코드 옮기기</h3>
+            <p class="note">다른 브라우저로 옮길 때 코드를 복사해서 붙여넣으세요.</p>
+            <textarea id="saveCode" rows="3" spellcheck="false" placeholder="여기에 저장 코드를 붙여넣기"></textarea>
+            <div class="set-actions">
+              <button type="button" class="btn" id="exportBtn">코드 만들기·복사</button>
+              <button type="button" class="btn" id="importBtn">코드 불러오기</button>
+            </div>
+            <p class="note" id="codeMsg" role="status"></p>
+          </div>
+          <div class="set-row">
+            <div>
+              <h3>처음부터 다시</h3>
+              <p class="note">모든 진행 상황이 지워져요.</p>
+            </div>
+            <button type="button" class="btn btn-danger" id="resetBtn">초기화</button>
+          </div>
+          <div class="set-block stat-table">
+            <h3>운영 기록</h3>
+            <dl id="statList"></dl>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<div id="dispatchModal" class="modal" hidden>
+  <div class="modal-card dispatch-card" role="dialog" aria-modal="true" aria-labelledby="dispTitle">
+    <p class="eyebrow">원정 어선 파견</p>
+    <h2 id="dispTitle">먼바다로 출항</h2>
+    <p class="note">가두리에서는 연안 어종만 낚여요. 고래·심해 생물은 원정 어선을 보내야 얻을 수 있어요. 얻은 어종은 바로 교배 재료와 수족관 등록에 쓸 수 있어요.</p>
+    <div id="dispBody"></div>
+    <button type="button" class="btn" id="dispClose">닫기</button>
+  </div>
+</div>
+
+<div id="offlineModal" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="offTitle">
+    <p class="eyebrow">자리 비운 동안</p>
+    <h2 id="offTitle"><span id="offGain">0</span>원 벌었어요</h2>
+    <p class="note" id="offInfo"></p>
+    <p class="note" id="offExp"></p>
+    <button type="button" class="btn btn-primary" id="offClose">수익 받기</button>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/species-manager.js"></script>
+<script src="js/species-data.js"></script>
+<script src="js/breeding.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/render.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

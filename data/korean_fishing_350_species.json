@@ -1,0 +1,7513 @@
+[
+  {
+    "id": 1,
+    "name": "고등어",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 32,
+    "price": 243,
+    "idleDps": 37,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [고등어]."
+  },
+  {
+    "id": 2,
+    "name": "전갱이",
+    "rarity": "Rare",
+    "minSize": 33,
+    "maxSize": 86,
+    "price": 1721,
+    "idleDps": 102,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전갱이]."
+  },
+  {
+    "id": 3,
+    "name": "볼락",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 29,
+    "price": 227,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [볼락]."
+  },
+  {
+    "id": 4,
+    "name": "우럭(조피볼락)",
+    "rarity": "Rare",
+    "minSize": 23,
+    "maxSize": 70,
+    "price": 1030,
+    "idleDps": 90,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [우럭(조피볼락)]."
+  },
+  {
+    "id": 5,
+    "name": "광어(넙치)",
+    "rarity": "Rare",
+    "minSize": 25,
+    "maxSize": 55,
+    "price": 1651,
+    "idleDps": 49,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [광어(넙치)]."
+  },
+  {
+    "id": 6,
+    "name": "가자미",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 25,
+    "price": 314,
+    "idleDps": 14,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [가자미]."
+  },
+  {
+    "id": 7,
+    "name": "도다리",
+    "rarity": "Rare",
+    "minSize": 27,
+    "maxSize": 89,
+    "price": 1464,
+    "idleDps": 51,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [도다리]."
+  },
+  {
+    "id": 8,
+    "name": "참돔",
+    "rarity": "Epic",
+    "minSize": 50,
+    "maxSize": 138,
+    "price": 3742,
+    "idleDps": 249,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참돔]."
+  },
+  {
+    "id": 9,
+    "name": "감성돔",
+    "rarity": "Epic",
+    "minSize": 52,
+    "maxSize": 118,
+    "price": 4148,
+    "idleDps": 186,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [감성돔]."
+  },
+  {
+    "id": 10,
+    "name": "돌돔",
+    "rarity": "Legendary",
+    "minSize": 89,
+    "maxSize": 165,
+    "price": 14929,
+    "idleDps": 579,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [돌돔]."
+  },
+  {
+    "id": 11,
+    "name": "뱅에돔",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 74,
+    "price": 1479,
+    "idleDps": 100,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [뱅에돔]."
+  },
+  {
+    "id": 12,
+    "name": "긴꼬리뱅에돔",
+    "rarity": "Rare",
+    "minSize": 23,
+    "maxSize": 83,
+    "price": 1561,
+    "idleDps": 109,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [긴꼬리뱅에돔]."
+  },
+  {
+    "id": 13,
+    "name": "방어",
+    "rarity": "Epic",
+    "minSize": 41,
+    "maxSize": 125,
+    "price": 4245,
+    "idleDps": 285,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [방어]."
+  },
+  {
+    "id": 14,
+    "name": "부시리",
+    "rarity": "Epic",
+    "minSize": 51,
+    "maxSize": 108,
+    "price": 2829,
+    "idleDps": 195,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [부시리]."
+  },
+  {
+    "id": 15,
+    "name": "삼치",
+    "rarity": "Rare",
+    "minSize": 30,
+    "maxSize": 78,
+    "price": 1538,
+    "idleDps": 106,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [삼치]."
+  },
+  {
+    "id": 16,
+    "name": "갈치",
+    "rarity": "Rare",
+    "minSize": 30,
+    "maxSize": 82,
+    "price": 1555,
+    "idleDps": 105,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [갈치]."
+  },
+  {
+    "id": 17,
+    "name": "농어",
+    "rarity": "Epic",
+    "minSize": 39,
+    "maxSize": 137,
+    "price": 3188,
+    "idleDps": 201,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [농어]."
+  },
+  {
+    "id": 18,
+    "name": "점농어",
+    "rarity": "Epic",
+    "minSize": 55,
+    "maxSize": 122,
+    "price": 3855,
+    "idleDps": 166,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점농어]."
+  },
+  {
+    "id": 19,
+    "name": "쥐치",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 47,
+    "price": 269,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [쥐치]."
+  },
+  {
+    "id": 20,
+    "name": "말쥐치",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 29,
+    "price": 80,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [말쥐치]."
+  },
+  {
+    "id": 21,
+    "name": "살오징어",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 44,
+    "price": 1149,
+    "idleDps": 85,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [살오징어]."
+  },
+  {
+    "id": 22,
+    "name": "갑오징어",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 78,
+    "price": 1776,
+    "idleDps": 102,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [갑오징어]."
+  },
+  {
+    "id": 23,
+    "name": "무늬오징어",
+    "rarity": "Epic",
+    "minSize": 41,
+    "maxSize": 99,
+    "price": 4449,
+    "idleDps": 297,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [무늬오징어]."
+  },
+  {
+    "id": 24,
+    "name": "한치",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 52,
+    "price": 481,
+    "idleDps": 24,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [한치]."
+  },
+  {
+    "id": 25,
+    "name": "참문어",
+    "rarity": "Epic",
+    "minSize": 55,
+    "maxSize": 101,
+    "price": 3540,
+    "idleDps": 123,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참문어]."
+  },
+  {
+    "id": 26,
+    "name": "대문어",
+    "rarity": "Legendary",
+    "minSize": 89,
+    "maxSize": 269,
+    "price": 11185,
+    "idleDps": 711,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대문어]."
+  },
+  {
+    "id": 27,
+    "name": "낙지",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 49,
+    "price": 429,
+    "idleDps": 24,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [낙지]."
+  },
+  {
+    "id": 28,
+    "name": "주꾸미",
+    "rarity": "Rare",
+    "minSize": 33,
+    "maxSize": 91,
+    "price": 949,
+    "idleDps": 59,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [주꾸미]."
+  },
+  {
+    "id": 29,
+    "name": "삼세기",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 52,
+    "price": 386,
+    "idleDps": 19,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [삼세기]."
+  },
+  {
+    "id": 30,
+    "name": "아귀",
+    "rarity": "Rare",
+    "minSize": 35,
+    "maxSize": 94,
+    "price": 955,
+    "idleDps": 45,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [아귀]."
+  },
+  {
+    "id": 31,
+    "name": "대구",
+    "rarity": "Epic",
+    "minSize": 46,
+    "maxSize": 142,
+    "price": 3981,
+    "idleDps": 302,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대구]."
+  },
+  {
+    "id": 32,
+    "name": "명태",
+    "rarity": "Rare",
+    "minSize": 20,
+    "maxSize": 69,
+    "price": 882,
+    "idleDps": 60,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [명태]."
+  },
+  {
+    "id": 33,
+    "name": "임연수어",
+    "rarity": "Common",
+    "minSize": 17,
+    "maxSize": 46,
+    "price": 524,
+    "idleDps": 10,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [임연수어]."
+  },
+  {
+    "id": 34,
+    "name": "양태",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 46,
+    "price": 317,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [양태]."
+  },
+  {
+    "id": 35,
+    "name": "성대",
+    "rarity": "Rare",
+    "minSize": 18,
+    "maxSize": 76,
+    "price": 1587,
+    "idleDps": 96,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [성대]."
+  },
+  {
+    "id": 36,
+    "name": "보리멸",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 46,
+    "price": 198,
+    "idleDps": 5,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [보리멸]."
+  },
+  {
+    "id": 37,
+    "name": "망둥어",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 61,
+    "price": 973,
+    "idleDps": 43,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [망둥어]."
+  },
+  {
+    "id": 38,
+    "name": "짱뚱어",
+    "rarity": "Rare",
+    "minSize": 18,
+    "maxSize": 82,
+    "price": 1702,
+    "idleDps": 67,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [짱뚱어]."
+  },
+  {
+    "id": 39,
+    "name": "학꽁치",
+    "rarity": "Rare",
+    "minSize": 33,
+    "maxSize": 75,
+    "price": 1039,
+    "idleDps": 77,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [학꽁치]."
+  },
+  {
+    "id": 40,
+    "name": "꽁치",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 26,
+    "price": 129,
+    "idleDps": 32,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [꽁치]."
+  },
+  {
+    "id": 41,
+    "name": "청어",
+    "rarity": "Rare",
+    "minSize": 25,
+    "maxSize": 67,
+    "price": 817,
+    "idleDps": 104,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청어]."
+  },
+  {
+    "id": 42,
+    "name": "전어",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 27,
+    "price": 162,
+    "idleDps": 21,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전어]."
+  },
+  {
+    "id": 43,
+    "name": "밴댕이",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 33,
+    "price": 87,
+    "idleDps": 8,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [밴댕이]."
+  },
+  {
+    "id": 44,
+    "name": "멸치",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 54,
+    "price": 431,
+    "idleDps": 27,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [멸치]."
+  },
+  {
+    "id": 45,
+    "name": "정어리",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 56,
+    "price": 241,
+    "idleDps": 18,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [정어리]."
+  },
+  {
+    "id": 46,
+    "name": "숭어",
+    "rarity": "Rare",
+    "minSize": 24,
+    "maxSize": 71,
+    "price": 1115,
+    "idleDps": 89,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [숭어]."
+  },
+  {
+    "id": 47,
+    "name": "가숭어",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 31,
+    "price": 224,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [가숭어]."
+  },
+  {
+    "id": 48,
+    "name": "병어",
+    "rarity": "Rare",
+    "minSize": 25,
+    "maxSize": 62,
+    "price": 641,
+    "idleDps": 109,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [병어]."
+  },
+  {
+    "id": 49,
+    "name": "덕자병어",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 20,
+    "price": 396,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [덕자병어]."
+  },
+  {
+    "id": 50,
+    "name": "민어",
+    "rarity": "Rare",
+    "minSize": 28,
+    "maxSize": 90,
+    "price": 1218,
+    "idleDps": 43,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [민어]."
+  },
+  {
+    "id": 51,
+    "name": "홍치",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 42,
+    "price": 273,
+    "idleDps": 20,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [홍치]."
+  },
+  {
+    "id": 52,
+    "name": "쏨뱅이",
+    "rarity": "Rare",
+    "minSize": 23,
+    "maxSize": 57,
+    "price": 1708,
+    "idleDps": 90,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [쏨뱅이]."
+  },
+  {
+    "id": 53,
+    "name": "우럭볼락",
+    "rarity": "Rare",
+    "minSize": 30,
+    "maxSize": 81,
+    "price": 1166,
+    "idleDps": 109,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [우럭볼락]."
+  },
+  {
+    "id": 54,
+    "name": "황점볼락",
+    "rarity": "Rare",
+    "minSize": 32,
+    "maxSize": 59,
+    "price": 783,
+    "idleDps": 62,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황점볼락]."
+  },
+  {
+    "id": 55,
+    "name": "개볼락",
+    "rarity": "Rare",
+    "minSize": 16,
+    "maxSize": 83,
+    "price": 1665,
+    "idleDps": 80,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [개볼락]."
+  },
+  {
+    "id": 56,
+    "name": "참서대",
+    "rarity": "Common",
+    "minSize": 9,
+    "maxSize": 44,
+    "price": 109,
+    "idleDps": 19,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참서대]."
+  },
+  {
+    "id": 57,
+    "name": "박대",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 48,
+    "price": 255,
+    "idleDps": 17,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [박대]."
+  },
+  {
+    "id": 58,
+    "name": "청가시가자미",
+    "rarity": "Rare",
+    "minSize": 21,
+    "maxSize": 56,
+    "price": 1570,
+    "idleDps": 79,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청가시가자미]."
+  },
+  {
+    "id": 59,
+    "name": "문치가자미",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 30,
+    "price": 261,
+    "idleDps": 38,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [문치가자미]."
+  },
+  {
+    "id": 60,
+    "name": "돌가자미",
+    "rarity": "Common",
+    "minSize": 9,
+    "maxSize": 25,
+    "price": 359,
+    "idleDps": 21,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [돌가자미]."
+  },
+  {
+    "id": 61,
+    "name": "범가자미",
+    "rarity": "Rare",
+    "minSize": 33,
+    "maxSize": 60,
+    "price": 1792,
+    "idleDps": 79,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [범가자미]."
+  },
+  {
+    "id": 62,
+    "name": "줄가자미",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 68,
+    "price": 814,
+    "idleDps": 50,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄가자미]."
+  },
+  {
+    "id": 63,
+    "name": "용치놀래기",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 38,
+    "price": 101,
+    "idleDps": 17,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [용치놀래기]."
+  },
+  {
+    "id": 64,
+    "name": "어랭이",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 21,
+    "price": 148,
+    "idleDps": 29,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [어랭이]."
+  },
+  {
+    "id": 65,
+    "name": "혹돔",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 26,
+    "price": 262,
+    "idleDps": 15,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [혹돔]."
+  },
+  {
+    "id": 66,
+    "name": "벤자리",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 38,
+    "price": 94,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [벤자리]."
+  },
+  {
+    "id": 67,
+    "name": "자바리(거북상어)",
+    "rarity": "Epic",
+    "minSize": 100,
+    "maxSize": 300,
+    "price": 2885,
+    "idleDps": 256,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [자바리(거북상어)]."
+  },
+  {
+    "id": 68,
+    "name": "능성어",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 22,
+    "price": 247,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [능성어]."
+  },
+  {
+    "id": 69,
+    "name": "붉바리",
+    "rarity": "Legendary",
+    "minSize": 70,
+    "maxSize": 246,
+    "price": 7425,
+    "idleDps": 706,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [붉바리]."
+  },
+  {
+    "id": 70,
+    "name": "돌기해삼",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 31,
+    "price": 429,
+    "idleDps": 34,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [돌기해삼]."
+  },
+  {
+    "id": 71,
+    "name": "홍해삼",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 40,
+    "price": 215,
+    "idleDps": 19,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [홍해삼]."
+  },
+  {
+    "id": 72,
+    "name": "뿔소라",
+    "rarity": "Common",
+    "minSize": 17,
+    "maxSize": 47,
+    "price": 544,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [뿔소라]."
+  },
+  {
+    "id": 73,
+    "name": "참소라",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 52,
+    "price": 523,
+    "idleDps": 27,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참소라]."
+  },
+  {
+    "id": 74,
+    "name": "전복",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 45,
+    "price": 306,
+    "idleDps": 13,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전복]."
+  },
+  {
+    "id": 75,
+    "name": "오메기",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 32,
+    "price": 510,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [오메기]."
+  },
+  {
+    "id": 76,
+    "name": "청치치",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 35,
+    "price": 249,
+    "idleDps": 14,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청치치]."
+  },
+  {
+    "id": 77,
+    "name": "만새기",
+    "rarity": "Rare",
+    "minSize": 15,
+    "maxSize": 75,
+    "price": 1421,
+    "idleDps": 91,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [만새기]."
+  },
+  {
+    "id": 78,
+    "name": "다랑어(참치)",
+    "rarity": "Common",
+    "minSize": 100,
+    "maxSize": 300,
+    "price": 128,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [다랑어(참치)]."
+  },
+  {
+    "id": 79,
+    "name": "가다랭이",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 32,
+    "price": 284,
+    "idleDps": 16,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [가다랭이]."
+  },
+  {
+    "id": 80,
+    "name": "새치",
+    "rarity": "Common",
+    "minSize": 20,
+    "maxSize": 60,
+    "price": 251,
+    "idleDps": 31,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [새치]."
+  },
+  {
+    "id": 81,
+    "name": "황다랑어",
+    "rarity": "Common",
+    "minSize": 60,
+    "maxSize": 200,
+    "price": 405,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황다랑어]."
+  },
+  {
+    "id": 82,
+    "name": "눈다랑어",
+    "rarity": "Rare",
+    "minSize": 60,
+    "maxSize": 250,
+    "price": 1167,
+    "idleDps": 87,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [눈다랑어]."
+  },
+  {
+    "id": 83,
+    "name": "날치",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 51,
+    "price": 159,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [날치]."
+  },
+  {
+    "id": 84,
+    "name": "복어(까치복)",
+    "rarity": "Rare",
+    "minSize": 33,
+    "maxSize": 84,
+    "price": 1233,
+    "idleDps": 50,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [복어(까치복)]."
+  },
+  {
+    "id": 85,
+    "name": "졸복",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 30,
+    "price": 94,
+    "idleDps": 22,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [졸복]."
+  },
+  {
+    "id": 86,
+    "name": "밀복",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 47,
+    "price": 416,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [밀복]."
+  },
+  {
+    "id": 87,
+    "name": "까칠복",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 25,
+    "price": 330,
+    "idleDps": 25,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [까칠복]."
+  },
+  {
+    "id": 88,
+    "name": "은대구",
+    "rarity": "Epic",
+    "minSize": 33,
+    "maxSize": 126,
+    "price": 3968,
+    "idleDps": 213,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [은대구]."
+  },
+  {
+    "id": 89,
+    "name": "곰치",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 37,
+    "price": 342,
+    "idleDps": 30,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [곰치]."
+  },
+  {
+    "id": 90,
+    "name": "괴기어",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 54,
+    "price": 451,
+    "idleDps": 37,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [괴기어]."
+  },
+  {
+    "id": 91,
+    "name": "갯장어(하모)",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 37,
+    "price": 242,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [갯장어(하모)]."
+  },
+  {
+    "id": 92,
+    "name": "붕장어(아나고)",
+    "rarity": "Common",
+    "minSize": 17,
+    "maxSize": 33,
+    "price": 526,
+    "idleDps": 38,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [붕장어(아나고)]."
+  },
+  {
+    "id": 93,
+    "name": "곰보장어",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 60,
+    "price": 203,
+    "idleDps": 18,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [곰보장어]."
+  },
+  {
+    "id": 94,
+    "name": "먹장어(꼼장어)",
+    "rarity": "Legendary",
+    "minSize": 48,
+    "maxSize": 179,
+    "price": 9934,
+    "idleDps": 850,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [먹장어(꼼장어)]."
+  },
+  {
+    "id": 95,
+    "name": "뱀장어",
+    "rarity": "Legendary",
+    "minSize": 79,
+    "maxSize": 231,
+    "price": 11922,
+    "idleDps": 895,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [뱀장어]."
+  },
+  {
+    "id": 96,
+    "name": "쥐노섬",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 52,
+    "price": 1729,
+    "idleDps": 59,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [쥐노섬]."
+  },
+  {
+    "id": 97,
+    "name": "노래미",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 28,
+    "price": 484,
+    "idleDps": 24,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [노래미]."
+  },
+  {
+    "id": 98,
+    "name": "게르치",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 31,
+    "price": 145,
+    "idleDps": 34,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [게르치]."
+  },
+  {
+    "id": 99,
+    "name": "눈볼대(금태)",
+    "rarity": "Legendary",
+    "minSize": 74,
+    "maxSize": 137,
+    "price": 12281,
+    "idleDps": 851,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [눈볼대(금태)]."
+  },
+  {
+    "id": 100,
+    "name": "열기",
+    "rarity": "Legendary",
+    "minSize": 45,
+    "maxSize": 164,
+    "price": 11466,
+    "idleDps": 905,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [열기]."
+  },
+  {
+    "id": 101,
+    "name": "대게",
+    "rarity": "Rare",
+    "minSize": 16,
+    "maxSize": 71,
+    "price": 898,
+    "idleDps": 105,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대게]."
+  },
+  {
+    "id": 102,
+    "name": "붉은대게(홍게)",
+    "rarity": "Legendary",
+    "minSize": 85,
+    "maxSize": 234,
+    "price": 11283,
+    "idleDps": 950,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [붉은대게(홍게)]."
+  },
+  {
+    "id": 103,
+    "name": "꽃게",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 44,
+    "price": 337,
+    "idleDps": 17,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [꽃게]."
+  },
+  {
+    "id": 104,
+    "name": "돌게",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 44,
+    "price": 195,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [돌게]."
+  },
+  {
+    "id": 105,
+    "name": "참게",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 96,
+    "price": 1466,
+    "idleDps": 98,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참게]."
+  },
+  {
+    "id": 106,
+    "name": "쏙",
+    "rarity": "Rare",
+    "minSize": 21,
+    "maxSize": 58,
+    "price": 1586,
+    "idleDps": 51,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [쏙]."
+  },
+  {
+    "id": 107,
+    "name": "갯가재",
+    "rarity": "Rare",
+    "minSize": 20,
+    "maxSize": 58,
+    "price": 923,
+    "idleDps": 54,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [갯가재]."
+  },
+  {
+    "id": 108,
+    "name": "왕새우(대하)",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 41,
+    "price": 360,
+    "idleDps": 14,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [왕새우(대하)]."
+  },
+  {
+    "id": 109,
+    "name": "흰다리새우",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 45,
+    "price": 346,
+    "idleDps": 34,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흰다리새우]."
+  },
+  {
+    "id": 110,
+    "name": "보리새우",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 55,
+    "price": 366,
+    "idleDps": 19,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [보리새우]."
+  },
+  {
+    "id": 111,
+    "name": "닭새우(스캄피)",
+    "rarity": "Rare",
+    "minSize": 23,
+    "maxSize": 91,
+    "price": 1747,
+    "idleDps": 81,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [닭새우(스캄피)]."
+  },
+  {
+    "id": 112,
+    "name": "털가재",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 35,
+    "price": 359,
+    "idleDps": 38,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [털가재]."
+  },
+  {
+    "id": 113,
+    "name": "홍새우",
+    "rarity": "Rare",
+    "minSize": 31,
+    "maxSize": 84,
+    "price": 685,
+    "idleDps": 48,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [홍새우]."
+  },
+  {
+    "id": 114,
+    "name": "독도새우(도화새우)",
+    "rarity": "Rare",
+    "minSize": 34,
+    "maxSize": 89,
+    "price": 1777,
+    "idleDps": 98,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [독도새우(도화새우)]."
+  },
+  {
+    "id": 115,
+    "name": "꽃새우",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 43,
+    "price": 148,
+    "idleDps": 6,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [꽃새우]."
+  },
+  {
+    "id": 116,
+    "name": "찰진보리새우",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 39,
+    "price": 103,
+    "idleDps": 9,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [찰진보리새우]."
+  },
+  {
+    "id": 117,
+    "name": "쭈꾸미왕",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 47,
+    "price": 244,
+    "idleDps": 34,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [쭈꾸미왕]."
+  },
+  {
+    "id": 118,
+    "name": "살조개",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 33,
+    "price": 101,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [살조개]."
+  },
+  {
+    "id": 119,
+    "name": "피조개",
+    "rarity": "Rare",
+    "minSize": 30,
+    "maxSize": 88,
+    "price": 1575,
+    "idleDps": 88,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [피조개]."
+  },
+  {
+    "id": 120,
+    "name": "가리비",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 37,
+    "price": 453,
+    "idleDps": 7,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [가리비]."
+  },
+  {
+    "id": 121,
+    "name": "키조개",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 37,
+    "price": 216,
+    "idleDps": 32,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [키조개]."
+  },
+  {
+    "id": 122,
+    "name": "전복소라",
+    "rarity": "Rare",
+    "minSize": 21,
+    "maxSize": 83,
+    "price": 850,
+    "idleDps": 87,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전복소라]."
+  },
+  {
+    "id": 123,
+    "name": "명주조개",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 44,
+    "price": 287,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [명주조개]."
+  },
+  {
+    "id": 124,
+    "name": "바지락",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 53,
+    "price": 106,
+    "idleDps": 21,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [바지락]."
+  },
+  {
+    "id": 125,
+    "name": "백합",
+    "rarity": "Legendary",
+    "minSize": 42,
+    "maxSize": 129,
+    "price": 9683,
+    "idleDps": 521,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백합]."
+  },
+  {
+    "id": 126,
+    "name": "개복치",
+    "rarity": "Rare",
+    "minSize": 150,
+    "maxSize": 330,
+    "price": 672,
+    "idleDps": 85,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [개복치]."
+  },
+  {
+    "id": 127,
+    "name": "청상어",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 24,
+    "price": 229,
+    "idleDps": 10,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청상어]."
+  },
+  {
+    "id": 128,
+    "name": "악상어",
+    "rarity": "Legendary",
+    "minSize": 150,
+    "maxSize": 300,
+    "price": 10200,
+    "idleDps": 394,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [악상어]."
+  },
+  {
+    "id": 129,
+    "name": "살레상어",
+    "rarity": "Rare",
+    "minSize": 32,
+    "maxSize": 97,
+    "price": 1719,
+    "idleDps": 61,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [살레상어]."
+  },
+  {
+    "id": 130,
+    "name": "귀신고래상어",
+    "rarity": "Common",
+    "minSize": 300,
+    "maxSize": 700,
+    "price": 499,
+    "idleDps": 8,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [귀신고래상어]."
+  },
+  {
+    "id": 131,
+    "name": "대왕오징어",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1300,
+    "price": 2358,
+    "idleDps": 182,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대왕오징어]."
+  },
+  {
+    "id": 132,
+    "name": "초롱아귀",
+    "rarity": "Rare",
+    "minSize": 20,
+    "maxSize": 60,
+    "price": 1503,
+    "idleDps": 62,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [초롱아귀]."
+  },
+  {
+    "id": 133,
+    "name": "심해등가자미",
+    "rarity": "Rare",
+    "minSize": 23,
+    "maxSize": 89,
+    "price": 1290,
+    "idleDps": 91,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해등가자미]."
+  },
+  {
+    "id": 134,
+    "name": "바이퍼피시",
+    "rarity": "Legendary",
+    "minSize": 44,
+    "maxSize": 199,
+    "price": 5810,
+    "idleDps": 702,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [바이퍼피시]."
+  },
+  {
+    "id": 135,
+    "name": "관해파리",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 36,
+    "price": 525,
+    "idleDps": 14,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [관해파리]."
+  },
+  {
+    "id": 136,
+    "name": "유령오징어",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 48,
+    "price": 80,
+    "idleDps": 29,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [유령오징어]."
+  },
+  {
+    "id": 137,
+    "name": "심해대게",
+    "rarity": "Rare",
+    "minSize": 17,
+    "maxSize": 85,
+    "price": 1649,
+    "idleDps": 85,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해대게]."
+  },
+  {
+    "id": 138,
+    "name": "황제문어",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 41,
+    "price": 139,
+    "idleDps": 29,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황제문어]."
+  },
+  {
+    "id": 139,
+    "name": "전설의 황금돔",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 36,
+    "price": 462,
+    "idleDps": 5,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전설의 황금돔]."
+  },
+  {
+    "id": 140,
+    "name": "고대 실러캔스",
+    "rarity": "Rare",
+    "minSize": 30,
+    "maxSize": 65,
+    "price": 798,
+    "idleDps": 71,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [고대 실러캔스]."
+  },
+  {
+    "id": 141,
+    "name": "바다거북",
+    "rarity": "Common",
+    "minSize": 70,
+    "maxSize": 150,
+    "price": 114,
+    "idleDps": 13,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [바다거북]."
+  },
+  {
+    "id": 142,
+    "name": "푸른바다거북",
+    "rarity": "Common",
+    "minSize": 80,
+    "maxSize": 150,
+    "price": 90,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [푸른바다거북]."
+  },
+  {
+    "id": 143,
+    "name": "돌고래(상괭이)",
+    "rarity": "Common",
+    "minSize": 120,
+    "maxSize": 200,
+    "price": 380,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [돌고래(상괭이)]."
+  },
+  {
+    "id": 144,
+    "name": "범고래",
+    "rarity": "Common",
+    "minSize": 500,
+    "maxSize": 900,
+    "price": 220,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [범고래]."
+  },
+  {
+    "id": 145,
+    "name": "해마",
+    "rarity": "Rare",
+    "minSize": 24,
+    "maxSize": 69,
+    "price": 1440,
+    "idleDps": 100,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [해마]."
+  },
+  {
+    "id": 146,
+    "name": "대왕해마",
+    "rarity": "Common",
+    "minSize": 17,
+    "maxSize": 41,
+    "price": 189,
+    "idleDps": 23,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대왕해마]."
+  },
+  {
+    "id": 147,
+    "name": "피그미해마",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 59,
+    "price": 277,
+    "idleDps": 13,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [피그미해마]."
+  },
+  {
+    "id": 148,
+    "name": "푸른고리문어",
+    "rarity": "Rare",
+    "minSize": 23,
+    "maxSize": 70,
+    "price": 1702,
+    "idleDps": 88,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [푸른고리문어]."
+  },
+  {
+    "id": 149,
+    "name": "독가시치(따치)",
+    "rarity": "Rare",
+    "minSize": 34,
+    "maxSize": 71,
+    "price": 1218,
+    "idleDps": 44,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [독가시치(따치)]."
+  },
+  {
+    "id": 150,
+    "name": "쏠배기(라이언피시)",
+    "rarity": "Rare",
+    "minSize": 29,
+    "maxSize": 78,
+    "price": 1788,
+    "idleDps": 56,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [쏠배기(라이언피시)]."
+  },
+  {
+    "id": 151,
+    "name": "참가자미",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 60,
+    "price": 457,
+    "idleDps": 7,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참가자미]."
+  },
+  {
+    "id": 152,
+    "name": "문치가자미",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 56,
+    "price": 402,
+    "idleDps": 37,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [문치가자미]."
+  },
+  {
+    "id": 153,
+    "name": "용가자미",
+    "rarity": "Rare",
+    "minSize": 31,
+    "maxSize": 83,
+    "price": 627,
+    "idleDps": 93,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [용가자미]."
+  },
+  {
+    "id": 154,
+    "name": "흑돔",
+    "rarity": "Common",
+    "minSize": 17,
+    "maxSize": 49,
+    "price": 489,
+    "idleDps": 20,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑돔]."
+  },
+  {
+    "id": 155,
+    "name": "청줄돔",
+    "rarity": "Epic",
+    "minSize": 37,
+    "maxSize": 107,
+    "price": 4009,
+    "idleDps": 278,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청줄돔]."
+  },
+  {
+    "id": 156,
+    "name": "자리돔",
+    "rarity": "Rare",
+    "minSize": 18,
+    "maxSize": 50,
+    "price": 1716,
+    "idleDps": 50,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [자리돔]."
+  },
+  {
+    "id": 157,
+    "name": "파랑돔",
+    "rarity": "Rare",
+    "minSize": 35,
+    "maxSize": 66,
+    "price": 1310,
+    "idleDps": 106,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [파랑돔]."
+  },
+  {
+    "id": 158,
+    "name": "청황돔",
+    "rarity": "Rare",
+    "minSize": 17,
+    "maxSize": 63,
+    "price": 607,
+    "idleDps": 52,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청황돔]."
+  },
+  {
+    "id": 159,
+    "name": "깃돔",
+    "rarity": "Legendary",
+    "minSize": 75,
+    "maxSize": 245,
+    "price": 7228,
+    "idleDps": 545,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [깃돔]."
+  },
+  {
+    "id": 160,
+    "name": "독돔",
+    "rarity": "Epic",
+    "minSize": 29,
+    "maxSize": 97,
+    "price": 3418,
+    "idleDps": 180,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [독돔]."
+  },
+  {
+    "id": 161,
+    "name": "혹돔",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 44,
+    "price": 147,
+    "idleDps": 10,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [혹돔]."
+  },
+  {
+    "id": 162,
+    "name": "납작돔",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 57,
+    "price": 1519,
+    "idleDps": 100,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [납작돔]."
+  },
+  {
+    "id": 163,
+    "name": "황줄돔",
+    "rarity": "Rare",
+    "minSize": 32,
+    "maxSize": 90,
+    "price": 740,
+    "idleDps": 72,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황줄돔]."
+  },
+  {
+    "id": 164,
+    "name": "꼬마돔",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 82,
+    "price": 945,
+    "idleDps": 41,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [꼬마돔]."
+  },
+  {
+    "id": 165,
+    "name": "흰줄돔",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 45,
+    "price": 302,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흰줄돔]."
+  },
+  {
+    "id": 166,
+    "name": "점줄돔",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 52,
+    "price": 396,
+    "idleDps": 21,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점줄돔]."
+  },
+  {
+    "id": 167,
+    "name": "홍돔",
+    "rarity": "Epic",
+    "minSize": 30,
+    "maxSize": 103,
+    "price": 4477,
+    "idleDps": 254,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [홍돔]."
+  },
+  {
+    "id": 168,
+    "name": "눈동자돔",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 47,
+    "price": 208,
+    "idleDps": 38,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [눈동자돔]."
+  },
+  {
+    "id": 169,
+    "name": "청돔",
+    "rarity": "Epic",
+    "minSize": 39,
+    "maxSize": 89,
+    "price": 4981,
+    "idleDps": 271,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청돔]."
+  },
+  {
+    "id": 170,
+    "name": "바다참돔",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 22,
+    "price": 239,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [바다참돔]."
+  },
+  {
+    "id": 171,
+    "name": "방어새끼",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 50,
+    "price": 452,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [방어새끼]."
+  },
+  {
+    "id": 172,
+    "name": "참부시리",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 53,
+    "price": 425,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참부시리]."
+  },
+  {
+    "id": 173,
+    "name": "소형방어",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 50,
+    "price": 263,
+    "idleDps": 5,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [소형방어]."
+  },
+  {
+    "id": 174,
+    "name": "대형방어",
+    "rarity": "Legendary",
+    "minSize": 80,
+    "maxSize": 180,
+    "price": 12272,
+    "idleDps": 827,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대형방어]."
+  },
+  {
+    "id": 175,
+    "name": "황금방어",
+    "rarity": "Rare",
+    "minSize": 18,
+    "maxSize": 64,
+    "price": 1715,
+    "idleDps": 46,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금방어]."
+  },
+  {
+    "id": 176,
+    "name": "점방어",
+    "rarity": "Rare",
+    "minSize": 21,
+    "maxSize": 59,
+    "price": 1127,
+    "idleDps": 40,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점방어]."
+  },
+  {
+    "id": 177,
+    "name": "줄방어",
+    "rarity": "Epic",
+    "minSize": 54,
+    "maxSize": 149,
+    "price": 4902,
+    "idleDps": 213,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄방어]."
+  },
+  {
+    "id": 178,
+    "name": "청방어",
+    "rarity": "Epic",
+    "minSize": 41,
+    "maxSize": 121,
+    "price": 4508,
+    "idleDps": 257,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청방어]."
+  },
+  {
+    "id": 179,
+    "name": "흑방어",
+    "rarity": "Epic",
+    "minSize": 28,
+    "maxSize": 112,
+    "price": 3713,
+    "idleDps": 178,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑방어]."
+  },
+  {
+    "id": 180,
+    "name": "백방어",
+    "rarity": "Common",
+    "minSize": 6,
+    "maxSize": 24,
+    "price": 527,
+    "idleDps": 29,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백방어]."
+  },
+  {
+    "id": 181,
+    "name": "참고등어",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 51,
+    "price": 521,
+    "idleDps": 23,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참고등어]."
+  },
+  {
+    "id": 182,
+    "name": "점고등어",
+    "rarity": "Epic",
+    "minSize": 34,
+    "maxSize": 83,
+    "price": 2209,
+    "idleDps": 226,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점고등어]."
+  },
+  {
+    "id": 183,
+    "name": "줄고등어",
+    "rarity": "Epic",
+    "minSize": 26,
+    "maxSize": 70,
+    "price": 3626,
+    "idleDps": 303,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄고등어]."
+  },
+  {
+    "id": 184,
+    "name": "흑고등어",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 33,
+    "price": 305,
+    "idleDps": 14,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑고등어]."
+  },
+  {
+    "id": 185,
+    "name": "백고등어",
+    "rarity": "Epic",
+    "minSize": 44,
+    "maxSize": 93,
+    "price": 3892,
+    "idleDps": 254,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백고등어]."
+  },
+  {
+    "id": 186,
+    "name": "황금고등어",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 21,
+    "price": 433,
+    "idleDps": 23,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금고등어]."
+  },
+  {
+    "id": 187,
+    "name": "청고등어",
+    "rarity": "Legendary",
+    "minSize": 40,
+    "maxSize": 146,
+    "price": 11904,
+    "idleDps": 426,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청고등어]."
+  },
+  {
+    "id": 188,
+    "name": "대고등어",
+    "rarity": "Epic",
+    "minSize": 35,
+    "maxSize": 91,
+    "price": 2896,
+    "idleDps": 169,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대고등어]."
+  },
+  {
+    "id": 189,
+    "name": "소고등어",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 64,
+    "price": 117,
+    "idleDps": 19,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [소고등어]."
+  },
+  {
+    "id": 190,
+    "name": "왕고등어",
+    "rarity": "Epic",
+    "minSize": 46,
+    "maxSize": 93,
+    "price": 4262,
+    "idleDps": 184,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [왕고등어]."
+  },
+  {
+    "id": 191,
+    "name": "참삼치",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 81,
+    "price": 984,
+    "idleDps": 62,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참삼치]."
+  },
+  {
+    "id": 192,
+    "name": "흑삼치",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 40,
+    "price": 226,
+    "idleDps": 8,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑삼치]."
+  },
+  {
+    "id": 193,
+    "name": "청삼치",
+    "rarity": "Common",
+    "minSize": 9,
+    "maxSize": 36,
+    "price": 549,
+    "idleDps": 24,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청삼치]."
+  },
+  {
+    "id": 194,
+    "name": "백삼치",
+    "rarity": "Epic",
+    "minSize": 55,
+    "maxSize": 138,
+    "price": 2506,
+    "idleDps": 186,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백삼치]."
+  },
+  {
+    "id": 195,
+    "name": "황삼치",
+    "rarity": "Rare",
+    "minSize": 16,
+    "maxSize": 45,
+    "price": 1211,
+    "idleDps": 56,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황삼치]."
+  },
+  {
+    "id": 196,
+    "name": "점삼치",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 16,
+    "price": 414,
+    "idleDps": 17,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점삼치]."
+  },
+  {
+    "id": 197,
+    "name": "줄삼치",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 54,
+    "price": 243,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄삼치]."
+  },
+  {
+    "id": 198,
+    "name": "대삼치",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 94,
+    "price": 1048,
+    "idleDps": 45,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대삼치]."
+  },
+  {
+    "id": 199,
+    "name": "소삼치",
+    "rarity": "Common",
+    "minSize": 6,
+    "maxSize": 37,
+    "price": 330,
+    "idleDps": 32,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [소삼치]."
+  },
+  {
+    "id": 200,
+    "name": "왕삼치",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 51,
+    "price": 364,
+    "idleDps": 38,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [왕삼치]."
+  },
+  {
+    "id": 201,
+    "name": "참갈치",
+    "rarity": "Rare",
+    "minSize": 30,
+    "maxSize": 64,
+    "price": 707,
+    "idleDps": 45,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참갈치]."
+  },
+  {
+    "id": 202,
+    "name": "흑갈치",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 34,
+    "price": 410,
+    "idleDps": 27,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑갈치]."
+  },
+  {
+    "id": 203,
+    "name": "청갈치",
+    "rarity": "Epic",
+    "minSize": 31,
+    "maxSize": 100,
+    "price": 2850,
+    "idleDps": 191,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청갈치]."
+  },
+  {
+    "id": 204,
+    "name": "백갈치",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 37,
+    "price": 350,
+    "idleDps": 35,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백갈치]."
+  },
+  {
+    "id": 205,
+    "name": "황금갈치",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 39,
+    "price": 439,
+    "idleDps": 24,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금갈치]."
+  },
+  {
+    "id": 206,
+    "name": "점갈치",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 26,
+    "price": 364,
+    "idleDps": 32,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점갈치]."
+  },
+  {
+    "id": 207,
+    "name": "줄갈치",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 43,
+    "price": 391,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄갈치]."
+  },
+  {
+    "id": 208,
+    "name": "대갈치",
+    "rarity": "Rare",
+    "minSize": 20,
+    "maxSize": 50,
+    "price": 998,
+    "idleDps": 74,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대갈치]."
+  },
+  {
+    "id": 209,
+    "name": "소갈치",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 57,
+    "price": 195,
+    "idleDps": 24,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [소갈치]."
+  },
+  {
+    "id": 210,
+    "name": "왕갈치",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 19,
+    "price": 448,
+    "idleDps": 23,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [왕갈치]."
+  },
+  {
+    "id": 211,
+    "name": "참오징어",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 48,
+    "price": 114,
+    "idleDps": 29,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참오징어]."
+  },
+  {
+    "id": 212,
+    "name": "흑오징어",
+    "rarity": "Common",
+    "minSize": 6,
+    "maxSize": 49,
+    "price": 223,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑오징어]."
+  },
+  {
+    "id": 213,
+    "name": "청오징어",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 38,
+    "price": 547,
+    "idleDps": 25,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청오징어]."
+  },
+  {
+    "id": 214,
+    "name": "백오징어",
+    "rarity": "Legendary",
+    "minSize": 76,
+    "maxSize": 255,
+    "price": 10141,
+    "idleDps": 524,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백오징어]."
+  },
+  {
+    "id": 215,
+    "name": "황금오징어",
+    "rarity": "Rare",
+    "minSize": 32,
+    "maxSize": 65,
+    "price": 1660,
+    "idleDps": 49,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금오징어]."
+  },
+  {
+    "id": 216,
+    "name": "점오징어",
+    "rarity": "Legendary",
+    "minSize": 79,
+    "maxSize": 186,
+    "price": 11903,
+    "idleDps": 445,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점오징어]."
+  },
+  {
+    "id": 217,
+    "name": "줄오징어",
+    "rarity": "Common",
+    "minSize": 6,
+    "maxSize": 17,
+    "price": 80,
+    "idleDps": 9,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄오징어]."
+  },
+  {
+    "id": 218,
+    "name": "대오징어",
+    "rarity": "Common",
+    "minSize": 20,
+    "maxSize": 33,
+    "price": 89,
+    "idleDps": 6,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대오징어]."
+  },
+  {
+    "id": 219,
+    "name": "소오징어",
+    "rarity": "Rare",
+    "minSize": 34,
+    "maxSize": 68,
+    "price": 704,
+    "idleDps": 65,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [소오징어]."
+  },
+  {
+    "id": 220,
+    "name": "왕오징어",
+    "rarity": "Legendary",
+    "minSize": 52,
+    "maxSize": 116,
+    "price": 12921,
+    "idleDps": 383,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [왕오징어]."
+  },
+  {
+    "id": 221,
+    "name": "참문어",
+    "rarity": "Rare",
+    "minSize": 28,
+    "maxSize": 98,
+    "price": 1683,
+    "idleDps": 52,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참문어]."
+  },
+  {
+    "id": 222,
+    "name": "흑문어",
+    "rarity": "Rare",
+    "minSize": 17,
+    "maxSize": 47,
+    "price": 1088,
+    "idleDps": 85,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑문어]."
+  },
+  {
+    "id": 223,
+    "name": "청문어",
+    "rarity": "Epic",
+    "minSize": 26,
+    "maxSize": 120,
+    "price": 2984,
+    "idleDps": 129,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청문어]."
+  },
+  {
+    "id": 224,
+    "name": "백문어",
+    "rarity": "Epic",
+    "minSize": 30,
+    "maxSize": 94,
+    "price": 2028,
+    "idleDps": 199,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백문어]."
+  },
+  {
+    "id": 225,
+    "name": "황금문어",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 47,
+    "price": 332,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금문어]."
+  },
+  {
+    "id": 226,
+    "name": "점문어",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 56,
+    "price": 121,
+    "idleDps": 13,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점문어]."
+  },
+  {
+    "id": 227,
+    "name": "줄문어",
+    "rarity": "Common",
+    "minSize": 20,
+    "maxSize": 31,
+    "price": 477,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄문어]."
+  },
+  {
+    "id": 228,
+    "name": "대문어",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 53,
+    "price": 379,
+    "idleDps": 15,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대문어]."
+  },
+  {
+    "id": 229,
+    "name": "소문어",
+    "rarity": "Epic",
+    "minSize": 40,
+    "maxSize": 123,
+    "price": 2251,
+    "idleDps": 152,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [소문어]."
+  },
+  {
+    "id": 230,
+    "name": "왕문어",
+    "rarity": "Epic",
+    "minSize": 29,
+    "maxSize": 121,
+    "price": 4285,
+    "idleDps": 150,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [왕문어]."
+  },
+  {
+    "id": 231,
+    "name": "참게",
+    "rarity": "Common",
+    "minSize": 17,
+    "maxSize": 57,
+    "price": 330,
+    "idleDps": 6,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참게]."
+  },
+  {
+    "id": 232,
+    "name": "꽃게",
+    "rarity": "Rare",
+    "minSize": 28,
+    "maxSize": 78,
+    "price": 1243,
+    "idleDps": 47,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [꽃게]."
+  },
+  {
+    "id": 233,
+    "name": "박대게",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 64,
+    "price": 1449,
+    "idleDps": 106,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [박대게]."
+  },
+  {
+    "id": 234,
+    "name": "돌게",
+    "rarity": "Epic",
+    "minSize": 29,
+    "maxSize": 86,
+    "price": 4969,
+    "idleDps": 143,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [돌게]."
+  },
+  {
+    "id": 235,
+    "name": "방울게",
+    "rarity": "Rare",
+    "minSize": 27,
+    "maxSize": 61,
+    "price": 1059,
+    "idleDps": 92,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [방울게]."
+  },
+  {
+    "id": 236,
+    "name": "털게",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 48,
+    "price": 519,
+    "idleDps": 16,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [털게]."
+  },
+  {
+    "id": 237,
+    "name": "바다게",
+    "rarity": "Epic",
+    "minSize": 48,
+    "maxSize": 106,
+    "price": 2633,
+    "idleDps": 126,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [바다게]."
+  },
+  {
+    "id": 238,
+    "name": "심해게",
+    "rarity": "Rare",
+    "minSize": 34,
+    "maxSize": 99,
+    "price": 1556,
+    "idleDps": 43,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해게]."
+  },
+  {
+    "id": 239,
+    "name": "붉은게",
+    "rarity": "Legendary",
+    "minSize": 73,
+    "maxSize": 208,
+    "price": 7467,
+    "idleDps": 905,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [붉은게]."
+  },
+  {
+    "id": 240,
+    "name": "황금게",
+    "rarity": "Epic",
+    "minSize": 39,
+    "maxSize": 137,
+    "price": 3281,
+    "idleDps": 150,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금게]."
+  },
+  {
+    "id": 241,
+    "name": "참새우",
+    "rarity": "Epic",
+    "minSize": 35,
+    "maxSize": 130,
+    "price": 4560,
+    "idleDps": 156,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참새우]."
+  },
+  {
+    "id": 242,
+    "name": "보리새우",
+    "rarity": "Common",
+    "minSize": 20,
+    "maxSize": 63,
+    "price": 303,
+    "idleDps": 17,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [보리새우]."
+  },
+  {
+    "id": 243,
+    "name": "꽃새우",
+    "rarity": "Common",
+    "minSize": 9,
+    "maxSize": 25,
+    "price": 409,
+    "idleDps": 37,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [꽃새우]."
+  },
+  {
+    "id": 244,
+    "name": "닭새우",
+    "rarity": "Epic",
+    "minSize": 55,
+    "maxSize": 117,
+    "price": 2779,
+    "idleDps": 255,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [닭새우]."
+  },
+  {
+    "id": 245,
+    "name": "독도새우",
+    "rarity": "Legendary",
+    "minSize": 53,
+    "maxSize": 182,
+    "price": 8227,
+    "idleDps": 481,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [독도새우]."
+  },
+  {
+    "id": 246,
+    "name": "도화새우",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 37,
+    "price": 251,
+    "idleDps": 18,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [도화새우]."
+  },
+  {
+    "id": 247,
+    "name": "홍새우",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 27,
+    "price": 525,
+    "idleDps": 25,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [홍새우]."
+  },
+  {
+    "id": 248,
+    "name": "흰다리새우",
+    "rarity": "Epic",
+    "minSize": 50,
+    "maxSize": 93,
+    "price": 4992,
+    "idleDps": 300,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흰다리새우]."
+  },
+  {
+    "id": 249,
+    "name": "대하",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 24,
+    "price": 451,
+    "idleDps": 35,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대하]."
+  },
+  {
+    "id": 250,
+    "name": "중새우",
+    "rarity": "Epic",
+    "minSize": 38,
+    "maxSize": 99,
+    "price": 3498,
+    "idleDps": 138,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [중새우]."
+  },
+  {
+    "id": 251,
+    "name": "참조기",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 21,
+    "price": 364,
+    "idleDps": 31,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참조기]."
+  },
+  {
+    "id": 252,
+    "name": "부서",
+    "rarity": "Epic",
+    "minSize": 31,
+    "maxSize": 129,
+    "price": 2312,
+    "idleDps": 130,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [부서]."
+  },
+  {
+    "id": 253,
+    "name": "민어조기",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 61,
+    "price": 920,
+    "idleDps": 53,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [민어조기]."
+  },
+  {
+    "id": 254,
+    "name": "수조기",
+    "rarity": "Legendary",
+    "minSize": 78,
+    "maxSize": 221,
+    "price": 14212,
+    "idleDps": 490,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [수조기]."
+  },
+  {
+    "id": 255,
+    "name": "흑조기",
+    "rarity": "Common",
+    "minSize": 5,
+    "maxSize": 48,
+    "price": 227,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑조기]."
+  },
+  {
+    "id": 256,
+    "name": "백조기",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 34,
+    "price": 113,
+    "idleDps": 19,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백조기]."
+  },
+  {
+    "id": 257,
+    "name": "황조기",
+    "rarity": "Epic",
+    "minSize": 50,
+    "maxSize": 141,
+    "price": 2885,
+    "idleDps": 299,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황조기]."
+  },
+  {
+    "id": 258,
+    "name": "청조기",
+    "rarity": "Epic",
+    "minSize": 40,
+    "maxSize": 105,
+    "price": 4180,
+    "idleDps": 238,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청조기]."
+  },
+  {
+    "id": 259,
+    "name": "점조기",
+    "rarity": "Rare",
+    "minSize": 27,
+    "maxSize": 85,
+    "price": 950,
+    "idleDps": 76,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점조기]."
+  },
+  {
+    "id": 260,
+    "name": "줄조기",
+    "rarity": "Epic",
+    "minSize": 39,
+    "maxSize": 106,
+    "price": 2574,
+    "idleDps": 313,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄조기]."
+  },
+  {
+    "id": 261,
+    "name": "참홍어",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 40,
+    "price": 394,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참홍어]."
+  },
+  {
+    "id": 262,
+    "name": "가오리",
+    "rarity": "Legendary",
+    "minSize": 300,
+    "maxSize": 700,
+    "price": 13151,
+    "idleDps": 440,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [가오리]."
+  },
+  {
+    "id": 263,
+    "name": "간재미",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 49,
+    "price": 254,
+    "idleDps": 6,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [간재미]."
+  },
+  {
+    "id": 264,
+    "name": "색가오리",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 44,
+    "price": 104,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [색가오리]."
+  },
+  {
+    "id": 265,
+    "name": "흑가오리",
+    "rarity": "Rare",
+    "minSize": 32,
+    "maxSize": 87,
+    "price": 941,
+    "idleDps": 89,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑가오리]."
+  },
+  {
+    "id": 266,
+    "name": "청가오리",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 40,
+    "price": 387,
+    "idleDps": 30,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청가오리]."
+  },
+  {
+    "id": 267,
+    "name": "백가오리",
+    "rarity": "Rare",
+    "minSize": 29,
+    "maxSize": 65,
+    "price": 691,
+    "idleDps": 71,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백가오리]."
+  },
+  {
+    "id": 268,
+    "name": "전설의 가오리",
+    "rarity": "Rare",
+    "minSize": 300,
+    "maxSize": 700,
+    "price": 861,
+    "idleDps": 93,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전설의 가오리]."
+  },
+  {
+    "id": 269,
+    "name": "대형가오리",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 500,
+    "price": 1381,
+    "idleDps": 85,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대형가오리]."
+  },
+  {
+    "id": 270,
+    "name": "심해가오리",
+    "rarity": "Rare",
+    "minSize": 100,
+    "maxSize": 250,
+    "price": 1673,
+    "idleDps": 62,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해가오리]."
+  },
+  {
+    "id": 271,
+    "name": "참상어",
+    "rarity": "Epic",
+    "minSize": 150,
+    "maxSize": 350,
+    "price": 2740,
+    "idleDps": 128,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참상어]."
+  },
+  {
+    "id": 272,
+    "name": "표범상어",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 24,
+    "price": 207,
+    "idleDps": 36,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [표범상어]."
+  },
+  {
+    "id": 273,
+    "name": "참치상어",
+    "rarity": "Rare",
+    "minSize": 150,
+    "maxSize": 350,
+    "price": 645,
+    "idleDps": 43,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참치상어]."
+  },
+  {
+    "id": 274,
+    "name": "너스상어",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 37,
+    "price": 88,
+    "idleDps": 10,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [너스상어]."
+  },
+  {
+    "id": 275,
+    "name": "귀신상어",
+    "rarity": "Rare",
+    "minSize": 19,
+    "maxSize": 47,
+    "price": 1620,
+    "idleDps": 106,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [귀신상어]."
+  },
+  {
+    "id": 276,
+    "name": "고래상어",
+    "rarity": "Epic",
+    "minSize": 800,
+    "maxSize": 1800,
+    "price": 3091,
+    "idleDps": 175,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [고래상어]."
+  },
+  {
+    "id": 277,
+    "name": "백상아리",
+    "rarity": "Rare",
+    "minSize": 21,
+    "maxSize": 56,
+    "price": 1388,
+    "idleDps": 74,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백상아리]."
+  },
+  {
+    "id": 278,
+    "name": "청상아리",
+    "rarity": "Common",
+    "minSize": 19,
+    "maxSize": 39,
+    "price": 542,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청상아리]."
+  },
+  {
+    "id": 279,
+    "name": "모래상어",
+    "rarity": "Common",
+    "minSize": 150,
+    "maxSize": 300,
+    "price": 507,
+    "idleDps": 18,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [모래상어]."
+  },
+  {
+    "id": 280,
+    "name": "심해상어",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 1318,
+    "idleDps": 62,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해상어]."
+  },
+  {
+    "id": 281,
+    "name": "참복",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 25,
+    "price": 190,
+    "idleDps": 15,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참복]."
+  },
+  {
+    "id": 282,
+    "name": "밀복",
+    "rarity": "Rare",
+    "minSize": 29,
+    "maxSize": 59,
+    "price": 921,
+    "idleDps": 61,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [밀복]."
+  },
+  {
+    "id": 283,
+    "name": "까치복",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 54,
+    "price": 140,
+    "idleDps": 16,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [까치복]."
+  },
+  {
+    "id": 284,
+    "name": "황복",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 35,
+    "price": 423,
+    "idleDps": 13,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황복]."
+  },
+  {
+    "id": 285,
+    "name": "졸복",
+    "rarity": "Rare",
+    "minSize": 27,
+    "maxSize": 72,
+    "price": 950,
+    "idleDps": 83,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [졸복]."
+  },
+  {
+    "id": 286,
+    "name": "은복",
+    "rarity": "Rare",
+    "minSize": 21,
+    "maxSize": 64,
+    "price": 1598,
+    "idleDps": 91,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [은복]."
+  },
+  {
+    "id": 287,
+    "name": "검복",
+    "rarity": "Common",
+    "minSize": 13,
+    "maxSize": 43,
+    "price": 97,
+    "idleDps": 32,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [검복]."
+  },
+  {
+    "id": 288,
+    "name": "청복",
+    "rarity": "Epic",
+    "minSize": 34,
+    "maxSize": 100,
+    "price": 4506,
+    "idleDps": 313,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청복]."
+  },
+  {
+    "id": 289,
+    "name": "백복",
+    "rarity": "Common",
+    "minSize": 15,
+    "maxSize": 27,
+    "price": 509,
+    "idleDps": 23,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백복]."
+  },
+  {
+    "id": 290,
+    "name": "대왕복",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 58,
+    "price": 245,
+    "idleDps": 12,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대왕복]."
+  },
+  {
+    "id": 291,
+    "name": "참해마",
+    "rarity": "Epic",
+    "minSize": 50,
+    "maxSize": 140,
+    "price": 2975,
+    "idleDps": 136,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참해마]."
+  },
+  {
+    "id": 292,
+    "name": "대왕해마",
+    "rarity": "Epic",
+    "minSize": 42,
+    "maxSize": 127,
+    "price": 4795,
+    "idleDps": 127,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대왕해마]."
+  },
+  {
+    "id": 293,
+    "name": "점해마",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 17,
+    "price": 504,
+    "idleDps": 31,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [점해마]."
+  },
+  {
+    "id": 294,
+    "name": "줄해마",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 40,
+    "price": 545,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [줄해마]."
+  },
+  {
+    "id": 295,
+    "name": "황금해마",
+    "rarity": "Rare",
+    "minSize": 26,
+    "maxSize": 93,
+    "price": 1326,
+    "idleDps": 102,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금해마]."
+  },
+  {
+    "id": 296,
+    "name": "백색해마",
+    "rarity": "Common",
+    "minSize": 16,
+    "maxSize": 44,
+    "price": 105,
+    "idleDps": 15,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [백색해마]."
+  },
+  {
+    "id": 297,
+    "name": "흑색해마",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 52,
+    "price": 392,
+    "idleDps": 15,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흑색해마]."
+  },
+  {
+    "id": 298,
+    "name": "청색해마",
+    "rarity": "Epic",
+    "minSize": 32,
+    "maxSize": 128,
+    "price": 4473,
+    "idleDps": 204,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [청색해마]."
+  },
+  {
+    "id": 299,
+    "name": "심해해마",
+    "rarity": "Epic",
+    "minSize": 31,
+    "maxSize": 112,
+    "price": 4564,
+    "idleDps": 178,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해해마]."
+  },
+  {
+    "id": 300,
+    "name": "신비의 해마",
+    "rarity": "Common",
+    "minSize": 18,
+    "maxSize": 61,
+    "price": 517,
+    "idleDps": 11,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [신비의 해마]."
+  },
+  {
+    "id": 301,
+    "name": "참해파리",
+    "rarity": "Epic",
+    "minSize": 53,
+    "maxSize": 139,
+    "price": 3243,
+    "idleDps": 187,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참해파리]."
+  },
+  {
+    "id": 302,
+    "name": "문어해파리",
+    "rarity": "Common",
+    "minSize": 6,
+    "maxSize": 40,
+    "price": 390,
+    "idleDps": 37,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [문어해파리]."
+  },
+  {
+    "id": 303,
+    "name": "상자해파리",
+    "rarity": "Common",
+    "minSize": 9,
+    "maxSize": 39,
+    "price": 548,
+    "idleDps": 32,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [상자해파리]."
+  },
+  {
+    "id": 304,
+    "name": "노랑해파리",
+    "rarity": "Rare",
+    "minSize": 31,
+    "maxSize": 82,
+    "price": 1490,
+    "idleDps": 49,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [노랑해파리]."
+  },
+  {
+    "id": 305,
+    "name": "적색해파리",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 44,
+    "price": 284,
+    "idleDps": 10,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [적색해파리]."
+  },
+  {
+    "id": 306,
+    "name": "대왕해파리",
+    "rarity": "Rare",
+    "minSize": 100,
+    "maxSize": 200,
+    "price": 1187,
+    "idleDps": 60,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대왕해파리]."
+  },
+  {
+    "id": 307,
+    "name": "유령해파리",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 26,
+    "price": 416,
+    "idleDps": 18,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [유령해파리]."
+  },
+  {
+    "id": 308,
+    "name": "심해해파리",
+    "rarity": "Common",
+    "minSize": 20,
+    "maxSize": 47,
+    "price": 193,
+    "idleDps": 6,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해해파리]."
+  },
+  {
+    "id": 309,
+    "name": "황금해파리",
+    "rarity": "Rare",
+    "minSize": 35,
+    "maxSize": 85,
+    "price": 1737,
+    "idleDps": 106,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [황금해파리]."
+  },
+  {
+    "id": 310,
+    "name": "전설의 해파리",
+    "rarity": "Rare",
+    "minSize": 31,
+    "maxSize": 83,
+    "price": 1156,
+    "idleDps": 49,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [전설의 해파리]."
+  },
+  {
+    "id": 311,
+    "name": "참고래",
+    "rarity": "Legendary",
+    "minSize": 1800,
+    "maxSize": 2500,
+    "price": 12480,
+    "idleDps": 671,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참고래]."
+  },
+  {
+    "id": 312,
+    "name": "향고래",
+    "rarity": "Epic",
+    "minSize": 1100,
+    "maxSize": 1800,
+    "price": 4389,
+    "idleDps": 295,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [향고래]."
+  },
+  {
+    "id": 313,
+    "name": "밍크고래",
+    "rarity": "Rare",
+    "minSize": 700,
+    "maxSize": 1000,
+    "price": 826,
+    "idleDps": 105,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [밍크고래]."
+  },
+  {
+    "id": 314,
+    "name": "혹등고래",
+    "rarity": "Rare",
+    "minSize": 1200,
+    "maxSize": 1600,
+    "price": 1615,
+    "idleDps": 58,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [혹등고래]."
+  },
+  {
+    "id": 315,
+    "name": "참고래(대형)",
+    "rarity": "Legendary",
+    "minSize": 2000,
+    "maxSize": 2700,
+    "price": 7902,
+    "idleDps": 363,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [참고래(대형)]."
+  },
+  {
+    "id": 316,
+    "name": "푸른고래",
+    "rarity": "Epic",
+    "minSize": 2400,
+    "maxSize": 3000,
+    "price": 3360,
+    "idleDps": 261,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [푸른고래]."
+  },
+  {
+    "id": 317,
+    "name": "대왕고래",
+    "rarity": "Common",
+    "minSize": 2400,
+    "maxSize": 3300,
+    "price": 318,
+    "idleDps": 33,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [대왕고래]."
+  },
+  {
+    "id": 318,
+    "name": "흰고래(벨루가)",
+    "rarity": "Rare",
+    "minSize": 350,
+    "maxSize": 550,
+    "price": 1770,
+    "idleDps": 91,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [흰고래(벨루가)]."
+  },
+  {
+    "id": 319,
+    "name": "범고래(오카)",
+    "rarity": "Rare",
+    "minSize": 500,
+    "maxSize": 900,
+    "price": 1294,
+    "idleDps": 92,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [범고래(오카)]."
+  },
+  {
+    "id": 320,
+    "name": "심해고래",
+    "rarity": "Common",
+    "minSize": 1500,
+    "maxSize": 2500,
+    "price": 177,
+    "idleDps": 31,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해고래]."
+  },
+  {
+    "id": 321,
+    "name": "심해 미지의 생물 #321",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 984,
+    "idleDps": 48,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #321]."
+  },
+  {
+    "id": 322,
+    "name": "심해 미지의 생물 #322",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 1601,
+    "idleDps": 97,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #322]."
+  },
+  {
+    "id": 323,
+    "name": "심해 미지의 생물 #323",
+    "rarity": "Legendary",
+    "minSize": 1500,
+    "maxSize": 3000,
+    "price": 8774,
+    "idleDps": 492,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #323]."
+  },
+  {
+    "id": 324,
+    "name": "심해 미지의 생물 #324",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 2564,
+    "idleDps": 277,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #324]."
+  },
+  {
+    "id": 325,
+    "name": "심해 미지의 생물 #325",
+    "rarity": "Legendary",
+    "minSize": 1500,
+    "maxSize": 3000,
+    "price": 14200,
+    "idleDps": 393,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #325]."
+  },
+  {
+    "id": 326,
+    "name": "심해 미지의 생물 #326",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 18,
+    "price": 260,
+    "idleDps": 35,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #326]."
+  },
+  {
+    "id": 327,
+    "name": "심해 미지의 생물 #327",
+    "rarity": "Common",
+    "minSize": 11,
+    "maxSize": 29,
+    "price": 189,
+    "idleDps": 38,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #327]."
+  },
+  {
+    "id": 328,
+    "name": "심해 미지의 생물 #328",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 35,
+    "price": 223,
+    "idleDps": 25,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #328]."
+  },
+  {
+    "id": 329,
+    "name": "심해 미지의 생물 #329",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 4355,
+    "idleDps": 173,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #329]."
+  },
+  {
+    "id": 330,
+    "name": "심해 미지의 생물 #330",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 1584,
+    "idleDps": 79,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #330]."
+  },
+  {
+    "id": 331,
+    "name": "심해 미지의 생물 #331",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 2373,
+    "idleDps": 162,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #331]."
+  },
+  {
+    "id": 332,
+    "name": "심해 미지의 생물 #332",
+    "rarity": "Common",
+    "minSize": 8,
+    "maxSize": 32,
+    "price": 329,
+    "idleDps": 35,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #332]."
+  },
+  {
+    "id": 333,
+    "name": "심해 미지의 생물 #333",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 2055,
+    "idleDps": 195,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #333]."
+  },
+  {
+    "id": 334,
+    "name": "심해 미지의 생물 #334",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 4129,
+    "idleDps": 160,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #334]."
+  },
+  {
+    "id": 335,
+    "name": "심해 미지의 생물 #335",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 49,
+    "price": 180,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #335]."
+  },
+  {
+    "id": 336,
+    "name": "심해 미지의 생물 #336",
+    "rarity": "Common",
+    "minSize": 20,
+    "maxSize": 48,
+    "price": 436,
+    "idleDps": 26,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #336]."
+  },
+  {
+    "id": 337,
+    "name": "심해 미지의 생물 #337",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 50,
+    "price": 275,
+    "idleDps": 30,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #337]."
+  },
+  {
+    "id": 338,
+    "name": "심해 미지의 생물 #338",
+    "rarity": "Common",
+    "minSize": 14,
+    "maxSize": 33,
+    "price": 156,
+    "idleDps": 6,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #338]."
+  },
+  {
+    "id": 339,
+    "name": "심해 미지의 생물 #339",
+    "rarity": "Legendary",
+    "minSize": 1500,
+    "maxSize": 3000,
+    "price": 11853,
+    "idleDps": 534,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #339]."
+  },
+  {
+    "id": 340,
+    "name": "심해 미지의 생물 #340",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 721,
+    "idleDps": 62,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #340]."
+  },
+  {
+    "id": 341,
+    "name": "심해 미지의 생물 #341",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 3629,
+    "idleDps": 210,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #341]."
+  },
+  {
+    "id": 342,
+    "name": "심해 미지의 생물 #342",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 791,
+    "idleDps": 105,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #342]."
+  },
+  {
+    "id": 343,
+    "name": "심해 미지의 생물 #343",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 1239,
+    "idleDps": 89,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #343]."
+  },
+  {
+    "id": 344,
+    "name": "심해 미지의 생물 #344",
+    "rarity": "Common",
+    "minSize": 12,
+    "maxSize": 25,
+    "price": 185,
+    "idleDps": 22,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #344]."
+  },
+  {
+    "id": 345,
+    "name": "심해 미지의 생물 #345",
+    "rarity": "Common",
+    "minSize": 10,
+    "maxSize": 34,
+    "price": 211,
+    "idleDps": 7,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #345]."
+  },
+  {
+    "id": 346,
+    "name": "심해 미지의 생물 #346",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 3394,
+    "idleDps": 271,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #346]."
+  },
+  {
+    "id": 347,
+    "name": "심해 미지의 생물 #347",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 4527,
+    "idleDps": 152,
+    "conditions": {
+      "weather": [
+        "Cloudy",
+        "Rainy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Rainy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #347]."
+  },
+  {
+    "id": 348,
+    "name": "심해 미지의 생물 #348",
+    "rarity": "Epic",
+    "minSize": 600,
+    "maxSize": 1500,
+    "price": 3349,
+    "idleDps": 199,
+    "conditions": {
+      "weather": [
+        "Clear",
+        "Cloudy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Cloudy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #348]."
+  },
+  {
+    "id": 349,
+    "name": "심해 미지의 생물 #349",
+    "rarity": "Rare",
+    "minSize": 200,
+    "maxSize": 600,
+    "price": 1231,
+    "idleDps": 84,
+    "conditions": {
+      "weather": [
+        "Stormy"
+      ],
+      "timeOfDay": [
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Stormy"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #349]."
+  },
+  {
+    "id": 350,
+    "name": "심해 미지의 생물 #350",
+    "rarity": "Common",
+    "minSize": 7,
+    "maxSize": 46,
+    "price": 177,
+    "idleDps": 15,
+    "conditions": {
+      "weather": [
+        "Clear"
+      ],
+      "timeOfDay": [
+        "Morning",
+        "Day",
+        "Evening",
+        "Night"
+      ],
+      "preferredWeather": "Clear"
+    },
+    "description": "한국 연근해와 심해 생태계에서 서식하는 풍성한 방치형 낚시 도감 어종 [심해 미지의 생물 #350]."
+  }
+]
