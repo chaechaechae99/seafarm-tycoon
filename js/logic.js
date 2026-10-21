@@ -240,6 +240,18 @@
   function tipChance(lv) {
     return D.VIP.tipBase + (lv >= 5 ? D.VIP.tipLv5 : 0);
   }
+  // 손님 유형에 맞는 페르소나와 위트 있는 이름 타이틀
+  function pickPersona(typeId, rng) {
+    const list = D.PERSONAS.filter((x) => x.type === typeId);
+    return list[Math.floor(rng() * list.length)] || D.PERSONAS[0];
+  }
+  function makeNick(persona, rng) {
+    const tpl = persona.titles[Math.floor(rng() * persona.titles.length)];
+    return tpl.replace("{성}", D.SURNAME[Math.floor(rng() * D.SURNAME.length)]).replace("{이름}", D.GIVEN[Math.floor(rng() * D.GIVEN.length)]);
+  }
+  function personaById(id) {
+    return D.PERSONAS.find((x) => x.id === id) || null;
+  }
   function guestTypeById(id) {
     return D.GUEST_TYPES.find((g) => g.id === id) || D.GUEST_TYPES[0];
   }
@@ -628,7 +640,7 @@
   }
   function fishPool(spot, rarity, season) {
     return D.FISH.filter((f) => f.rarity === rarity && f.spots.includes(spot))
-      .map((f) => [f, f.seasons.includes(season) ? 2.5 : 1]);
+      .map((f) => [f, (f.seasons.includes(season) ? 2.5 : 1) * D.DIFF_WEIGHT[f.diff || D.DIFF_DEFAULT[f.rarity]]]);
   }
   function rollFish(state, rng, opt) {
     opt = opt || {};
@@ -819,6 +831,8 @@
       reg = free[Math.floor(rng() * free.length)];
     }
     const g = reg ? guestTypeById(reg.type) : pickGuestType(state, rng);
+    const persona = (reg && personaById(reg.persona)) || pickPersona(g.id, rng);
+    const nick = reg ? reg.nick : makeNick(persona, rng);
     const lv = reg ? vipLevel(reg) : 0;
     let seat = -1;
     // 호감도 10 VIP는 비밀 양식장 전용 좌대로
@@ -847,7 +861,7 @@
     const perk = lv >= 5;
     const stay = BASE_STAY * stayMult(state) * g.stay * (perk ? D.VIP.lv5Stay : 1) * (0.85 + rng() * 0.3);
     const guest = {
-      type: g, seat, stay, left: stay, reg, vip, lv, walk: WALK_IN,
+      type: g, seat, stay, left: stay, reg, vip, lv, walk: WALK_IN, persona: persona.id, look: persona.look, nick,
       rarity: g.rarity * (perk ? D.VIP.lv5Rarity : 1),
       nextCatch: BASE_CATCH_INTERVAL * (0.5 + rng()),
       sat: 55 + (state.upgrades.shade ? 5 : 0) + (perk ? 10 : 0),
@@ -884,7 +898,7 @@
       guest.sat += D.RARITY[c.rarity].sat + (c.golden ? 25 : 0);
       earn(state, world, c.value * cookRate(state), { seat: guest.seat, src: "cook" });
     }
-    world.events.push({ kind: "catch", seat: guest.seat, fish: c, isNew, who: guest.type.name });
+    world.events.push({ kind: "catch", seat: guest.seat, fish: c, isNew, who: guest.nick || guest.type.name });
   }
 
   function makeReview(state, world, guest) {
@@ -896,7 +910,7 @@
     }
     const stars = Math.max(1, Math.min(5, Math.round(sat / 20)));
     const texts = D.REVIEW_TEXT[stars];
-    const nick = guest.reg ? guest.reg.nick : D.NICK_A[Math.floor(rng() * D.NICK_A.length)] + D.NICK_B[Math.floor(rng() * D.NICK_B.length)];
+    const nick = guest.nick || (guest.reg && guest.reg.nick) || makeNick(pickPersona(guest.type.id, rng), rng);
     // 단골: 팁·호감도 / 일반 손님: 만족하면 단골 등록
     if (guest.reg) {
       const r = guest.reg;
@@ -913,7 +927,7 @@
         world.events.push({ kind: "vipLevel", nick: r.nick, lv: after, title: vipTitle(after) });
       }
     } else if (stars >= 4 && state.vip.regulars.length < D.VIP.max && rng() < D.VIP.joinChance) {
-      const r = { id: state.vip.nextId++, nick, type: guest.type.id, xp: 1, visits: 1 };
+      const r = { id: state.vip.nextId++, nick, type: guest.type.id, persona: guest.persona, xp: 1, visits: 1 };
       state.vip.regulars.push(r);
       world.events.push({ kind: "newRegular", nick, type: guest.type.name });
     }

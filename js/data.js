@@ -50,9 +50,13 @@
     common: { name: "일반", base: 30, weight: 70, color: "#7a8a99", sat: 3 },
     premium: { name: "고급", base: 150, weight: 24, color: "#2f8f5b", sat: 8 },
     rare: { name: "희귀", base: 1000, weight: 5.5, color: "#2f6fd6", sat: 20 },
+    masterpiece: { name: "명품", base: 3500, weight: 1.6, color: "#b8327a", sat: 30 },
     legendary: { name: "전설", base: 12000, weight: 0.4, color: "#c9821b", sat: 40 },
   };
-  const RARITY_ORDER = ["common", "premium", "rare", "legendary"];
+  const RARITY_ORDER = ["common", "premium", "rare", "masterpiece", "legendary"];
+  // 낚시 난이도 1~5: 높을수록 잘 안 물림 (출현 가중치 배수). 값이 없으면 희귀도 기본값
+  const DIFF_WEIGHT = [1, 1, 0.9, 0.75, 0.6, 0.45];
+  const DIFF_DEFAULT = { common: 1, premium: 2, rare: 3, masterpiece: 4, legendary: 5 };
 
   const SPOTS = {
     cage: { name: "가두리", weight: 1.0 },
@@ -116,7 +120,88 @@
     { id: "tuna", name: "참다랑어", rarity: "legendary", spots: ["boat"], seasons: ["summer", "autumn"], size: [120, 250], v: 2.0 },
     { id: "marlin", name: "청새치", rarity: "legendary", spots: ["boat"], seasons: ["summer"], size: [150, 300], v: 2.2 },
     { id: "jewfish", name: "돗돔", rarity: "legendary", spots: ["night", "rock"], seasons: ["summer"], size: [80, 180], v: 1.8 },
-  ];
+  ].concat([
+    // 실존 양식·연안 어종 72종 추가 (총 120종): [id, 이름, 희귀도, 장소, 제철, 최소cm, 최대cm, 가치배수, 난이도, 체형, 몸색]
+    // 일반
+    ["gasungeo", "가숭어", "common", "cage", "spring", 30, 60, 1.0, 1, "fish", "#8a96a0"],
+    ["pomfret", "병어", "common", "boat", "summer", 15, 30, 1.2, 2, "flat", "#c9d3dc"],
+    ["ycroaker", "참조기", "common", "cage", "spring", 15, 30, 1.3, 2, "fish", "#d9b84a"],
+    ["wcroaker", "보구치", "common", "cage", "summer", 15, 30, 0.9, 1, "fish", "#c8c0b0"],
+    ["pollock", "명태", "common", "boat", "winter", 30, 60, 1.0, 2, "fish", "#8a8f7a"],
+    ["plaice", "참가자미", "common", "cage", "winter,spring", 15, 35, 1.0, 1, "flat", "#8a7a5a"],
+    ["roughscale", "용가자미", "common", "cage", "spring", 15, 30, 0.9, 1, "flat", "#9a8a6a"],
+    ["starry", "강도다리", "common", "cage", "winter", 25, 50, 1.1, 2, "flat", "#6a6a50"],
+    ["sardine", "정어리", "common", "cage", "autumn", 12, 22, 0.7, 1, "slim", "#5a7fa0"],
+    ["anchovy", "멸치", "common", "cage", "summer", 6, 14, 0.5, 1, "slim", "#8aa8c0"],
+    ["sandlance", "까나리", "common", "cage", "spring", 10, 20, 0.6, 1, "slim", "#a0b0b8"],
+    ["sardinella", "밴댕이", "common", "cage", "summer", 10, 20, 0.6, 1, "slim", "#a8b8c8"],
+    ["redfin", "황어", "common", "cage", "spring", 25, 45, 0.9, 1, "fish", "#7a8a5a"],
+    ["chromis", "자리돔", "common", "rock", "summer", 8, 15, 0.7, 1, "fish", "#5a6a8a"],
+    ["surfperch", "망상어", "common", "cage", "spring", 15, 25, 0.8, 1, "fish", "#8a8a9a"],
+    ["scorpaena", "감펭", "common", "rock", "autumn", 12, 25, 0.9, 2, "fish", "#c0703a"],
+    ["flathead", "양태", "common", "cage", "summer", 30, 60, 1.0, 2, "long", "#8a7a5a"],
+    ["flyingfish", "날치", "common", "boat", "summer", 20, 35, 0.9, 2, "slim", "#4a7aa0"],
+    ["saury", "꽁치", "common", "boat", "autumn", 25, 35, 0.8, 1, "long", "#4a6a90"],
+    ["sandfish", "도루묵", "common", "boat", "winter", 15, 25, 0.9, 1, "slim", "#a09a80"],
+    ["atka", "임연수어", "common", "boat", "winter", 25, 45, 1.0, 1, "fish", "#9a8a50"],
+    ["snailfish", "물메기", "common", "boat", "winter", 30, 50, 0.9, 1, "eel", "#a08a90"],
+    ["rockfishb", "개볼락", "common", "rock", "winter", 15, 30, 1.0, 1, "fish", "#6a5040"],
+    ["barracuda", "꼬치고기", "common", "cage", "summer", 20, 40, 0.9, 2, "long", "#8aa0b0"],
+    ["blackscraper", "말쥐치", "common", "cage", "autumn", 25, 40, 1.0, 1, "fish", "#6a7a8a"],
+    // 고급
+    ["spotbass", "점농어", "premium", "cage", "summer", 40, 90, 1.3, 3, "fish", "#9aa8b0"],
+    ["coho", "은연어", "premium", "cage", "autumn", 50, 80, 1.2, 2, "fish", "#b0b8c0"],
+    ["rainbow", "무지개송어", "premium", "cage", "winter,spring", 40, 70, 1.1, 2, "fish", "#8a9a7a"],
+    ["seatrout", "바다송어", "premium", "cage", "spring", 40, 70, 1.1, 2, "fish", "#8a9aa0"],
+    ["atlantic", "대서양연어", "premium", "cage", "autumn,winter", 60, 100, 1.4, 3, "fish", "#a8b4c0"],
+    ["lcroaker", "부세", "premium", "cage", "autumn", 30, 60, 1.2, 2, "fish", "#d0a83a"],
+    ["turbot", "터봇", "premium", "cage", "winter", 40, 70, 1.3, 2, "flat", "#7a6a50"],
+    ["blackbass", "블랙씨바스", "premium", "cage", "summer", 25, 50, 1.1, 2, "fish", "#2a3038"],
+    ["reddrum", "레드드럼", "premium", "cage", "autumn", 50, 100, 1.2, 3, "fish", "#c0784a"],
+    ["barramundi", "바라문디", "premium", "cage", "summer", 50, 100, 1.3, 3, "fish", "#a0a8a0"],
+    ["grunt", "벤자리", "premium", "rock", "summer", 25, 40, 1.1, 2, "fish", "#9a8a5a"],
+    ["yellowback", "황돔", "premium", "boat", "spring", 25, 40, 1.2, 2, "fish", "#e8a080"],
+    ["lionfish", "쏠배감펭", "premium", "rock", "summer", 20, 35, 1.0, 3, "fish", "#c05030"],
+    ["yspot", "황점볼락", "premium", "rock", "winter", 20, 40, 1.2, 2, "fish", "#b08a40"],
+    ["stripey", "범돔", "premium", "rock", "summer", 15, 25, 1.0, 2, "fish", "#e0c040"],
+    ["bluestripe", "청줄돔", "premium", "rock", "summer", 10, 20, 1.0, 2, "fish", "#3a6ab0"],
+    ["sbonito", "줄삼치", "premium", "boat", "autumn", 40, 80, 1.1, 2, "fish", "#3a5a7a"],
+    ["rudderfish", "연어병치", "premium", "boat", "autumn", 30, 60, 1.1, 2, "fish", "#6a6a7a"],
+    ["angler", "아귀", "premium", "boat", "winter", 40, 100, 1.1, 2, "flat", "#7a6040"],
+    ["pikeconger", "갯장어", "premium", "night", "summer", 60, 150, 1.3, 3, "eel", "#7a6a5a"],
+    ["sablefish", "은대구", "premium", "boat", "winter", 50, 90, 1.3, 3, "fish", "#4a4a50"],
+    // 희귀
+    ["gamberjack", "잿방어", "rare", "boat", "summer", 80, 150, 1.3, 4, "big", "#b0a070"],
+    ["longtailop", "긴꼬리벵에돔", "rare", "rock", "autumn", 30, 55, 1.2, 4, "fish", "#2a3a3a"],
+    ["blackbream", "흑돔", "rare", "rock", "autumn", 40, 80, 1.1, 4, "fish", "#2a2a30"],
+    ["spotknife", "강담돔", "rare", "rock", "summer", 30, 60, 1.3, 4, "fish", "#c8c0a0"],
+    ["cobia", "날쌔기", "rare", "cage", "summer", 80, 150, 1.2, 3, "long", "#4a3a30"],
+    ["mahi", "만새기", "rare", "boat", "summer", 60, 130, 1.1, 3, "fish", "#3aa06a"],
+    ["albacore", "날개다랑어", "rare", "boat", "summer", 60, 110, 1.2, 3, "big", "#4a5a7a"],
+    ["yellowfin", "황다랑어", "rare", "boat", "summer", 80, 180, 1.3, 4, "big", "#3a4a6a"],
+    ["horsehead", "옥두어", "rare", "boat", "winter", 30, 50, 1.2, 3, "fish", "#c88a70"],
+    ["kyphosus", "황줄깜정이", "rare", "rock", "summer", 30, 50, 1.0, 3, "fish", "#6a6a50"],
+    ["redsnapperg", "레드스내퍼", "rare", "boat", "summer", 40, 80, 1.2, 3, "fish", "#d05040"],
+    ["kawakawa", "점다랑어", "rare", "boat", "summer", 40, 80, 1.0, 3, "big", "#3a5a80"],
+    // 명품
+    ["rosythroat", "눈볼대", "masterpiece", "boat", "winter", 20, 35, 1.4, 4, "fish", "#e05a4a"],
+    ["silvercutlass", "은갈치", "masterpiece", "night", "autumn", 80, 140, 1.2, 4, "long", "#d6dde3"],
+    ["chinook", "왕연어", "masterpiece", "cage", "autumn", 70, 120, 1.3, 4, "fish", "#9aa0a8"],
+    ["stripedjack", "줄전갱이", "masterpiece", "cage", "summer", 40, 80, 1.2, 4, "fish", "#a8b8c0"],
+    ["alfonsino", "금눈돔", "masterpiece", "boat", "winter", 30, 50, 1.2, 4, "fish", "#e04040"],
+    ["crimsonbream", "붉돔", "masterpiece", "boat", "spring", 25, 40, 1.1, 3, "fish", "#e86a6a"],
+    ["stoneflounder", "돌가자미", "masterpiece", "cage", "winter", 30, 50, 1.1, 3, "flat", "#7a7060"],
+    ["spothalibut", "범가자미", "masterpiece", "cage", "spring", 30, 60, 1.3, 4, "flat", "#8a7a4a"],
+    ["morwong", "아홉동가리", "masterpiece", "rock", "summer", 25, 40, 1.0, 4, "fish", "#c8b080"],
+    ["tilefish", "옥돔", "masterpiece", "boat", "winter", 30, 50, 1.3, 4, "fish", "#e07a70"],
+    ["tigerpuffer", "참복", "masterpiece", "cage", "winter", 40, 70, 1.4, 4, "fish", "#5a5a50"],
+    // 전설
+    ["swordfish", "황새치", "legendary", "boat", "summer", 150, 300, 2.2, 5, "marlin", "#4a5a6a"],
+    ["sailfish", "돛새치", "legendary", "boat", "summer", 150, 280, 2.1, 5, "marlin", "#2a4a8a"],
+    ["toothfish", "메로", "legendary", "boat", "winter", 70, 200, 2.0, 5, "big", "#3a3a40"],
+  ].map(([id, name, rarity, spots, seasons, lo, hi, v, diff, shape, col]) => ({
+    id, name, rarity, spots: spots.split(","), seasons: seasons.split(","), size: [lo, hi], v, diff, shape, col,
+  })));
 
   const JUNK = [
     { id: "boot", name: "장화" },
@@ -244,7 +329,7 @@
   // 수족관: 희귀 이상만 등록. 등록 1마리당 전체 매출 버프
   const AQUARIUM = {
     slots: 6,
-    buff: { rare: 0.04, legendary: 0.12 },
+    buff: { rare: 0.04, masterpiece: 0.08, legendary: 0.12 },
     bredBonus: 0.03,       // 직접 개량한 신종이면 추가
     goldenMult: 2,         // 황금 개체를 낚은 적 있는 어종이면 ×
   };
@@ -274,6 +359,22 @@
   };
 
   // 가상 손님 닉네임 (게임 안에서만 표시)
+  const SURNAME = ["김", "이", "박", "최", "정", "강", "조", "윤", "장", "임", "한", "오", "서", "신", "권", "황"];
+  const GIVEN = ["민준", "서연", "도윤", "하은", "지호", "수아", "예준", "지우", "현우", "유나", "준서", "채원", "건우", "소율", "우진", "다은"];
+  // 손님 페르소나: 외형(look)·이름 타이틀. 손님 유형(type, 경제 수치)에 맞는 페르소나에서 뽑음. {성}·{이름}은 무작위
+  const PERSONAS = [
+    { id: "highschool", type: "tourist", look: "student", titles: ["시험 끝난 고등학생", "야자 빼먹은 고등학생", "수학여행 온 고3", "방학 맞은 {이름}"] },
+    { id: "college", type: "tourist", look: "college", titles: ["종강한 대학생", "MT 온 새내기", "과제 미룬 {이름}", "학점 포기한 복학생"] },
+    { id: "youngwoman", type: "tourist", look: "youngwoman", titles: ["인생샷 찍으러 온 {이름}", "낚린이 탈출 중인 {이름}", "바다 보러 온 {이름}"] },
+    { id: "youngman", type: "tourist", look: "youngman", titles: ["손맛 처음 본 {이름}", "주말마다 오는 {이름}", "캠핑 왔다 들른 {이름}"] },
+    { id: "traveler", type: "tourist", look: "tourist", titles: ["서울에서 온 여행객", "제주 한 달 살기 중", "렌터카 반납 전 관광객", "배낭여행 온 {이름}"] },
+    { id: "couple", type: "family", look: "couple", titles: ["100일 기념 커플", "썸 타는 커플", "신혼여행 온 부부", "결혼 10년 차 부부"] },
+    { id: "parent", type: "family", look: "family", titles: ["주말 아빠 {성}씨", "아이 셋 엄마", "가족 나들이 온 {성}씨네", "캠핑카 끌고 온 아빠"] },
+    { id: "office", type: "angler", look: "office", titles: ["월차 낸 {성}대리", "반차 쓴 {성}과장", "퇴근길 {성}주임", "출장 핑계 댄 {성}부장"] },
+    { id: "elder", type: "angler", look: "elder", titles: ["세월을 낚는 어르신", "바다만 보는 강태공", "은퇴한 {성}선장", "새벽 첫배 {성}영감"] },
+    { id: "master", type: "angler", look: "angler", titles: ["손맛 중독 꾼", "찌 보면 잠 깨는 고수", "갯바위 30년 {성}프로", "채비만 열 벌인 꾼"] },
+    { id: "youtuber", type: "pro", look: "pro", titles: ["구독자 10만 낚시 유튜버", "생방송 켠 {이름}TV", "협찬 받은 프로 {성}씨"] },
+  ];
   const NICK_A = ["주말", "새벽", "초보", "손맛", "바다", "갯바위", "대물", "월척", "찌낚시", "선상", "가족", "캠핑", "회사원", "은퇴한", "여행가"];
   const NICK_B = ["꾼", "조사", "아빠", "엄마", "삼촌", "낚린이", "고수", "왕", "러버", "탐험가", "김씨", "박씨", "이씨", "최씨"];
 
@@ -289,6 +390,7 @@
     FACILITIES, UPGRADES, RARITY, RARITY_ORDER, SPOTS, FISH, JUNK, JUNK_CHANCE, WALKIN, GOLDEN_CHANCE,
     EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
     GUEST_TYPES, SEASON_NAMES, WEATHER, WEATHER_ODDS, NICK_A, NICK_B, REVIEW_TEXT,
+    PERSONAS, SURNAME, GIVEN, DIFF_WEIGHT, DIFF_DEFAULT,
   };
   root.GameData = GameData;
   if (typeof module !== "undefined" && module.exports) {

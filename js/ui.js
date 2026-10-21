@@ -511,7 +511,7 @@
       }
       return '<div class="dex-cell" style="--rc: var(--r-' + f.rarity + ')">' + (d.golden ? '<span class="dex-gold" title="황금 개체 낚음">황금</span>' : "") +
         '<img class="dex-img pix" alt="" src="' + root.Sprites.fishURL(f.id, d.golden) + '"><div class="dex-name">' + esc(f.name) + "</div>" +
-        '<div class="dex-meta">최대 ' + G.fmtSize(d.best) + " · " + d.count + "마리</div>" +
+        '<div class="dex-meta">난이도 ' + (f.diff || D.DIFF_DEFAULT[f.rarity]) + " · 최대 " + G.fmtSize(d.best) + " · " + d.count + "마리</div>" +
         '<div class="dex-rar">' + r.name + " · " + esc(spots) + (inSeason ? " · 제철" : "") + "</div></div>";
     }).join("");
   }

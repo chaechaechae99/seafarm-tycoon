@@ -19,6 +19,7 @@
   --r-common: #6c7a87;
   --r-premium: #2f8a55;
   --r-rare: #2f67c9;
+  --r-masterpiece: #b8327a;
   --r-legendary: #c27a12;
   --font-pixel: "Galmuri11", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
   --font-num: "GalmuriMono11", "Galmuri11", ui-monospace, Menlo, Consolas, monospace;
@@ -43,6 +44,7 @@
     --r-common: #a3b0bc;
     --r-premium: #5cc08e;
     --r-rare: #7eaaff;
+    --r-masterpiece: #f07ab8;
     --r-legendary: #f0b54a;
     color-scheme: dark;
   }
@@ -66,6 +68,7 @@
   --r-common: #a3b0bc;
   --r-premium: #5cc08e;
   --r-rare: #7eaaff;
+    --r-masterpiece: #f07ab8;
   --r-legendary: #f0b54a;
   color-scheme: dark;
 }

@@ -249,7 +249,7 @@
         const baseName = (pa.bredRef && pa.bredRef.baseName) || pa.name;
         return Object.assign(common, {
           kind: "upgrade", name: this.D.BREED_TIERS[tier - 1] + baseName, baseName, base: pa.base, tier,
-          rarity: this.bumpRank(pa.rarity, 1), v: Math.round(pa.v * 1.5 * 100) / 100, family: pa.family,
+          rarity: tier >= this.D.BREED_TIERS.length ? "legendary" : this.bumpRank(pa.rarity, 1), v: Math.round(pa.v * 1.5 * 100) / 100, family: pa.family,
           size: [Math.round(pa.size[0] * SZ.tierStep), Math.round(pa.size[1] * SZ.tierStep)], giant: tier >= 3,
         });
       }

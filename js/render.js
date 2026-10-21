@@ -24,18 +24,19 @@
   const ROAD_L = 242;          // 아랫길 중앙선
   const LANE_X = 114;          // 두 길을 잇는 골목
   const BOARD_END = 444;
-  const MW = 80;
-  const MH = 46;
-  const MOD_X = [146, 240, 334];
-  const MOD_Y = [104, 184];
+  const MW = 68;
+  const MH = 40;
+  const MOD_X = [146, 220, 294, 368];
+  const MOD_Y = [106, 184];
+  const SEATS_PER = 10;   // 위 발판 5석(앞모습) + 아래 발판 5석(뒷모습)
   // 좌대 채우는 순서 [줄, 칸]: 입구 가까운 칸부터
-  const MOD_ORDER = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2], [1, 2]];
-  const SEAT_OFF = [10, 35, 60];
-  const MAX_SEATS_DRAWN = 36;
+  const MOD_ORDER = [[0, 0], [1, 0], [0, 1], [1, 1], [0, 2], [1, 2], [0, 3], [1, 3]];
+  const SEAT_OFF = [4, 16, 28, 40, 52];
+  const MAX_SEATS_DRAWN = 80;
   // VIP 비밀 양식장: 위쪽 띠 오른쪽 넓은 자리, 위·아래 발판에 6석씩 (12석)
   const SECRET = { x: 296, y: 66, w: 144, h: 32 };
   const VIP_STEP = 22;
-  const LADDER_X = MOD_X[2] + SEAT_OFF[1] + 4;
+  const LADDER_X = MOD_X[3] + SEAT_OFF[2] + 4;
   const OWNER = { x: 126, feet: 114 };
   const TANK = { x: 38, y: 196, w: 58, h: 26 };
   const DOCK_X = 132;
@@ -144,8 +145,8 @@
     for (let i = 0; i < 140; i++) {
       R.rain.push({ x: rnd() * W, y: rnd() * H, v: 160 + rnd() * 70 });
     }
-    for (let i = 0; i < 36; i++) {
-      R.fish.push({ m: i % 6, x: rnd() * 60, y: rnd() * 26, v: (rnd() < 0.5 ? -1 : 1) * (4 + rnd() * 6) });
+    for (let i = 0; i < 48; i++) {
+      R.fish.push({ m: i % 8, x: rnd() * 60, y: rnd() * 26, v: (rnd() < 0.5 ? -1 : 1) * (4 + rnd() * 6) });
     }
     buildGraph();
     resize();
@@ -807,7 +808,7 @@
     return { x: MOD_X[c], y: MOD_Y[r], row: r, col: c };
   }
   function moduleCount(st) {
-    return Math.max(1, Math.min(6, Math.ceil(Math.min(MAX_SEATS_DRAWN, G.seats(st)) / 6)));
+    return Math.max(1, Math.min(MOD_ORDER.length, Math.ceil(Math.min(MAX_SEATS_DRAWN, G.seats(st)) / SEATS_PER)));
   }
   function seatInfo(st, seat) {
     if (seat >= G.VIP_SEAT0) {
@@ -824,15 +825,15 @@
     if (seat >= MAX_SEATS_DRAWN) {
       return null;
     }
-    const m = Math.floor(seat / 6);
+    const m = Math.floor(seat / SEATS_PER);
     if (st && m >= moduleCount(st)) {
       return null;
     }
     const p = modulePos(m);
-    const k = seat % 6;
-    const sx = p.x + SEAT_OFF[k % 3];
+    const k = seat % SEATS_PER;
+    const sx = p.x + SEAT_OFF[k % 5];
     const d = bob(m, 0.6);
-    if (k < 3) {
+    if (k < 5) {
       const feet = p.y + 5 + d;
       return { x: sx, feet, view: "front", hand: [sx + 7, feet - 6], tip: [sx + 11, feet + 4], bob: [sx + 11, feet + 13], m };
     }
@@ -912,7 +913,7 @@
     }
     // 그늘막·밤 랜턴
     if (st.upgrades.shade) {
-      [x + 24, x + 62].forEach((cx) => {
+      [x + Math.round(MW * 0.3), x + Math.round(MW * 0.72)].forEach((cx) => {
         px(cx, y - 9, 1, 10, "#6b6b6b");
         px(cx - 6, y - 11, 13, 2, "#e5484d");
         px(cx - 4, y - 12, 9, 1, "#e5484d");
@@ -949,7 +950,7 @@
     order.sort((a, b) => modulePos(a).row - modulePos(b).row);
     order.forEach((i) => {
       drawModule(st, i, night);
-      const here = world.guests.filter((g) => g.seat < MAX_SEATS_DRAWN && Math.floor(g.seat / 6) === i && !(g.walk > 0));
+      const here = world.guests.filter((g) => g.seat < MAX_SEATS_DRAWN && Math.floor(g.seat / SEATS_PER) === i && !(g.walk > 0));
       ["front", "back"].forEach((view) => {
         here.forEach((g) => {
           const info = seatInfo(st, g.seat);
@@ -958,8 +959,8 @@
           }
         });
       });
-      for (let k = 0; k < 6; k++) {
-        const seat = i * 6 + k;
+      for (let k = 0; k < SEATS_PER; k++) {
+        const seat = i * SEATS_PER + k;
         if (seat < G.seats(st) && !world.seatOcc[seat]) {
           const info = seatInfo(st, seat);
           px(info.x + 2, info.feet - 1, 4, 1, "rgba(255,255,255,0.55)");
@@ -968,8 +969,8 @@
     });
     if (night && st.upgrades.night) {
       const y = MOD_Y[0] - 3;
-      line(MOD_X[0] - 2, y, MOD_X[2] + MW, y, "#333a42");
-      for (let x = MOD_X[0] + 4; x < MOD_X[2] + MW; x += 14) {
+      line(MOD_X[0] - 2, y, MOD_X[3] + MW, y, "#333a42");
+      for (let x = MOD_X[0] + 4; x < MOD_X[3] + MW; x += 14) {
         px(x, y + 1, 2, 2, "#f4ffe8");
         light(x + 1, y + 2, 18, "rgba(200,255,190,", 0.4);
       }
@@ -1236,12 +1237,12 @@
     link(NODE.laneTop, NODE.pier);
     const board = MOD_X.map((mx) => node(mx + MW / 2, ROAD_U));
     chain([NODE.pier].concat(board));
-    for (let m = 0; m < 6; m++) {
+    for (let m = 0; m < MOD_ORDER.length; m++) {
       const p = modulePos(m);
       const yT = p.y + 3;
       const yB = p.y + MH - 3;
-      const top = SEAT_OFF.map((o, k) => (SEAT_NODE[m * 6 + k] = node(p.x + o + 4, yT)));
-      const bot = SEAT_OFF.map((o, k) => (SEAT_NODE[m * 6 + 3 + k] = node(p.x + o + 4, yB)));
+      const top = SEAT_OFF.map((o, k) => (SEAT_NODE[m * SEATS_PER + k] = node(p.x + o + 4, yT)));
+      const bot = SEAT_OFF.map((o, k) => (SEAT_NODE[m * SEATS_PER + 5 + k] = node(p.x + o + 4, yB)));
       const TL = node(p.x + 2, yT);
       const TR = node(p.x + MW - 2, yT);
       const BL = node(p.x + 2, yB);
@@ -1251,7 +1252,7 @@
       link(TL, BL);
       link(TR, BR);
       // 다리 → 경사로 → 가까운 발판 가운데 자리
-      link(board[p.col], p.row === 0 ? bot[1] : top[1]);
+      link(board[p.col], p.row === 0 ? bot[2] : top[2]);
     }
     // 비밀 양식장: 오른쪽 위 좌대의 먼 발판 가운데에서 사다리
     const vyT = SECRET.y + 3;
@@ -1273,8 +1274,8 @@
     chain([vBL].concat(botLine, [vBR]));
     link(vTL, vBL);
     link(vTR, vBR);
-    const upperRight = MOD_ORDER.findIndex(([r, c]) => r === 0 && c === 2);
-    link(ladder, SEAT_NODE[upperRight * 6 + 1]);
+    const upperRight = MOD_ORDER.findIndex(([r, c]) => r === 0 && c === 3);
+    link(ladder, SEAT_NODE[upperRight * SEATS_PER + 2]);
   }
   // 다익스트라 (노드 수가 적어 단순 구현)
   function shortestPath(a, b) {
@@ -1363,7 +1364,7 @@
         g._hair = Math.floor(Math.random() * S.HAIRS.length);
       }
       const f = 1 - g.walk / G.WALK_IN;
-      drawWalker(g.vip ? "vip" : g.type.id, g._skin, g._hair, pointAt(g._route, f), true);
+      drawWalker(g.vip ? "vip" : g.look || g.type.id, g._skin, g._hair, pointAt(g._route, f), true);
     });
   }
   function startLeaver(st, ev) {
@@ -1377,7 +1378,7 @@
     if (!path) {
       return;
     }
-    R.leavers.push({ route: measure(path), t: 0, dur: G.WALK_IN, look: g.vip ? "vip" : g.type.id, skin: g._skin || 0, hair: g._hair || 0 });
+    R.leavers.push({ route: measure(path), t: 0, dur: G.WALK_IN, look: g.vip ? "vip" : g.look || g.type.id, skin: g._skin || 0, hair: g._hair || 0 });
   }
   function drawLeavers(dt) {
     for (let i = R.leavers.length - 1; i >= 0; i--) {
@@ -1442,7 +1443,7 @@
     const bite = g.bite > 0.5;
     const hop = pose === "surprise" && Math.floor(g.bite * 10) % 2 ? 1 : 0;
     const nod = !pose && Math.sin(R.t * 1.1 + g.seat) > 0.85 ? 1 : 0;
-    const img = S.person(info.view, look || g.type.id, g._skin, g._hair, pose);
+    const img = S.person(info.view, look || g.look || g.type.id, g._skin, g._hair, pose);
     const rod = pose === "reel" ? Object.assign({}, info, { tip: [info.tip[0] - 1, info.tip[1] - (info.view === "front" ? 9 : 4)] }) : info;
     const yTop = info.feet - 13 - hop + nod;
     if (info.view === "front") {

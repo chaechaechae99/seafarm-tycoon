@@ -84,7 +84,18 @@
     pro: { hat: "cap", H: "#1c1c22", h: "#000000", T: "#7b3fd0", t: "#f2f2f2", P: "#1c1c22", B: "#f2f2f2" },
     owner: { hat: "captain", H: "#f5f7fa", h: "#1d3557", T: "#1d3557", t: "#f2c14e", P: "#14213d", B: "#3a2414" },
     vip: { hat: "captain", H: "#1c1c22", h: "#f2c230", T: "#2a2a33", t: "#f2c230", P: "#1c1c22", B: "#111111", shades: true },
+    // 손님 페르소나 (data.js PERSONAS의 look)
+    student: { hat: "none", H: "#000", h: "#000", T: "#1d3557", t: "#f2f2f2", P: "#2a2a3a", B: "#111111" },
+    college: { hat: "cap", H: "#4fa36b", h: "#2f6b45", T: "#7a8a99", t: "#5a6a79", P: "#3e5c8a", B: "#f2f2f2" },
+    youngwoman: { hat: "none", hair: "long", H: "#000", h: "#000", T: "#ffb3c8", t: "#ffffff", P: "#5aa0d8", B: "#f2f2f2" },
+    youngman: { hat: "cap", H: "#2e6fd0", h: "#1d4f9a", T: "#f2f2f2", t: "#2e6fd0", P: "#2a2a3a", B: "#e5484d" },
+    couple: { hat: "none", hair: "long", H: "#000", h: "#000", T: "#e5484d", t: "#ffffff", P: "#1d3557", B: "#f2f2f2" },
+    office: { hat: "none", H: "#000", h: "#000", T: "#f2f2f2", t: "#1d3557", P: "#2a2a3a", B: "#111111" },
+    elder: { hat: "bucket", H: "#8a7a5a", h: "#6b5c40", T: "#8a5a32", t: "#e0c07a", P: "#5a5a5a", B: "#3a2414", gray: true },
   };
+  // 긴 머리: 얼굴 양옆과 어깨로 머리카락이 내려옴
+  const LONG_FRONT = { 0: "AASSSSAA", 1: "ASESSESA", 2: ".ASmmSA.", 3: "ATTTTTTA" };
+  const LONG_BACK = { 2: ".AAAAAA.", 3: ".TAAAAT." };
 
   // 손님 동작 포즈: 몸통 4~5번째 줄(팔)과 얼굴 줄만 바꿔 끼움
   //  idle 찌 관찰 / reel 끌어올리기(양팔 위) / drink 캔음료(한 손 입가 + 캔) / surprise 깜짝(팔 벌림)
@@ -112,13 +123,17 @@
         return view === "back" && i === 2 ? r : pr[i];
       });
     }
+    if (L.hair === "long") {
+      const lr = view === "front" ? LONG_FRONT : LONG_BACK;
+      body = body.map((r, i) => lr[i] || r);
+    }
     if (L.shades && view === "front") {
       body = body.map((r, i) => (i === 1 ? ".SEEEES." : r));
     }
     const rows = hat.concat(body);
     const pal = {
       H: L.H, h: L.h, T: L.T, t: L.t, P: L.P, B: L.B,
-      S: SKINS[skinI % SKINS.length], A: HAIRS[hairI % HAIRS.length],
+      S: SKINS[skinI % SKINS.length], A: L.gray ? "#c8c8c8" : HAIRS[hairI % HAIRS.length],
       E: "#1a1a1a", m: lookId === "owner" ? "#3b2a1a" : SKINS[skinI % SKINS.length],
       C: "#e5484d",
     };
@@ -293,8 +308,20 @@
       return out;
     });
   }
+  function shade(hex, k) {
+    const n = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return "#" + n.map((v) => Math.max(0, Math.min(255, Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k)))).toString(16).padStart(2, "0")).join("");
+  }
+  function autoLook(id) {
+    const f = root.GameData && root.GameData.FISH.find((x) => x.id === id);
+    if (!f || !f.col) {
+      return null;
+    }
+    FISH_LOOK[id] = [f.shape || "fish", f.col, shade(f.col, 0.6), shade(f.col, -0.3), shade(f.col, -0.45)];
+    return FISH_LOOK[id];
+  }
   function fishSprite(id, scale, golden, frame) {
-    const L = FISH_LOOK[id] || ["fish", "#7a8a99", "#dfe6ea", "#55626b", "#55626b"];
+    const L = FISH_LOOK[id] || autoLook(id) || ["fish", "#7a8a99", "#dfe6ea", "#55626b", "#55626b"];
     const pal = golden
       ? { B: "#f2c230", b: "#fff1a8", F: "#c9921a", S: "#e0a81e", E: "#3a2a00" }
       : { B: L[1], b: L[2], F: L[3], S: L[4], E: "#111111" };
@@ -373,7 +400,7 @@
   function lookOf(key, bredList, depth) {
     const raw = /^[fsb]:/.test(key) ? key.slice(2) : key;
     const kind = /^[fsb]:/.test(key) ? key[0] : null;
-    if ((kind === "f" || !kind) && FISH_LOOK[raw]) {
+    if ((kind === "f" || !kind) && (FISH_LOOK[raw] || autoLook(raw))) {
       return FISH_LOOK[raw];
     }
     if (kind === "s") {
