@@ -381,7 +381,7 @@
     for (let i = 0; i < 4; i++) {
       const x = ((i * 131 + R.t * (9 + i * 3)) % (W + 60)) - 30;
       const y = 12 + i * 8 + Math.round(Math.sin(R.t * 0.9 + i * 2) * 3);
-      const f = Math.floor(R.t * 4 + i) % 2;
+      const f = Math.abs(Math.floor(R.t * 4 + i)) % 2;
       spr(S.get("gull" + f, GULL[f], { W: "#f5f7fa", k: "#5f6b78" }), x, y);
     }
   }
@@ -2118,7 +2118,24 @@
     ["lighting", (st, world, ctx) => { R.prevLights = R.lights.slice(); drawNight(ctx.hr, st); }],
   ];
 
+  // 레이어·글자 그리기 중 오류는 기록만 하고 넘어감 (화면 전체가 비는 것 방지)
+  const failed = {};
+  function safe(name, fn) {
+    try {
+      fn();
+    } catch (e) {
+      if (!failed[name]) {
+        failed[name] = true;
+        console.error("그리기 오류 [" + name + "]", e);
+      }
+    }
+  }
   function draw(st, world, dt) {
+    dt = isFinite(dt) && dt > 0 ? dt : 0;
+    // 이전 프레임이 중간에 끊겼어도 그리기 상태를 초기화
+    R.b.setTransform(1, 0, 0, 1, 0, 0);
+    R.b.globalCompositeOperation = "source-over";
+    R.b.globalAlpha = 1;
     R.t += dt;
     R.dt = dt;
     R.st = st;
@@ -2127,7 +2144,7 @@
     const ctx = { ck, hr, night: ck.night, dt };
     R.lights = [];
     watchPurchases(st);
-    LAYERS.forEach((l) => l[1](st, world, ctx));
+    LAYERS.forEach((l) => safe(l[0], () => l[1](st, world, ctx)));
 
     R.walkT += dt;
     if (R.walkT >= 2.5) {
@@ -2155,9 +2172,12 @@
     clampCam();
     const cam = R.cam;
     c.drawImage(R.buf, cam.x, cam.y, W / cam.z, H / cam.z, sx * R.K, sy * R.K, W * R.K, H * R.K);
-    signs(st);
-    hiText();
-    drawBanner(dt);
+    c.globalAlpha = 1;
+    c.globalCompositeOperation = "source-over";
+    safe("signs", () => signs(st));
+    safe("text", () => hiText());
+    safe("banner", () => drawBanner(dt));
+    c.globalAlpha = 1;
   }
 
   /* ---------- 수족관 서브 화면 (수족관 탭 캔버스) ---------- */

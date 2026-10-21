@@ -88,7 +88,7 @@
     requestAnimationFrame(frame);
   }
   function step(now) {
-    const dt = Math.min((now - last) / 1000, 1);
+    const dt = Math.max(0, Math.min((now - last) / 1000, 1));
     last = now;
     G.tick(state, world, dt);
     dispatch();
