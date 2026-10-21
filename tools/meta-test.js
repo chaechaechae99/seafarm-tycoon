@@ -99,6 +99,31 @@ test("환생: 100억 미만 불가, 이상이면 포인트 획득 + 시설 초�
   assert.ok(s.trophies.length === 1 && s.prestige.points === gain && s.prestige.count === 1);
 });
 
+test("손님 새 어종 도감 쿨타임 · 역대 도감은 환생 후에도 남음", () => {
+  const s = midGame();
+  const f = D.FISH.filter((x) => x.rarity === "common");
+  assert.ok(G.registerCatch(s, { id: f[0].id, size: 10, rarity: "common" }, true));
+  assert.ok(!G.registerCatch(s, { id: f[1].id, size: 10, rarity: "common" }, true), "쿨타임 중 손님 새 어종은 미등록");
+  assert.ok(G.registerCatch(s, { id: f[1].id, size: 12, rarity: "common" }), "사장님은 항상 등록");
+  s.totalEarned = 4e10;
+  G.doPrestige(s);
+  assert.ok(!s.dex[f[1].id] && s.allDex[f[1].id].best === 12);
+});
+
+test("원정 파견: 후반 보상은 초당 수익 비례, 전설 원정 어종은 파견 전용", () => {
+  const s = midGame();
+  const w = G.newWorld(rng);
+  s.tickets = 12;
+  G.startDispatch(s, 3600);
+  s.dispatch.t = s.dispatch.dur;
+  s.weather = "sunny";
+  const res = G.finishDispatch(s, w, rng);
+  assert.ok(res.gold >= G.expectedRate(s) * 3600 * D.DISPATCH.cpsShare * 0.99);
+  assert.ok(Object.keys(s.dispDex).length > 0);
+  const leg = G.EXP.species.find((x) => x.rarity === "Legendary" && !s.expDex[x.id]);
+  assert.ok(!G.registerExp(s, { id: leg.id, rarity: "Legendary", size: 100 }) && !s.expDex[leg.id]);
+});
+
 test("교배 시간: 일반 15분 ~ 전설 3시간, 부스터·명인 손재주로 단축", () => {
   const s = G.newState();
   const c = D.FISH.find((f) => f.rarity === "common");

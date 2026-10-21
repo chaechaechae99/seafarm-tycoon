@@ -71,7 +71,7 @@
       trophies: [],         // { league, rank, day }
       skins: [],            // 우승으로 얻은 사장님 스킨
       diamonds: 0,
-      achv: { dex: [], sets: [] },   // 받은 도감 업적(종 수)·세트 id
+      achv: { dex: [], sets: [], disp: [] },   // 받은 도감 업적(종 수)·세트 id
       skinsOwned: [],       // 상점·가챠 스킨 id
       equip: {},            // 대상별 장착 스킨 id
       relics: [],           // 경매 낙찰 유물·조형물 id
@@ -79,6 +79,9 @@
       auctionT: 60,
       lastGacha: null,
       tickets: D.DISPATCH.ticket.start, ticketT: 0,
+      dexGuestCd: 0,
+      dispDex: {},          // 파견 도감 (직접 보낸 원정에서만)
+      allDex: {},           // 역대 도감: 환생해도 남는 기록 { count, best, golden, run }
       vipDex: [],           // 초청한 VIP 특수 손님 id
       pendingVip: null,     // 초청권 사용 후 아직 자리 못 잡은 VIP
       skills: { chum: 0, haggle: 0, craft: 0 },
@@ -309,12 +312,14 @@
       expDex: state.expDex, bred: state.bred, breedHints: state.breedHints, aquarium: state.aquarium,
       trophies: state.trophies, skins: state.skins, stats: state.stats,
       diamonds: state.diamonds, skinsOwned: state.skinsOwned, equip: state.equip, relics: state.relics, stats2: state.stats2, created: state.created,
-      vipDex: state.vipDex, skills: state.skills, tickets: state.tickets,
+      vipDex: state.vipDex, skills: state.skills, tickets: state.tickets, dispDex: state.dispDex, allDex: state.allDex,
       prestige: { points: state.prestige.points + gain, total: state.prestige.total + gain, count: state.prestige.count + 1, levels: state.prestige.levels },
     };
     const fresh = newState();
     Object.keys(state).forEach((k) => { delete state[k]; });
+    const dispAchv = (state.achv && state.achv.disp) || [];
     Object.assign(state, fresh, keep);
+    state.achv.disp = dispAchv;
     return gain;
   }
 
@@ -343,7 +348,16 @@
     const n = state.owned.crew || 0;
     return n ? expPerAngler(state) * n * msMult(n) * D.EXPEDITION.scale : 0;
   }
-  function registerExp(state, c) {
+  function registerExp(state, c, fromDispatch) {
+    if (c.rarity === "Legendary" && !fromDispatch) {
+      return false;
+    }
+    if (fromDispatch) {
+      const p = state.dispDex[c.id] || { count: 0, best: 0 };
+      p.count++;
+      p.best = Math.max(p.best, c.size);
+      state.dispDex[c.id] = p;
+    }
     const isNew = !state.expDex[c.id];
     const d = state.expDex[c.id] || { count: 0, best: 0 };
     d.count++;
@@ -583,7 +597,7 @@
       if (!c) {
         continue;
       }
-      if (registerExp(state, c)) {
+      if (registerExp(state, c, true)) {
         newCount++;
         c.isNew = true;
       }
@@ -594,6 +608,7 @@
         best[c.id] = Object.assign({}, c, { isNew: c.isNew || (best[c.id] && best[c.id].isNew) });
       }
     }
+    gold = Math.max(gold, (expectedRate(state) / incomeMult(state)) * tier.sec * D.DISPATCH.cpsShare * (storm ? 1 - D.OCEAN.typhoonDispatchLoss : 1));
     earn(state, world, gold, null);
     const top = Object.values(best).sort((a, b) => (b.isNew - a.isNew) || b.value - a.value).slice(0, 20);
     const res = { dur: dp.dur, name: tier.name, total, byRarity, catches: top, gold: gold * incomeMult(state), newCount, seen: false, storm };
@@ -873,7 +888,8 @@
     const tier = t > 0.9 ? "대물" : t > 0.6 ? "대" : t > 0.3 ? "중" : "소";
     return { junk: false, id: f.id, name: f.name, rarity, spot, size, value, golden, tier };
   }
-  function registerCatch(state, c) {
+  // byGuest면 손님 어획: 새 어종은 DEX_GUEST_CD초에 한 종만 도감 등록
+  function registerCatch(state, c, byGuest) {
     state.stats.catches++;
     if (c.junk) {
       return false;
@@ -900,11 +916,22 @@
       state.stats.golden++;
     }
     const isNew = !state.dex[c.id];
+    if (isNew && byGuest) {
+      if (state.dexGuestCd > 0) {
+        return false;
+      }
+      state.dexGuestCd = D.DEX_GUEST_CD;
+    }
     const d = state.dex[c.id] || { count: 0, best: 0, golden: false };
     d.count++;
     d.best = Math.max(d.best, c.size);
     d.golden = d.golden || c.golden;
     state.dex[c.id] = d;
+    const a = state.allDex[c.id] || { count: 0, best: 0, golden: false, run: state.prestige.count };
+    a.count++;
+    a.best = Math.max(a.best, c.size);
+    a.golden = a.golden || c.golden;
+    state.allDex[c.id] = a;
     return isNew;
   }
 
@@ -1186,6 +1213,15 @@
         world.events.push({ kind: "achv", name: "도감 " + need + "종 달성", dia });
       }
     });
+    const nd = Object.keys(state.dispDex || {}).length;
+    state.achv.disp = state.achv.disp || [];
+    D.DISPATCH.dexMilestones.forEach(([need, dia]) => {
+      if (nd >= need && !state.achv.disp.includes(need)) {
+        state.achv.disp.push(need);
+        state.diamonds += dia;
+        world.events.push({ kind: "achv", name: "파견 도감 " + need + "종", dia });
+      }
+    });
     setProgress(state).forEach((s) => {
       if (s.done && !state.achv.sets.includes(s.id)) {
         state.achv.sets.push(s.id);
@@ -1254,6 +1290,7 @@
     } else {
       state.ticketT = 0;
     }
+    state.dexGuestCd = Math.max(0, (state.dexGuestCd || 0) - dt);
     state.skillCd.burst = Math.max(0, state.skillCd.burst - dt);
     state.skillCd.harbor = Math.max(0, state.skillCd.harbor - dt);
     state.buffs.burst = Math.max(0, (state.buffs.burst || 0) - dt);
@@ -1469,7 +1506,7 @@
     }
     guest.caught.push(c);
     guest.bite = 1.2;
-    const isNew = registerCatch(state, c);
+    const isNew = registerCatch(state, c, true);
     if (c.junk) {
       guest.sat -= 3;
     } else {
@@ -1747,6 +1784,10 @@
         total: cs.length, byRarity, catches: cs.slice(0, 20), gold: ld.gold || 0, newCount: ld.newCount || 0, seen: true,
       };
     }
+    if (!Object.keys(st.allDex).length && Object.keys(st.dex).length) {
+      Object.entries(st.dex).forEach(([id, d]) => { st.allDex[id] = Object.assign({ run: st.prestige.count }, d); });
+    }
+    st.achv.disp = st.achv.disp || [];
     st.version = VERSION;
     if (!isFinite(st.money)) {
       st.money = 0;

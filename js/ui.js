@@ -213,7 +213,8 @@
       '<div class="row"><span>원정 수익</span><b>' + fmt(G.expIncome(state) * G.incomeMult(state)) + "원/초</b></div>" +
       '<div class="row"><span>낚시꾼 1명 (방치 DPS + 판매)</span><b>' + fmt(G.expPerAngler(state)) + "원/초</b></div>" +
       '<div class="row"><span>등장 어종 풀</span><b>' + M.poolFor(prog).length + " / " + M.species.length + "종</b></div>" +
-      '<p class="note">원정 도감 1종마다 전체 수익 +0.5% · 자리 비운 동안에도 원정대가 낚아요</p>';
+      '<div class="row"><span>파견 도감 (직접 보낸 원정에서만)</span><b>' + Object.keys(state.dispDex).length + " / " + M.species.length + "종</b></div>" +
+      '<p class="note">원정 도감 1종마다 전체 수익 +0.5% · 자리 비운 동안에도 원정대가 낚아요 · 전설 원정 어종은 원정 파견으로만 등록돼요</p>';
     if (!U.expDirty) {
       return;
     }
@@ -482,7 +483,8 @@
     } else {
       const T = D.DISPATCH.ticket;
       html = '<div class="row"><span>원정 티켓 (1장 = 1시간 항해)</span><b>' + state.tickets + " / " + T.max + (state.tickets < T.max ? " · 다음 충전 " + hms(T.regen - state.ticketT) : "") + "</b></div>" +
-        '<p class="note">티켓은 1시간마다 1장 충전돼요. 1분에 1마리씩 잡고, 오래 보낼수록 더 먼 바다까지 나가 전설·고래·심해 생물 확률이 크게 올라요.</p>' +
+        '<div class="row"><span>파견 도감</span><b>' + Object.keys(state.dispDex).length + "종 · 다음 보상 " + ((D.DISPATCH.dexMilestones.find(([n]) => !(state.achv.disp || []).includes(n)) || ["-", 0])[0]) + "종</b></div>" +
+        '<p class="note">보상은 최소 초당 수익 × 항해 시간의 ' + Math.round(D.DISPATCH.cpsShare * 100) + "%. 전설 원정 어종은 파견으로만 잡혀요. 티켓은 1시간마다 1장 충전돼요. 1분에 1마리씩 잡고, 오래 보낼수록 더 먼 바다까지 나가 전설·고래·심해 생물 확률이 크게 올라요.</p>" +
         '<div class="disp-opts">' + D.DISPATCH.tiers.map((x) =>
           '<button type="button" class="btn disp-opt" data-disp="' + x.sec + '"' + (state.tickets < x.tickets ? " disabled" : "") + "><b>" + x.name + "</b><span>티켓 " + x.tickets + "장</span><span>" + G.dispatchCatches(x.sec) + "마리</span><span>" +
           esc(G.EXP.zones[x.depth].name) + "까지</span><span>희귀↑ x" + x.luck + "</span></button>").join("") + "</div>";
@@ -522,6 +524,7 @@
     const n = G.dexCount(state);
     const achv = '<div class="box"><h3>다이아 ' + state.diamonds + "개</h3>" +
       DM.dexMilestones.map(([need, dia]) => '<div class="row"><span>도감 ' + need + "종 (" + Math.min(n, need) + "/" + need + ")</span><b>" + (state.achv.dex.includes(need) ? "받음" : "+" + dia) + "</b></div>").join("") +
+      D.DISPATCH.dexMilestones.map(([need, dia]) => '<div class="row"><span>파견 도감 ' + need + "종 (" + Math.min(Object.keys(state.dispDex).length, need) + "/" + need + ")</span><b>" + ((state.achv.disp || []).includes(need) ? "받음" : "+" + dia) + "</b></div>").join("") +
       '<div class="row"><span>세트 컬렉션 완성 (' + state.achv.sets.length + "/" + D.COLLECTION_SETS.length + ")</span><b>세트당 +" + DM.setReward + "</b></div>" +
       '<div class="set-actions"><button type="button" class="btn" data-act="gacha"' + (state.diamonds < DM.gachaCost ? " disabled" : "") + ">한정 스킨 뽑기 (다이아 " + DM.gachaCost + ")</button>" +
       '<button type="button" class="btn" data-act="bait"' + (state.diamonds < DM.bait.cost ? " disabled" : "") + ">특수 미끼 (다이아 " + DM.bait.cost + ", 10분 고급 이상 ×" + DM.bait.mult + ")</button></div>" +
@@ -612,7 +615,7 @@
     const prestige = '<div class="box"><h3>환생 · 리조트 매각</h3>' +
       '<div class="row"><span>이번 회차 누적 수익</span><b>' + fmt(state.totalEarned) + " / " + fmt(D.PRESTIGE.minEarned) + "원</b></div>" +
       '<div class="row"><span>매각하면 받는 명성 포인트</span><b>' + gain + "</b></div>" +
-      '<p class="note">자금·시설·업그레이드·단골이 초기화돼요. 원정 도감·신종·수족관·트로피·스킨·VIP 도감·스킬·다이아는 남아요. (' + P.count + "회 환생)</p>" +
+      '<p class="note">자금·시설·업그레이드·단골이 초기화돼요. 원정 도감·파견 도감·역대 도감·신종·수족관·트로피·스킨·VIP 도감·스킬·다이아는 남아요. (' + P.count + "회 환생)</p>" +
       '<p class="note warn">[주의] 환생 시 어류 도감 및 도감 업적이 초기화되며, 도감을 다시 채워 다이아 보상을 재수급할 수 있습니다.</p>' +
       '<button type="button" class="btn btn-danger' + (U.prestigeArm ? " is-armed" : "") + '" data-act="prestige"' + (gain ? "" : " disabled") + ">" +
       (U.prestigeArm ? "한 번 더 누르면 매각" : "리조트 매각 (명성 +" + gain + ")") + "</button>" +
@@ -652,8 +655,16 @@
       s.got + "/" + s.total + "</span></div>").join("") + '</div><p class="note">세트를 완성하면 그 어종 판매가 +25~35%, 전체 입질 속도 +3~4%. 완성: ' +
       (sets.filter((s) => s.done).map((s) => esc(s.name)).join(", ") || "없음") + "</p>";
     const grid = $("dexGrid");
+    const all = U.dexMode === "all";
+    if (all) {
+      const ad = state.allDex;
+      const n = Object.keys(ad).length;
+      const big = Object.entries(ad).map(([id, a]) => ({ f: D.FISH.find((x) => x.id === id), a })).filter((x) => x.f).sort((p, q) => q.a.best / q.f.size[1] - p.a.best / p.f.size[1])[0];
+      $("dexNote").textContent = "역대 기록 · 환생해도 남아요 · 지금까지 " + n + "/" + D.FISH.length + "종, 총 " + Object.values(ad).reduce((s, a) => s + a.count, 0) + "마리" +
+        (big ? " · 최고 대물: " + big.f.name + " " + G.fmtSize(big.a.best) : "");
+    }
     grid.innerHTML = D.FISH.filter((f) => U.rar === "all" || f.rarity === U.rar).map((f) => {
-      const d = state.dex[f.id];
+      const d = all ? state.allDex[f.id] : state.dex[f.id];
       const r = D.RARITY[f.rarity];
       const spots = f.spots.map((s) => D.SPOTS[s].name).join("·");
       const inSeason = f.seasons.includes(ck.season);
@@ -664,7 +675,7 @@
       }
       return '<div class="dex-cell" style="--rc: var(--r-' + f.rarity + ')">' + (d.golden ? '<span class="dex-gold" title="황금 개체 낚음">황금</span>' : "") +
         '<img class="dex-img pix" alt="" src="' + root.Sprites.fishURL(f.id, d.golden) + '"><div class="dex-name">' + esc(f.name) + "</div>" +
-        '<div class="dex-meta">난이도 ' + (f.diff || D.DIFF_DEFAULT[f.rarity]) + " · 최대 " + G.fmtSize(d.best) + " · " + d.count + "마리</div>" +
+        '<div class="dex-meta">' + (all ? (d.run || 0) + "회차에 첫 등록" : "난이도 " + (f.diff || D.DIFF_DEFAULT[f.rarity])) + " · 최대 " + G.fmtSize(d.best) + " · " + d.count + "마리</div>" +
         '<div class="dex-rar">' + r.name + " · " + esc(spots) + (inSeason ? " · 제철" : "") + "</div></div>";
     }).join("");
   }
@@ -1019,6 +1030,11 @@
     document.querySelectorAll("[data-amt]").forEach((b) => b.addEventListener("click", () => {
       U.amt = b.dataset.amt;
       document.querySelectorAll("[data-amt]").forEach((x) => x.classList.toggle("is-on", x === b));
+    }));
+    document.querySelectorAll("[data-dexmode]").forEach((b) => b.addEventListener("click", () => {
+      U.dexMode = b.dataset.dexmode;
+      U.dexDirty = true;
+      document.querySelectorAll("[data-dexmode]").forEach((x) => x.classList.toggle("is-on", x === b));
     }));
     document.querySelectorAll("[data-rar]").forEach((b) => b.addEventListener("click", () => {
       U.rar = b.dataset.rar;

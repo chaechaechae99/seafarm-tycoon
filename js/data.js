@@ -348,6 +348,9 @@
   const DISPATCH = {
     perMinute: 1,
     ticket: { regen: 3600, max: 12, start: 3 },
+    cpsShare: 0.25,   // 최소 보상 = 초당 수익 × 항해 시간 × cpsShare (후반에도 의미 있게)
+    // 파견 도감: 직접 보낸 원정에서 낚은 어종. 전설 원정 어종은 파견으로만 등록됨
+    dexMilestones: [[10, 5], [50, 10], [100, 20], [200, 40], [350, 100]],
     tiers: [
       { sec: 3600, name: "1시간", tickets: 1, luck: 4, deep: 4, depth: 3 },
       { sec: 10800, name: "3시간", tickets: 3, luck: 6, deep: 6, depth: 4 },
@@ -355,6 +358,8 @@
       { sec: 43200, name: "12시간", tickets: 12, luck: 12, deep: 12, depth: 5 },
     ],
   };
+  // 손님이 낚은 새 어종은 DEX_GUEST_CD초에 한 종만 도감에 등록 (사장님 낚시는 항상 등록)
+  const DEX_GUEST_CD = 90;
   // 사장님 자동 낚시 간격 (초)
   const AUTO_CAST_SEC = 30;
   /* ---- 진행도 비례 보상: 모든 자금 보상 = 현재 초당 수익(CPS) × 초 (최소값 floor) ---- */
@@ -538,7 +543,7 @@
   const GameData = {
     FACILITIES, UPGRADES, RARITY, RARITY_ORDER, SPOTS, FISH, JUNK, JUNK_CHANCE, WALKIN, GOLDEN_CHANCE,
     EXPEDITION, VIP, BREED, AQUARIUM, CAT, WISH, DISPATCH, AUTO_CAST_SEC, QUEST, PRESTIGE, OCEAN, TOURNEY,
-    DIAMOND, SKINS, SKIN_TARGETS, AUCTION, VIP_GUESTS, SKILLS, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
+    DIAMOND, SKINS, SKIN_TARGETS, AUCTION, VIP_GUESTS, SKILLS, DEX_GUEST_CD, BREED_FAMILIES, BREED_RECIPES, BREED_TIERS, BREED_SIZE,
     GUEST_TYPES, SEASON_NAMES, WEATHER, WEATHER_ODDS, NICK_A, NICK_B, REVIEW_TEXT,
     PERSONAS, SURNAME, GIVEN, DIFF_WEIGHT, DIFF_DEFAULT, PRICE, COLLECTION_SETS, NIGHT_WEATHER,
   };
